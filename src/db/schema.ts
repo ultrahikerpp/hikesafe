@@ -1,5 +1,8 @@
 import {
   boolean,
+  check,
+  foreignKey,
+  index,
   integer,
   jsonb,
   numeric,
@@ -10,6 +13,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const tripStatusEnum = pgEnum('trip_status', [
   'draft',
@@ -34,6 +38,7 @@ export const locationSourceEnum = pgEnum('location_source', [
 export const locationStatusEnum = pgEnum('location_status', [
   'available',
   'unavailable',
+  'redacted',
 ]);
 export const alertStageEnum = pgEnum('alert_stage', [
   'due',
@@ -63,62 +68,93 @@ export const routes = pgTable('routes', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const routeVersions = pgTable('route_versions', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  routeId: uuid('route_id')
-    .notNull()
-    .references(() => routes.id),
-  mountainName: text('mountain_name').notNull(),
-  routeName: text('route_name').notNull(),
-  region: text('region').notNull(),
-  kind: text('kind').notNull(),
-  startLatitude: numeric('start_latitude', {
-    precision: 9,
-    scale: 6,
-    mode: 'number',
-  }).notNull(),
-  startLongitude: numeric('start_longitude', {
-    precision: 9,
-    scale: 6,
-    mode: 'number',
-  }).notNull(),
-  distanceKm: numeric('distance_km', {
-    precision: 7,
-    scale: 2,
-    mode: 'number',
-  }).notNull(),
-  elevationGainMeters: integer('elevation_gain_meters').notNull(),
-  durationMinutes: integer('duration_minutes').notNull(),
-  difficulty: integer('difficulty').notNull(),
-  checkpoints: jsonb('checkpoints').notNull(),
-  evacuationPoints: jsonb('evacuation_points').notNull(),
-  permitNotes: text('permit_notes').notNull(),
-  sourceOrganization: text('source_organization').notNull(),
-  sourceUrl: text('source_url').notNull(),
-  sourceVersion: text('source_version').notNull(),
-  reviewedAt: timestamp('reviewed_at', { withTimezone: true }).notNull(),
-  isActive: boolean('is_active').notNull().default(true),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const routeVersions = pgTable(
+  'route_versions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    routeId: uuid('route_id')
+      .notNull()
+      .references(() => routes.id),
+    mountainName: text('mountain_name').notNull(),
+    routeName: text('route_name').notNull(),
+    region: text('region').notNull(),
+    kind: text('kind').notNull(),
+    startLatitude: numeric('start_latitude', {
+      precision: 9,
+      scale: 6,
+      mode: 'number',
+    }).notNull(),
+    startLongitude: numeric('start_longitude', {
+      precision: 9,
+      scale: 6,
+      mode: 'number',
+    }).notNull(),
+    distanceKm: numeric('distance_km', {
+      precision: 7,
+      scale: 2,
+      mode: 'number',
+    }).notNull(),
+    elevationGainMeters: integer('elevation_gain_meters').notNull(),
+    durationMinutes: integer('duration_minutes').notNull(),
+    difficulty: integer('difficulty').notNull(),
+    checkpoints: jsonb('checkpoints').notNull(),
+    evacuationPoints: jsonb('evacuation_points').notNull(),
+    permitNotes: text('permit_notes').notNull(),
+    sourceOrganization: text('source_organization').notNull(),
+    sourceUrl: text('source_url').notNull(),
+    sourceVersion: text('source_version').notNull(),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }).notNull(),
+    isActive: boolean('is_active').notNull().default(true),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('route_versions_route_source_version_unique').on(
+      table.routeId,
+      table.sourceVersion,
+    ),
+    uniqueIndex('route_versions_one_active_per_route')
+      .on(table.routeId)
+      .where(sql`${table.isActive} = true`),
+    index('route_versions_active_catalog_idx')
+      .on(table.region, table.kind, table.mountainName, table.routeName)
+      .where(sql`${table.isActive} = true`),
+  ],
+);
 
-export const trips = pgTable('trips', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  ownerUserId: uuid('owner_user_id')
-    .notNull()
-    .references(() => users.id),
-  routeVersionId: uuid('route_version_id')
-    .notNull()
-    .references(() => routeVersions.id),
-  status: tripStatusEnum('status').notNull().default('draft'),
-  startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
-  plannedFinishAt: timestamp('planned_finish_at', { withTimezone: true }).notNull(),
-  startedAt: timestamp('started_at', { withTimezone: true }),
-  finishedAt: timestamp('finished_at', { withTimezone: true }),
-  vehicle: text('vehicle').notNull().default(''),
-  equipment: jsonb('equipment').notNull().default([]),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const trips = pgTable(
+  'trips',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    ownerUserId: uuid('owner_user_id')
+      .notNull()
+      .references(() => users.id),
+    routeVersionId: uuid('route_version_id')
+      .notNull()
+      .references(() => routeVersions.id),
+    status: tripStatusEnum('status').notNull().default('draft'),
+    startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+    plannedFinishAt: timestamp('planned_finish_at', {
+      withTimezone: true,
+    }).notNull(),
+    startedAt: timestamp('started_at', { withTimezone: true }),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+    vehicle: text('vehicle').notNull().default(''),
+    equipment: jsonb('equipment').notNull().default([]),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('trips_retention_finished_at_idx')
+      .on(table.finishedAt)
+      .where(sql`${table.status} = 'finished'`),
+  ],
+);
 
 export const tripMembers = pgTable(
   'trip_members',
@@ -135,6 +171,12 @@ export const tripMembers = pgTable(
   },
   (table) => [
     uniqueIndex('trip_members_trip_user_unique').on(table.tripId, table.userId),
+    uniqueIndex('trip_members_one_leader_per_trip')
+      .on(table.tripId)
+      .where(sql`${table.role} = 'leader'`),
+    uniqueIndex('trip_members_one_deputy_per_trip')
+      .on(table.tripId)
+      .where(sql`${table.role} = 'deputy'`),
   ],
 );
 
@@ -153,46 +195,74 @@ export const lineBindings = pgTable('line_bindings', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const guardians = pgTable('guardians', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tripId: uuid('trip_id')
-    .notNull()
-    .references(() => trips.id),
-  lineBindingId: uuid('line_binding_id')
-    .notNull()
-    .references(() => lineBindings.id),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const guardians = pgTable(
+  'guardians',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tripId: uuid('trip_id')
+      .notNull()
+      .references(() => trips.id),
+    lineBindingId: uuid('line_binding_id')
+      .notNull()
+      .references(() => lineBindings.id),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('guardians_id_trip_unique').on(table.id, table.tripId),
+    uniqueIndex('guardians_trip_line_binding_unique').on(
+      table.tripId,
+      table.lineBindingId,
+    ),
+  ],
+);
 
-export const checkIns = pgTable('check_ins', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tripId: uuid('trip_id')
-    .notNull()
-    .references(() => trips.id),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id),
-  message: text('message'),
-  locationStatus: locationStatusEnum('location_status').notNull(),
-  latitude: numeric('latitude', {
-    precision: 9,
-    scale: 6,
-    mode: 'number',
-  }),
-  longitude: numeric('longitude', {
-    precision: 9,
-    scale: 6,
-    mode: 'number',
-  }),
-  accuracyMeters: numeric('accuracy_meters', {
-    precision: 8,
-    scale: 2,
-    mode: 'number',
-  }),
-  locationCapturedAt: timestamp('location_captured_at', { withTimezone: true }),
-  locationSource: locationSourceEnum('location_source'),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const checkIns = pgTable(
+  'check_ins',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tripId: uuid('trip_id')
+      .notNull()
+      .references(() => trips.id),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    message: text('message'),
+    locationStatus: locationStatusEnum('location_status').notNull(),
+    latitude: numeric('latitude', {
+      precision: 9,
+      scale: 6,
+      mode: 'number',
+    }),
+    longitude: numeric('longitude', {
+      precision: 9,
+      scale: 6,
+      mode: 'number',
+    }),
+    accuracyMeters: numeric('accuracy_meters', {
+      precision: 8,
+      scale: 2,
+      mode: 'number',
+    }),
+    locationCapturedAt: timestamp('location_captured_at', {
+      withTimezone: true,
+    }),
+    locationSource: locationSourceEnum('location_source'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    check(
+      'check_ins_location_consistency',
+      sql`(${table.locationStatus} = 'available' and ${table.latitude} is not null and ${table.longitude} is not null and ${table.accuracyMeters} is not null and ${table.locationCapturedAt} is not null and ${table.locationSource} is not null) or (${table.locationStatus} in ('unavailable', 'redacted') and ${table.latitude} is null and ${table.longitude} is null and ${table.accuracyMeters} is null and ${table.locationCapturedAt} is null and ${table.locationSource} is null)`,
+    ),
+    index('check_ins_last_available_location_idx')
+      .on(table.tripId, table.createdAt.desc())
+      .where(sql`${table.locationStatus} = 'available'`),
+  ],
+);
 
 export const alertEvents = pgTable(
   'alert_events',
@@ -213,21 +283,34 @@ export const alertEvents = pgTable(
   },
   (table) => [
     uniqueIndex('alert_events_trip_stage_unique').on(table.tripId, table.stage),
+    index('alert_events_pending_due_idx')
+      .on(table.dueAt)
+      .where(sql`${table.status} = 'pending'`),
   ],
 );
 
-export const viewerGrants = pgTable('viewer_grants', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tripId: uuid('trip_id')
-    .notNull()
-    .references(() => trips.id),
-  guardianId: uuid('guardian_id')
-    .notNull()
-    .references(() => guardians.id),
-  tokenHash: text('token_hash').notNull().unique(),
-  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+export const viewerGrants = pgTable(
+  'viewer_grants',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tripId: uuid('trip_id')
+      .notNull()
+      .references(() => trips.id),
+    guardianId: uuid('guardian_id').notNull(),
+    tokenHash: text('token_hash').notNull().unique(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    foreignKey({
+      name: 'viewer_grants_guardian_trip_guardians_id_trip_fk',
+      columns: [table.guardianId, table.tripId],
+      foreignColumns: [guardians.id, guardians.tripId],
+    }),
+  ],
+);
 
 export const idempotencyKeys = pgTable(
   'idempotency_keys',

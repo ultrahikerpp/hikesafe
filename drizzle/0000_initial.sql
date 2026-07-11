@@ -2,7 +2,7 @@ CREATE TYPE "public"."alert_stage" AS ENUM('due', 'overdue_60', 'overdue_120');-
 CREATE TYPE "public"."alert_status" AS ENUM('pending', 'claimed', 'sent', 'cancelled');--> statement-breakpoint
 CREATE TYPE "public"."line_source_type" AS ENUM('user', 'group', 'room');--> statement-breakpoint
 CREATE TYPE "public"."location_source" AS ENUM('gps', 'network');--> statement-breakpoint
-CREATE TYPE "public"."location_status" AS ENUM('available', 'unavailable');--> statement-breakpoint
+CREATE TYPE "public"."location_status" AS ENUM('available', 'unavailable', 'redacted');--> statement-breakpoint
 CREATE TYPE "public"."trip_role" AS ENUM('leader', 'deputy', 'member');--> statement-breakpoint
 CREATE TYPE "public"."trip_status" AS ENUM('draft', 'active', 'finished', 'cancelled');--> statement-breakpoint
 CREATE TABLE "alert_events" (
@@ -30,7 +30,8 @@ CREATE TABLE "check_ins" (
 	"accuracy_meters" numeric(8, 2),
 	"location_captured_at" timestamp with time zone,
 	"location_source" "location_source",
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "check_ins_location_consistency" CHECK (("check_ins"."location_status" = 'available' and "check_ins"."latitude" is not null and "check_ins"."longitude" is not null and "check_ins"."accuracy_meters" is not null and "check_ins"."location_captured_at" is not null and "check_ins"."location_source" is not null) or ("check_ins"."location_status" in ('unavailable', 'redacted') and "check_ins"."latitude" is null and "check_ins"."longitude" is null and "check_ins"."accuracy_meters" is null and "check_ins"."location_captured_at" is null and "check_ins"."location_source" is null))
 );
 --> statement-breakpoint
 CREATE TABLE "guardians" (
@@ -151,7 +152,17 @@ ALTER TABLE "trip_members" ADD CONSTRAINT "trip_members_user_id_users_id_fk" FOR
 ALTER TABLE "trips" ADD CONSTRAINT "trips_owner_user_id_users_id_fk" FOREIGN KEY ("owner_user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "trips" ADD CONSTRAINT "trips_route_version_id_route_versions_id_fk" FOREIGN KEY ("route_version_id") REFERENCES "public"."route_versions"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "viewer_grants" ADD CONSTRAINT "viewer_grants_trip_id_trips_id_fk" FOREIGN KEY ("trip_id") REFERENCES "public"."trips"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "viewer_grants" ADD CONSTRAINT "viewer_grants_guardian_id_guardians_id_fk" FOREIGN KEY ("guardian_id") REFERENCES "public"."guardians"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "viewer_grants" ADD CONSTRAINT "viewer_grants_guardian_trip_guardians_id_trip_fk" FOREIGN KEY ("guardian_id","trip_id") REFERENCES "public"."guardians"("id","trip_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "alert_events_trip_stage_unique" ON "alert_events" USING btree ("trip_id","stage");--> statement-breakpoint
+CREATE INDEX "alert_events_pending_due_idx" ON "alert_events" USING btree ("due_at") WHERE "alert_events"."status" = 'pending';--> statement-breakpoint
+CREATE INDEX "check_ins_last_available_location_idx" ON "check_ins" USING btree ("trip_id","created_at" DESC NULLS LAST) WHERE "check_ins"."location_status" = 'available';--> statement-breakpoint
+CREATE UNIQUE INDEX "guardians_id_trip_unique" ON "guardians" USING btree ("id","trip_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "guardians_trip_line_binding_unique" ON "guardians" USING btree ("trip_id","line_binding_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "idempotency_keys_user_key_unique" ON "idempotency_keys" USING btree ("user_id","key");--> statement-breakpoint
-CREATE UNIQUE INDEX "trip_members_trip_user_unique" ON "trip_members" USING btree ("trip_id","user_id");
+CREATE UNIQUE INDEX "route_versions_route_source_version_unique" ON "route_versions" USING btree ("route_id","source_version");--> statement-breakpoint
+CREATE UNIQUE INDEX "route_versions_one_active_per_route" ON "route_versions" USING btree ("route_id") WHERE "route_versions"."is_active" = true;--> statement-breakpoint
+CREATE INDEX "route_versions_active_catalog_idx" ON "route_versions" USING btree ("region","kind","mountain_name","route_name") WHERE "route_versions"."is_active" = true;--> statement-breakpoint
+CREATE UNIQUE INDEX "trip_members_trip_user_unique" ON "trip_members" USING btree ("trip_id","user_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "trip_members_one_leader_per_trip" ON "trip_members" USING btree ("trip_id") WHERE "trip_members"."role" = 'leader';--> statement-breakpoint
+CREATE UNIQUE INDEX "trip_members_one_deputy_per_trip" ON "trip_members" USING btree ("trip_id") WHERE "trip_members"."role" = 'deputy';--> statement-breakpoint
+CREATE INDEX "trips_retention_finished_at_idx" ON "trips" USING btree ("finished_at") WHERE "trips"."status" = 'finished';
