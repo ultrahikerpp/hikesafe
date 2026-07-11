@@ -1,5 +1,5 @@
 {
-  "id": "ecc8adb7-a743-488d-9179-6be5d1352767",
+  "id": "ddb3fb56-9478-4981-98c9-b034ebbc0a41",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -114,7 +114,23 @@
             }
           ],
           "isUnique": false,
-          "where": "\"alert_events\".\"status\" = 'pending'",
+          "where": "\"alert_events\".\"status\" = 'pending' and \"alert_events\".\"next_attempt_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "alert_events_pending_next_attempt_idx": {
+          "name": "alert_events_pending_next_attempt_idx",
+          "columns": [
+            {
+              "expression": "next_attempt_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"alert_events\".\"status\" = 'pending' and \"alert_events\".\"next_attempt_at\" is not null",
           "concurrently": false,
           "method": "btree",
           "with": {}

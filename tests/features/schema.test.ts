@@ -154,6 +154,7 @@ describe('database schema', () => {
       expect.arrayContaining([
         'check_ins_last_available_location_idx',
         'alert_events_pending_due_idx',
+        'alert_events_pending_next_attempt_idx',
         'trips_retention_finished_at_idx',
         'route_versions_active_catalog_idx',
       ]),
@@ -204,7 +205,10 @@ describe('initial migration contract', () => {
       `CREATE INDEX "check_ins_last_available_location_idx" ON "check_ins" USING btree ("trip_id","created_at" DESC NULLS LAST) WHERE "check_ins"."location_status" = 'available'`,
     );
     expect(migration).toContain(
-      `CREATE INDEX "alert_events_pending_due_idx" ON "alert_events" USING btree ("due_at") WHERE "alert_events"."status" = 'pending'`,
+      `CREATE INDEX "alert_events_pending_due_idx" ON "alert_events" USING btree ("due_at") WHERE "alert_events"."status" = 'pending' and "alert_events"."next_attempt_at" is null`,
+    );
+    expect(migration).toContain(
+      `CREATE INDEX "alert_events_pending_next_attempt_idx" ON "alert_events" USING btree ("next_attempt_at") WHERE "alert_events"."status" = 'pending' and "alert_events"."next_attempt_at" is not null`,
     );
     expect(migration).toContain(
       `CREATE INDEX "trips_retention_finished_at_idx" ON "trips" USING btree ("finished_at") WHERE "trips"."status" = 'finished'`,

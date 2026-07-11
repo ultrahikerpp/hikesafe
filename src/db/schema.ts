@@ -285,7 +285,14 @@ export const alertEvents = pgTable(
     uniqueIndex('alert_events_trip_stage_unique').on(table.tripId, table.stage),
     index('alert_events_pending_due_idx')
       .on(table.dueAt)
-      .where(sql`${table.status} = 'pending'`),
+      .where(
+        sql`${table.status} = 'pending' and ${table.nextAttemptAt} is null`,
+      ),
+    index('alert_events_pending_next_attempt_idx')
+      .on(table.nextAttemptAt)
+      .where(
+        sql`${table.status} = 'pending' and ${table.nextAttemptAt} is not null`,
+      ),
   ],
 );
 
