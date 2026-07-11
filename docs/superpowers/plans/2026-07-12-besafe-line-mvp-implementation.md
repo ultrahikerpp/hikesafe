@@ -153,7 +153,7 @@ const schema = z.object({
 });
 
 export const parseEnv = (value: Record<string, string | undefined>) => schema.parse(value);
-export const env = parseEnv(process.env);
+export const getEnv = () => parseEnv(process.env);
 
 // src/lib/clock.ts
 export interface Clock { now(): Date }
@@ -286,7 +286,7 @@ Create tables for `users`, `routes`, `route_versions`, `trips`, `trip_members`, 
 
 Run: `npx drizzle-kit generate`
 
-Expected: `drizzle/0000_initial.sql` contains all ten tables and the three unique indexes.
+Expected: `drizzle/0000_initial.sql` contains all eleven tables and the three unique indexes.
 
 - [ ] **Step 5: Verify and commit**
 
