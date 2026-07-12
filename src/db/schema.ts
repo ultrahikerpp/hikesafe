@@ -54,6 +54,7 @@ export const alertStatusEnum = pgEnum('alert_status', [
 export const alertDeliveryStatusEnum = pgEnum('alert_delivery_status', [
   'pending',
   'claimed',
+  'sending',
   'sent',
   'cancelled',
 ]);
@@ -315,16 +316,20 @@ export const alertDeliveries = pgTable(
     eventId: uuid('event_id').notNull().references(() => alertEvents.id),
     recipientId: text('recipient_id').notNull(),
     guardianId: uuid('guardian_id').references(() => guardians.id),
+    guardianLineUserId: text('guardian_line_user_id'),
+    viewerGrantEligible: boolean('viewer_grant_eligible').notNull().default(false),
     retryKey: uuid('retry_key').notNull().defaultRandom().unique(),
     status: alertDeliveryStatusEnum('status').notNull().default('pending'),
     nextAttemptAt: timestamp('next_attempt_at', { withTimezone: true }),
     claimedAt: timestamp('claimed_at', { withTimezone: true }),
     claimToken: text('claim_token'),
     claimVersion: integer('claim_version').notNull().default(0),
+    grantVersion: integer('grant_version').notNull().default(1),
     claimExpiresAt: timestamp('claim_expires_at', { withTimezone: true }),
     sentAt: timestamp('sent_at', { withTimezone: true }),
     attempts: integer('attempts').notNull().default(0),
     lastError: text('last_error'),
+    message: jsonb('message'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
@@ -343,12 +348,16 @@ export const viewerGrants = pgTable(
       .references(() => trips.id),
     guardianId: uuid('guardian_id').notNull(),
     tokenHash: text('token_hash').notNull().unique(),
+    deliveryId: uuid('delivery_id').references(() => alertDeliveries.id),
+    tokenVersion: integer('token_version').notNull().default(1),
+    guardianLineUserId: text('guardian_line_user_id'),
     expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     createdAt: timestamp('created_at', { withTimezone: true })
       .notNull()
       .defaultNow(),
   },
   (table) => [
+    uniqueIndex('viewer_grants_delivery_version_unique').on(table.deliveryId, table.tokenVersion),
     foreignKey({
       name: 'viewer_grants_guardian_trip_guardians_id_trip_fk',
       columns: [table.guardianId, table.tripId],

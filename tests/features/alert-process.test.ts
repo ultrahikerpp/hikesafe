@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  createGrantToken,
+  materializeDeliveryMessages,
   processDueAlerts,
   retryAt,
   type AlertDeliveryWork,
@@ -8,6 +10,7 @@ import {
 } from '@/src/features/alerts/process';
 
 const now = new Date('2026-07-12T05:00:00.000Z');
+const message = { type: 'text' as const, text: 'alert snapshot' };
 const claim = { eventId: 'event-1', claimToken: 'opaque-token', claimVersion: 1 };
 const event = {
   id: 'event-1',
@@ -32,6 +35,76 @@ const repository = (overrides: Partial<AlertProcessRepository> = {}): AlertProce
 });
 
 describe('processDueAlerts', () => {
+  it('derives the same raw viewer token from delivery id and grant version without persisting it', () => {
+    const one = createGrantToken('delivery-1', 2, 'grant-secret');
+    const two = createGrantToken('delivery-1', 2, 'grant-secret');
+    expect(one).toBe(two);
+    expect(one).not.toBe(createGrantToken('delivery-1', 3, 'grant-secret'));
+  });
+
+  it('reconstructs a viewer URL from a token-free persisted message template', () => {
+    const template = [{ type: 'text' as const, text: 'https://viewer?grant=__BESAFE_GRANT_TOKEN__' }];
+    const sent = materializeDeliveryMessages(template, 'delivery-1', 1, 'grant-secret');
+    expect(JSON.stringify(template)).toContain('__BESAFE_GRANT_TOKEN__');
+    expect(JSON.stringify(template)).not.toContain(createGrantToken('delivery-1', 1, 'grant-secret'));
+    expect(JSON.stringify(sent)).toContain(createGrantToken('delivery-1', 1, 'grant-secret'));
+  });
+
+  it('reports a dispatched event with no recipients as an explicit skip', async () => {
+    const store = repository({ dispatchClaim: vi.fn().mockResolvedValue('skipped') });
+    await expect(processDueAlerts({ now, repository: store })).resolves.toEqual({ claimed: 1, sent: 0, failed: 0, skipped: 1 });
+  });
+
+  it('sends only after a delivery has been durably linearized, outside the database operation', async () => {
+    const prepared = {
+      outcome: 'ready' as const, id: 'delivery-1', to: 'line-user-1', retryKey: 'retry-1',
+      messages: [message],
+    };
+    const store = repository({
+      claimDueActiveEvents: vi.fn().mockResolvedValue([]),
+      claimDueDeliveries: vi.fn().mockResolvedValue([{ id: 'delivery-1' }]),
+      prepareDelivery: vi.fn().mockResolvedValue(prepared),
+      markDeliverySent: vi.fn().mockResolvedValue(true),
+      rescheduleDeliveryFailure: vi.fn().mockResolvedValue(true),
+    });
+    const send = vi.fn().mockResolvedValue(undefined);
+
+    await processDueAlerts({ now, repository: store, send });
+
+    expect(store.prepareDelivery.mock.invocationCallOrder[0]).toBeLessThan(send.mock.invocationCallOrder[0]);
+    expect(send).toHaveBeenCalledWith({ to: 'line-user-1', messages: prepared.messages, idempotencyKey: 'retry-1' });
+    expect(store.markDeliverySent).toHaveBeenCalledWith({ deliveryId: 'delivery-1', now });
+  });
+
+  it('reclaims an expired sending lease and preserves the persistent retry key and message', async () => {
+    const store = repository({
+      claimDueActiveEvents: vi.fn().mockResolvedValue([]),
+      claimDueDeliveries: vi.fn().mockResolvedValue([{ id: 'delivery-1' }]),
+      prepareDelivery: vi.fn().mockResolvedValue({
+        outcome: 'ready' as const, id: 'delivery-1', to: 'line-user-1', retryKey: 'retry-1', messages: [message],
+      }),
+      markDeliverySent: vi.fn().mockResolvedValue(true),
+      rescheduleDeliveryFailure: vi.fn().mockResolvedValue(true),
+    });
+    const send = vi.fn().mockResolvedValue(undefined);
+    await processDueAlerts({ now, repository: store, send });
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ idempotencyKey: 'retry-1', messages: [message] }));
+  });
+
+  it('allows lifecycle cancellation to win before sending, but never cancels an already sending delivery', async () => {
+    const store = repository({
+      claimDueActiveEvents: vi.fn().mockResolvedValue([]),
+      claimDueDeliveries: vi.fn().mockResolvedValue([{ id: 'cancelled' }, { id: 'sending' }]),
+      prepareDelivery: vi.fn()
+        .mockResolvedValueOnce({ outcome: 'skipped' })
+        .mockResolvedValueOnce({ outcome: 'ready', id: 'sending', to: 'line-user-1', retryKey: 'retry-2', messages: [message] }),
+      markDeliverySent: vi.fn().mockResolvedValue(true),
+      rescheduleDeliveryFailure: vi.fn().mockResolvedValue(true),
+    });
+    const send = vi.fn().mockResolvedValue(undefined);
+    await expect(processDueAlerts({ now, repository: store, send })).resolves.toEqual({ claimed: 0, sent: 1, failed: 0, skipped: 1 });
+    expect(send).toHaveBeenCalledTimes(1);
+  });
   it('delivers each recipient independently with its persistent retry key', async () => {
     const deliveries: AlertDeliveryWork[] = [
       { id: 'delivery-a', retryKey: 'retry-a' },

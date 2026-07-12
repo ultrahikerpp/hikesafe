@@ -5,6 +5,7 @@ import { hashViewerGrant } from '@/src/lib/idempotency';
 export interface AuthorizeTripViewerRequest {
   tripId: string;
   userId?: string;
+  lineUserId?: string;
   viewerToken?: string;
   now?: Date;
   requireGrant?: boolean;
@@ -12,7 +13,7 @@ export interface AuthorizeTripViewerRequest {
 
 export interface TripViewerAuthorizationRepository {
   isTripMember(tripId: string, userId: string): Promise<boolean>;
-  hasActiveViewerGrant(tripId: string, tokenHash: string, now: Date): Promise<boolean>;
+  hasActiveViewerGrant(tripId: string, tokenHash: string, lineUserId: string, now: Date): Promise<boolean>;
 }
 
 const databaseRepository: TripViewerAuthorizationRepository = {
@@ -26,7 +27,7 @@ const databaseRepository: TripViewerAuthorizationRepository = {
     return Boolean(member);
   },
 
-  async hasActiveViewerGrant(tripId, tokenHash, now) {
+  async hasActiveViewerGrant(tripId, tokenHash, lineUserId, now) {
     const [{ db }, { viewerGrants }] = await Promise.all([
       import('@/src/db/client'),
       import('@/src/db/schema'),
@@ -35,6 +36,7 @@ const databaseRepository: TripViewerAuthorizationRepository = {
       .where(and(
         eq(viewerGrants.tripId, tripId),
         eq(viewerGrants.tokenHash, tokenHash),
+        eq(viewerGrants.guardianLineUserId, lineUserId),
         gt(viewerGrants.expiresAt, now),
       )).limit(1);
     return Boolean(grant);
@@ -47,10 +49,11 @@ export const authorizeTripViewer = async (
 ) => {
   if (!request.userId) return false;
   if (!request.requireGrant && await repository.isTripMember(request.tripId, request.userId)) return true;
-  if (!request.viewerToken) return false;
+  if (!request.viewerToken || !request.lineUserId) return false;
   return repository.hasActiveViewerGrant(
     request.tripId,
     hashViewerGrant(request.viewerToken),
+    request.lineUserId,
     request.now ?? new Date(),
   );
 };

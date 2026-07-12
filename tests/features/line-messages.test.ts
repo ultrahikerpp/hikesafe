@@ -39,6 +39,12 @@ describe('buildLineMessage', () => {
     expect(JSON.stringify(message)).toContain('目前沒有可撥號的領隊聯絡資料');
   });
 
+  it('offers the real guardian viewer only for a direct guardian grant', () => {
+    const message = buildLineMessage('overdue_60', { ...trip, viewerGrantUrl: undefined });
+    expect(JSON.stringify(message)).toContain('請透過 LINE 聯絡已綁定的留守人員');
+    expect(JSON.stringify(message)).not.toContain('besafe.example');
+  });
+
   it('builds a red 120-minute guardian card with viewer URL, location, report copy, 119 action, and no automatic-report claim', () => {
     const message = buildLineMessage('overdue_120', trip);
     const serialized = JSON.stringify(message);
@@ -51,5 +57,11 @@ describe('buildLineMessage', () => {
     expect(serialized).toContain('"clipboard"');
     expect(serialized).toContain('tel:119');
     expect(serialized).toContain('系統尚未自動聯絡 119');
+  });
+
+  it('does not put a precise viewer link in a group notification', () => {
+    const message = buildLineMessage('overdue_120', { ...trip, viewerGrantUrl: undefined });
+    expect(JSON.stringify(message)).toContain('請透過 LINE 聯絡已綁定的個別留守人員');
+    expect(JSON.stringify(message)).not.toContain('besafe.example');
   });
 });

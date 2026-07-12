@@ -34,6 +34,7 @@ describe('authorizeTripViewer', () => {
     await expect(authorizeTripViewer({
       tripId: 'trip-1',
       userId: 'line-session-user',
+      lineUserId: 'U-line-session-user',
     }, repository)).resolves.toBe(false);
   });
 
@@ -42,8 +43,20 @@ describe('authorizeTripViewer', () => {
     await expect(authorizeTripViewer({
       tripId: 'trip-1',
       userId: 'line-session-user',
+      lineUserId: 'U-line-session-user',
       viewerToken: 'viewer-token',
     }, repository)).resolves.toBe(true);
 
+  });
+
+  it('rejects a forwarded guardian grant used from another LINE identity', async () => {
+    vi.mocked(repository.hasActiveViewerGrant).mockResolvedValueOnce(false);
+    await expect(authorizeTripViewer({
+      tripId: 'trip-1', userId: 'guardian-user', lineUserId: 'U-forwarded', viewerToken: 'viewer-token',
+      requireGrant: true,
+    }, repository)).resolves.toBe(false);
+    expect(repository.hasActiveViewerGrant).toHaveBeenLastCalledWith(
+      'trip-1', expect.any(String), 'U-forwarded', expect.any(Date),
+    );
   });
 });

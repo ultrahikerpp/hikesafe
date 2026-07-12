@@ -14,6 +14,7 @@ const env = {
   LINE_CHANNEL_ACCESS_TOKEN: 'channel-access-token',
   SESSION_SECRET: 'session-secret-with-at-least-32-characters',
   JOB_SECRET: 'job-secret-with-at-least-32-characters',
+  GRANT_TOKEN_SECRET: 'grant-secret-with-at-least-32-characters',
   NEXT_PUBLIC_LIFF_ID: 'liff-id',
 };
 

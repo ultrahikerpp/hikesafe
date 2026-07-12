@@ -1,6 +1,6 @@
 import { and, eq, sql } from 'drizzle-orm';
 
-import { alertEvents, checkIns, idempotencyKeys, tripMembers, trips } from '@/src/db/schema';
+import { alertDeliveries, alertEvents, checkIns, idempotencyKeys, tripMembers, trips } from '@/src/db/schema';
 import { scheduleAlertEvents } from '@/src/features/alerts/domain';
 import { canFinishTrip, type TripRole, type TripStatus } from '@/src/features/trips/domain';
 import { hashIdempotencyRequest } from '@/src/lib/idempotency';
@@ -250,6 +250,8 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
   async replaceUnsentAlertSchedule({ tripId, plannedFinishAt }) {
     await database.update(alertEvents).set({ status: 'cancelled' })
       .where(and(eq(alertEvents.tripId, tripId), sql`${alertEvents.status} in ('pending', 'claimed')`));
+    await database.update(alertDeliveries).set({ status: 'cancelled' })
+      .where(sql`${alertDeliveries.eventId} in (select ${alertEvents.id} from ${alertEvents} where ${alertEvents.tripId} = ${tripId}) and ${alertDeliveries.status} in ('pending', 'claimed')`);
     await database.insert(alertEvents).values(scheduleAlertEvents(tripId, plannedFinishAt).map(({ stage, dueAt }) => ({
       tripId, stage, status: 'pending' as const, dueAt,
     })));
@@ -261,6 +263,8 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
   async cancelUnsentAlerts(tripId) {
     await database.update(alertEvents).set({ status: 'cancelled' })
       .where(and(eq(alertEvents.tripId, tripId), sql`${alertEvents.status} in ('pending', 'claimed')`));
+    await database.update(alertDeliveries).set({ status: 'cancelled' })
+      .where(sql`${alertDeliveries.eventId} in (select ${alertEvents.id} from ${alertEvents} where ${alertEvents.tripId} = ${tripId}) and ${alertDeliveries.status} in ('pending', 'claimed')`);
   },
 });
 

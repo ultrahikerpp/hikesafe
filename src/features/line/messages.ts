@@ -72,16 +72,18 @@ export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): Lin
     return card('#F5C542', '已逾時 60 分鐘：請協助確認', trip, [
       '未回報不代表遇險，也可能是無訊號。請先聯絡隊員確認狀況。',
       ...(phone ? [] : ['目前沒有可撥號的領隊聯絡資料。']),
+      ...(!trip.viewerGrantUrl ? ['請透過 LINE 聯絡已綁定的留守人員。'] : []),
     ], phone
       ? [{ label: '聯絡隊員', uri: `tel:${phone}` }]
-      : [{ label: '查看行程', uri: trip.viewerGrantUrl ?? `https://besafe.example/trips/${trip.id}` }]);
+      : trip.viewerGrantUrl ? [{ label: '查看行程', uri: trip.viewerGrantUrl }] : []);
   }
   return card('#D64545', '已逾時 120 分鐘：請評估通報', trip, [
     locationText(trip.lastLocationStatus),
     `通報摘要：${trip.reportText ?? '請整理隊伍與路線資訊後通報。'}`,
     '系統尚未自動聯絡 119，請由留守人員依現況判斷是否通報。',
+    ...(!trip.viewerGrantUrl ? ['請透過 LINE 聯絡已綁定的個別留守人員取得行程資訊。'] : []),
   ], [
-    { label: '查看行程', uri: trip.viewerGrantUrl ?? `https://besafe.example/trips/${trip.id}` },
+    ...(trip.viewerGrantUrl ? [{ label: '查看行程', uri: trip.viewerGrantUrl }] : []),
     { label: '複製通報摘要', clipboardText: trip.reportText ?? '' },
     { label: '撥打 119', uri: 'tel:119' },
   ]);
