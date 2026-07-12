@@ -282,7 +282,9 @@ export const alertEvents = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
-    uniqueIndex('alert_events_trip_stage_unique').on(table.tripId, table.stage),
+    uniqueIndex('alert_events_active_trip_stage_unique')
+      .on(table.tripId, table.stage)
+      .where(sql`${table.status} in ('pending', 'claimed')`),
     index('alert_events_pending_due_idx')
       .on(table.dueAt)
       .where(

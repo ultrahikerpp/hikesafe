@@ -63,6 +63,14 @@ describe('database schema', () => {
     expect(uniqueIndexColumns[2]).toContainEqual(['user_id', 'key']);
   });
 
+  it('allows a cancelled alert stage to be replaced by a newly scheduled one', () => {
+    const [activeAlertIndex] = getTableConfig(alertEvents).indexes
+      .filter((index) => index.config.name === 'alert_events_active_trip_stage_unique');
+
+    expect(activeAlertIndex.config.unique).toBe(true);
+    expect(activeAlertIndex.config.where).toBeDefined();
+  });
+
   it('keeps location status and nullable location fields consistent', () => {
     const config = getTableConfig(checkIns);
     const locationColumns = [
@@ -173,6 +181,12 @@ describe('initial migration contract', () => {
     );
     expect(normalizedMigration).toContain(
       `CONSTRAINT "check_ins_location_consistency" CHECK (("location_status" = 'available' and "latitude" is not null and "longitude" is not null and "accuracy_meters" is not null and "location_captured_at" is not null and "location_source" is not null) or ("location_status" in ('unavailable', 'redacted') and "latitude" is null and "longitude" is null and "accuracy_meters" is null and "location_captured_at" is null and "location_source" is null))`,
+    );
+  });
+
+  it('permits replacement of cancelled alert stages', () => {
+    expect(migration).toContain(
+      `CREATE UNIQUE INDEX "alert_events_active_trip_stage_unique" ON "alert_events" USING btree ("trip_id","stage") WHERE "alert_events"."status" in ('pending', 'claimed')`,
     );
   });
 

@@ -1,0 +1,281 @@
+import { and, eq, sql } from 'drizzle-orm';
+
+import { alertEvents, checkIns, idempotencyKeys, tripMembers, trips } from '@/src/db/schema';
+import { canFinishTrip, type TripRole, type TripStatus } from '@/src/features/trips/domain';
+import { hashIdempotencyRequest } from '@/src/lib/idempotency';
+import { assertFreshLocation, type LocationFix } from '@/src/lib/location';
+
+type AlertStage = 'due' | 'overdue_60' | 'overdue_120';
+
+interface TripSnapshot {
+  id: string;
+  status: TripStatus;
+  plannedFinishAt: Date;
+  startedAt: Date | null;
+  finishedAt: Date | null;
+}
+
+interface StoredCheckIn {
+  id: string;
+  tripId: string;
+  userId: string;
+  message?: string;
+  locationStatus: 'available' | 'unavailable';
+  latitude?: number;
+  longitude?: number;
+  accuracyMeters?: number;
+  locationCapturedAt?: Date;
+  locationSource?: 'gps';
+  createdAt: Date;
+}
+
+type IdempotencyReservation =
+  | { kind: 'reserved' }
+  | { kind: 'existing'; requestHash: string; result: unknown };
+
+export interface TripCommandsTransaction {
+  lockTrip(tripId: string): Promise<TripSnapshot | undefined>;
+  findMembership(tripId: string, userId: string): Promise<TripRole | undefined>;
+  reserveIdempotency(input: { userId: string; key: string; requestHash: string }): Promise<IdempotencyReservation>;
+  saveIdempotencyResponse(input: { userId: string; key: string; result: unknown }): Promise<void>;
+  activateTrip(input: { tripId: string; startedAt: Date }): Promise<void>;
+  insertCheckIn(input: Omit<StoredCheckIn, 'id'>): Promise<StoredCheckIn>;
+  replacePendingAlertSchedule(input: { tripId: string; plannedFinishAt: Date }): Promise<void>;
+  finishTrip(input: { tripId: string; finishedAt: Date }): Promise<void>;
+  cancelPendingAlerts(tripId: string): Promise<void>;
+}
+
+export interface TripCommandsRepository extends TripCommandsTransaction {
+  transaction<T>(operation: (transaction: TripCommandsTransaction) => Promise<T>): Promise<T>;
+}
+
+export interface StartTripCommand {
+  tripId: string;
+  userId: string;
+  location: LocationFix;
+  idempotencyKey: string;
+  now: Date;
+}
+
+export interface RecordCheckInCommand {
+  tripId: string;
+  userId: string;
+  message?: string;
+  location?: LocationFix;
+  idempotencyKey: string;
+  now: Date;
+}
+
+export interface ExtendTripCommand {
+  tripId: string;
+  userId: string;
+  plannedFinishAt: Date;
+  idempotencyKey: string;
+  now: Date;
+}
+
+export interface FinishTripCommand {
+  tripId: string;
+  userId: string;
+  message?: string;
+  location?: LocationFix;
+  idempotencyKey: string;
+  now: Date;
+}
+
+const stages: ReadonlyArray<{ stage: AlertStage; delayMinutes: number }> = [
+  { stage: 'due', delayMinutes: 0 },
+  { stage: 'overdue_60', delayMinutes: 60 },
+  { stage: 'overdue_120', delayMinutes: 120 },
+];
+
+const assertGps = (location: LocationFix, now: Date) => {
+  if (location.source !== 'gps') throw new Error('Location must be GPS');
+  return assertFreshLocation(location, now);
+};
+
+const checkInValues = (
+  command: Pick<RecordCheckInCommand | FinishTripCommand, 'tripId' | 'userId' | 'message' | 'location' | 'now'>,
+) => {
+  if (!command.location) {
+    return {
+      tripId: command.tripId,
+      userId: command.userId,
+      message: command.message,
+      locationStatus: 'unavailable' as const,
+      createdAt: command.now,
+    };
+  }
+  const location = assertGps(command.location, command.now);
+  return {
+    tripId: command.tripId,
+    userId: command.userId,
+    message: command.message,
+    locationStatus: 'available' as const,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    accuracyMeters: location.accuracyMeters,
+    locationCapturedAt: location.capturedAt,
+    locationSource: 'gps' as const,
+    createdAt: command.now,
+  };
+};
+
+const assertMember = (role: TripRole | undefined) => {
+  if (!role) throw new Error('Trip membership is required');
+  return role;
+};
+
+const assertManager = (role: TripRole | undefined) => {
+  if (!role || !canFinishTrip(role)) throw new Error('Only leader or deputy may extend or finish');
+};
+
+const assertStatus = (trip: TripSnapshot, expected: TripStatus) => {
+  if (trip.status !== expected) throw new Error(`Trip must be ${expected}`);
+};
+
+const runIdempotent = async <T>(
+  transaction: TripCommandsTransaction,
+  userId: string,
+  key: string,
+  request: unknown,
+  mutation: () => Promise<T>,
+): Promise<T> => {
+  const requestHash = hashIdempotencyRequest(request);
+  const reservation = await transaction.reserveIdempotency({ userId, key, requestHash });
+  if (reservation.kind === 'existing') {
+    if (reservation.requestHash !== requestHash) throw new Error('Idempotency key does not match request');
+    return reservation.result as T;
+  }
+  const result = await mutation();
+  await transaction.saveIdempotencyResponse({ userId, key, result });
+  return result;
+};
+
+export const startTrip = async (
+  command: StartTripCommand,
+  repository: TripCommandsRepository = databaseRepository,
+) => repository.transaction(async (transaction) => {
+  const trip = await transaction.lockTrip(command.tripId);
+  if (!trip) throw new Error('Trip not found');
+  assertMember(await transaction.findMembership(command.tripId, command.userId));
+  return runIdempotent(transaction, command.userId, command.idempotencyKey, {
+    tripId: command.tripId, location: command.location,
+  }, async () => {
+    assertStatus(trip, 'draft');
+    assertGps(command.location, command.now);
+    await transaction.activateTrip({ tripId: trip.id, startedAt: command.now });
+    await transaction.replacePendingAlertSchedule({ tripId: trip.id, plannedFinishAt: trip.plannedFinishAt });
+    return { tripId: trip.id, status: 'active' as const, startedAt: command.now };
+  });
+});
+
+export const recordCheckIn = async (
+  command: RecordCheckInCommand,
+  repository: TripCommandsRepository = databaseRepository,
+) => repository.transaction(async (transaction) => {
+  const trip = await transaction.lockTrip(command.tripId);
+  if (!trip) throw new Error('Trip not found');
+  assertMember(await transaction.findMembership(command.tripId, command.userId));
+  return runIdempotent(transaction, command.userId, command.idempotencyKey, {
+    tripId: command.tripId, message: command.message, location: command.location,
+  }, async () => {
+    assertStatus(trip, 'active');
+    return transaction.insertCheckIn(checkInValues(command));
+  });
+});
+
+export const extendTrip = async (
+  command: ExtendTripCommand,
+  repository: TripCommandsRepository = databaseRepository,
+) => repository.transaction(async (transaction) => {
+  const trip = await transaction.lockTrip(command.tripId);
+  if (!trip) throw new Error('Trip not found');
+  assertManager(await transaction.findMembership(command.tripId, command.userId));
+  return runIdempotent(transaction, command.userId, command.idempotencyKey, {
+    tripId: command.tripId, plannedFinishAt: command.plannedFinishAt,
+  }, async () => {
+    assertStatus(trip, 'active');
+    if (command.plannedFinishAt <= command.now || command.plannedFinishAt <= trip.plannedFinishAt) {
+      throw new Error('Planned finish must extend the active trip');
+    }
+    await transaction.replacePendingAlertSchedule({ tripId: trip.id, plannedFinishAt: command.plannedFinishAt });
+    return { tripId: trip.id, plannedFinishAt: command.plannedFinishAt };
+  });
+});
+
+export const finishTrip = async (
+  command: FinishTripCommand,
+  repository: TripCommandsRepository = databaseRepository,
+) => repository.transaction(async (transaction) => {
+  const trip = await transaction.lockTrip(command.tripId);
+  if (!trip) throw new Error('Trip not found');
+  assertManager(await transaction.findMembership(command.tripId, command.userId));
+  return runIdempotent(transaction, command.userId, command.idempotencyKey, {
+    tripId: command.tripId, message: command.message, location: command.location,
+  }, async () => {
+    assertStatus(trip, 'active');
+    const finalCheckIn = await transaction.insertCheckIn(checkInValues(command));
+    await transaction.finishTrip({ tripId: trip.id, finishedAt: command.now });
+    await transaction.cancelPendingAlerts(trip.id);
+    return { tripId: trip.id, finishedAt: command.now, finalCheckInId: finalCheckIn.id };
+  });
+});
+
+const databaseTransaction = (database: any): TripCommandsTransaction => ({
+  async lockTrip(tripId) {
+    const [trip] = await database.select({
+      id: trips.id, status: trips.status, plannedFinishAt: trips.plannedFinishAt,
+      startedAt: trips.startedAt, finishedAt: trips.finishedAt,
+    }).from(trips).where(eq(trips.id, tripId)).for('update');
+    return trip;
+  },
+  async findMembership(tripId, userId) {
+    const [membership] = await database.select({ role: tripMembers.role }).from(tripMembers)
+      .where(and(eq(tripMembers.tripId, tripId), eq(tripMembers.userId, userId))).limit(1);
+    return membership?.role;
+  },
+  async reserveIdempotency({ userId, key, requestHash }) {
+    const [inserted] = await database.insert(idempotencyKeys).values({ userId, key, requestHash })
+      .onConflictDoNothing().returning({ id: idempotencyKeys.id });
+    if (inserted) return { kind: 'reserved' as const };
+    const [existing] = await database.select({ requestHash: idempotencyKeys.requestHash, result: idempotencyKeys.response })
+      .from(idempotencyKeys).where(and(eq(idempotencyKeys.userId, userId), eq(idempotencyKeys.key, key))).limit(1);
+    if (!existing?.result) throw new Error('Idempotency request is pending');
+    return { kind: 'existing' as const, requestHash: existing.requestHash, result: existing.result };
+  },
+  async saveIdempotencyResponse({ userId, key, result }) {
+    await database.update(idempotencyKeys).set({ response: result }).where(and(eq(idempotencyKeys.userId, userId), eq(idempotencyKeys.key, key)));
+  },
+  async activateTrip({ tripId, startedAt }) {
+    await database.update(trips).set({ status: 'active', startedAt, updatedAt: startedAt }).where(eq(trips.id, tripId));
+  },
+  async insertCheckIn(value) {
+    const [checkIn] = await database.insert(checkIns).values(value).returning();
+    return checkIn as StoredCheckIn;
+  },
+  async replacePendingAlertSchedule({ tripId, plannedFinishAt }) {
+    await database.update(alertEvents).set({ status: 'cancelled' })
+      .where(and(eq(alertEvents.tripId, tripId), eq(alertEvents.status, 'pending')));
+    await database.insert(alertEvents).values(stages.map(({ stage, delayMinutes }) => ({
+      tripId, stage, status: 'pending' as const,
+      dueAt: new Date(plannedFinishAt.getTime() + delayMinutes * 60_000),
+    })));
+    await database.update(trips).set({ plannedFinishAt, updatedAt: new Date() }).where(eq(trips.id, tripId));
+  },
+  async finishTrip({ tripId, finishedAt }) {
+    await database.update(trips).set({ status: 'finished', finishedAt, updatedAt: finishedAt }).where(eq(trips.id, tripId));
+  },
+  async cancelPendingAlerts(tripId) {
+    await database.update(alertEvents).set({ status: 'cancelled' })
+      .where(and(eq(alertEvents.tripId, tripId), eq(alertEvents.status, 'pending')));
+  },
+});
+
+const databaseRepository: TripCommandsRepository = {
+  transaction: async (operation) => {
+    const { db } = await import('@/src/db/client');
+    return db.transaction(async (transaction) => operation(databaseTransaction(transaction)));
+  },
+  ...databaseTransaction(undefined),
+};
