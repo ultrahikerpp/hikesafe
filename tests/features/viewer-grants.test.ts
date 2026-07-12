@@ -39,6 +39,34 @@ describe('authorizeViewerGrant', () => {
     }, store)).resolves.toBe(false);
   });
 
+  it('rejects an expired grant even while its trip is unfinished', async () => {
+    const store = repository({
+      findDirectGuardianGrants: vi.fn().mockResolvedValue([{
+        tokenHash: hash('valid-token'),
+        finishedAt: null,
+        expiresAt: new Date('2026-07-11T05:00:00.000Z'),
+      }]),
+    });
+
+    await expect(authorizeViewerGrant({
+      tripId: 'trip-1', token: 'valid-token', lineUserId: 'U-guardian', now,
+    }, store)).resolves.toBe(false);
+  });
+
+  it('uses the earlier grant expiry after a trip has finished', async () => {
+    const store = repository({
+      findDirectGuardianGrants: vi.fn().mockResolvedValue([{
+        tokenHash: hash('valid-token'),
+        finishedAt: new Date('2026-07-01T05:00:00.000Z'),
+        expiresAt: new Date('2026-07-11T05:00:00.000Z'),
+      }]),
+    });
+
+    await expect(authorizeViewerGrant({
+      tripId: 'trip-1', token: 'valid-token', lineUserId: 'U-guardian', now,
+    }, store)).resolves.toBe(false);
+  });
+
   it('does not authorize a legacy group or room grant', async () => {
     const store = repository({ findDirectGuardianGrants: vi.fn().mockResolvedValue([]) });
 

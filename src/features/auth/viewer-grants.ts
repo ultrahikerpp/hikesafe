@@ -21,7 +21,9 @@ export interface AuthorizeViewerGrantInput {
 }
 
 const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
-const expiresAfterFinish = (finishedAt: Date, now: Date) => finishedAt.getTime() + retentionMs <= now.getTime();
+const effectiveExpiry = ({ expiresAt, finishedAt }: ViewerGrant) => finishedAt
+  ? new Date(Math.min(expiresAt.getTime(), finishedAt.getTime() + retentionMs))
+  : expiresAt;
 
 export const matchesViewerGrantToken = (token: string, tokenHash: string) => {
   const received = Buffer.from(hashToken(token), 'hex');
@@ -53,6 +55,6 @@ export const authorizeViewerGrant = async (
   { tripId, token, lineUserId, now = new Date() }: AuthorizeViewerGrantInput,
   repository: ViewerGrantRepository = databaseRepository,
 ) => (await repository.findDirectGuardianGrants(tripId, lineUserId)).some((grant) => {
-  if (grant.finishedAt && expiresAfterFinish(grant.finishedAt, now)) return false;
+  if (effectiveExpiry(grant) <= now) return false;
   return matchesViewerGrantToken(token, grant.tokenHash);
 });
