@@ -40,3 +40,25 @@ Implemented and verified with Node 24.
 The formal route catalog remains blocked. This task neither imports nor exposes
 fixtures as a production catalog and does not imply that route selection is
 ready for production use.
+
+## Reviewer P1 follow-up
+
+- The active-trip server page now verifies the session before reading data and
+  loads the active trip through a participant-scoped query. It passes the
+  actual `startedAt`, `plannedFinishAt`, last persisted (therefore successfully
+  sent) check-in, and server-derived GPS freshness into `TripActions`.
+- Elapsed time is calculated from the same server `now` value and `startedAt`.
+- Extension and finish now cancel every unsent alert (`pending` and `claimed`),
+  so an old claimed stage no longer blocks its replacement.
+- The Task 7 delivery contract requires a stable alert event ID, an immediate
+  event-ID check for `pending` plus active trip status before delivery, and the
+  same ID as the provider idempotency key.
+- Added regression coverage for participant scoping, elapsed duration,
+  start/check-in/extend idempotency, claimed-stage rescheduling, and the alert
+  delivery contract.
+
+### Follow-up verification
+
+- Focused lifecycle/UI/contract tests: 17 passed.
+- Full suite: 99 passed across 21 files.
+- Production build: passed with Node 24.

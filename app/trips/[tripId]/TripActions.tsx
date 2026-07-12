@@ -8,18 +8,20 @@ import {
   flushCheckIns,
   type QueuedCheckIn,
 } from '@/src/offline/check-in-queue';
+import type { ActiveTripInitialState } from '@/src/features/trips/active-trip';
 
-export interface ActiveTripState {
-  startedAt?: string;
-  plannedFinishAt?: string;
-  lastSuccessfulCheckInAt?: string;
-  gpsFreshness: string;
-  pendingQueueCount: number;
-}
+export type ActiveTripState = ActiveTripInitialState;
 
 export const formatTime = (value?: string) => value
   ? `${new Date(value).toISOString().slice(0, 16).replace('T', ' ')} UTC`
   : '尚未取得';
+
+export const formatElapsed = (startedAt?: string, now = new Date().toISOString()) => {
+  if (!startedAt) return '尚未取得';
+  const minutes = Math.max(0, Math.floor((new Date(now).getTime() - new Date(startedAt).getTime()) / 60_000));
+  const hours = Math.floor(minutes / 60);
+  return hours > 0 ? `${hours} 小時 ${minutes % 60} 分鐘` : `${minutes} 分鐘`;
+};
 
 const locationFix = (): Promise<{ latitude: number; longitude: number; accuracyMeters: number; capturedAt: string; source: 'gps' } | undefined> =>
   new Promise((resolve) => {
@@ -106,7 +108,7 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
 
   return <section aria-label="進行中行程">
     <dl>
-      <div><dt>經過時間</dt><dd>{initialState.startedAt ? `自 ${formatTime(initialState.startedAt)}` : '尚未取得'}</dd></div>
+      <div><dt>經過時間</dt><dd>{formatElapsed(initialState.startedAt, initialState.now)}</dd></div>
       <div><dt>預計下山</dt><dd>{formatTime(initialState.plannedFinishAt)}</dd></div>
       <div><dt>最後成功送出</dt><dd>{formatTime(lastSuccessfulCheckInAt)}</dd></div>
       <div><dt>目前 GPS</dt><dd>{gpsFreshness}</dd></div>

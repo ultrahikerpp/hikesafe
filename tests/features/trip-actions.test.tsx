@@ -1,15 +1,20 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { TripActions } from '@/app/trips/[tripId]/TripActions';
+import { formatElapsed, TripActions } from '@/app/trips/[tripId]/TripActions';
 
 describe('TripActions', () => {
+  it('calculates elapsed time from the supplied server now and start time', () => {
+    expect(formatElapsed('2026-07-12T00:00:00.000Z', '2026-07-12T01:02:03.000Z')).toBe('1 小時 2 分鐘');
+  });
+
   it('shows active-trip status and all four required actions without treating pending work as sent', () => {
     render(<TripActions tripId="trip-1" initialState={{
       startedAt: '2026-07-12T00:00:00.000Z',
       plannedFinishAt: '2026-07-12T05:00:00.000Z',
       lastSuccessfulCheckInAt: '2026-07-12T00:30:00.000Z',
       gpsFreshness: '新鮮（1 分鐘前）',
+      now: '2026-07-12T01:00:00.000Z',
       pendingQueueCount: 2,
     }} />);
 

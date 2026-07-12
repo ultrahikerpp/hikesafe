@@ -40,9 +40,9 @@ export interface TripCommandsTransaction {
   saveIdempotencyResponse(input: { userId: string; key: string; result: unknown }): Promise<void>;
   activateTrip(input: { tripId: string; startedAt: Date }): Promise<void>;
   insertCheckIn(input: Omit<StoredCheckIn, 'id'>): Promise<StoredCheckIn>;
-  replacePendingAlertSchedule(input: { tripId: string; plannedFinishAt: Date }): Promise<void>;
+  replaceUnsentAlertSchedule(input: { tripId: string; plannedFinishAt: Date }): Promise<void>;
   finishTrip(input: { tripId: string; finishedAt: Date }): Promise<void>;
-  cancelPendingAlerts(tripId: string): Promise<void>;
+  cancelUnsentAlerts(tripId: string): Promise<void>;
 }
 
 export interface TripCommandsRepository extends TripCommandsTransaction {
@@ -165,7 +165,7 @@ export const startTrip = async (
     assertStatus(trip, 'draft');
     assertGps(command.location, command.now);
     await transaction.activateTrip({ tripId: trip.id, startedAt: command.now });
-    await transaction.replacePendingAlertSchedule({ tripId: trip.id, plannedFinishAt: trip.plannedFinishAt });
+    await transaction.replaceUnsentAlertSchedule({ tripId: trip.id, plannedFinishAt: trip.plannedFinishAt });
     return { tripId: trip.id, status: 'active' as const, startedAt: command.now };
   });
 });
@@ -199,7 +199,7 @@ export const extendTrip = async (
     if (command.plannedFinishAt <= command.now || command.plannedFinishAt <= trip.plannedFinishAt) {
       throw new Error('Planned finish must extend the active trip');
     }
-    await transaction.replacePendingAlertSchedule({ tripId: trip.id, plannedFinishAt: command.plannedFinishAt });
+    await transaction.replaceUnsentAlertSchedule({ tripId: trip.id, plannedFinishAt: command.plannedFinishAt });
     return { tripId: trip.id, plannedFinishAt: command.plannedFinishAt };
   });
 });
@@ -217,7 +217,7 @@ export const finishTrip = async (
     assertStatus(trip, 'active');
     const finalCheckIn = await transaction.insertCheckIn(checkInValues(command));
     await transaction.finishTrip({ tripId: trip.id, finishedAt: command.now });
-    await transaction.cancelPendingAlerts(trip.id);
+    await transaction.cancelUnsentAlerts(trip.id);
     return { tripId: trip.id, finishedAt: command.now, finalCheckInId: finalCheckIn.id };
   });
 });
@@ -254,9 +254,9 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
     const [checkIn] = await database.insert(checkIns).values(value).returning();
     return checkIn as StoredCheckIn;
   },
-  async replacePendingAlertSchedule({ tripId, plannedFinishAt }) {
+  async replaceUnsentAlertSchedule({ tripId, plannedFinishAt }) {
     await database.update(alertEvents).set({ status: 'cancelled' })
-      .where(and(eq(alertEvents.tripId, tripId), eq(alertEvents.status, 'pending')));
+      .where(and(eq(alertEvents.tripId, tripId), sql`${alertEvents.status} in ('pending', 'claimed')`));
     await database.insert(alertEvents).values(stages.map(({ stage, delayMinutes }) => ({
       tripId, stage, status: 'pending' as const,
       dueAt: new Date(plannedFinishAt.getTime() + delayMinutes * 60_000),
@@ -266,9 +266,9 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
   async finishTrip({ tripId, finishedAt }) {
     await database.update(trips).set({ status: 'finished', finishedAt, updatedAt: finishedAt }).where(eq(trips.id, tripId));
   },
-  async cancelPendingAlerts(tripId) {
+  async cancelUnsentAlerts(tripId) {
     await database.update(alertEvents).set({ status: 'cancelled' })
-      .where(and(eq(alertEvents.tripId, tripId), eq(alertEvents.status, 'pending')));
+      .where(and(eq(alertEvents.tripId, tripId), sql`${alertEvents.status} in ('pending', 'claimed')`));
   },
 });
 
