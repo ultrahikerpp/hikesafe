@@ -52,3 +52,13 @@ route selection is ready.
   list is valid until a guardian binding has been created.
 - Follow-up verification with Node 24.18.0: focused 18 tests passed; full
   suite 76 tests passed; production build passed.
+
+## Authorization regression follow-up
+
+- A verified active trip member may now view precise GPS without a viewer
+  grant. The viewer route still verifies the LINE session before any member or
+  grant decision.
+- A nonmember remains denied without a grant and is allowed only when that
+  verified session is paired with an active viewer grant.
+- Follow-up verification with Node 24.18.0: focused 22 tests passed; full
+  suite 80 tests passed; production build passed.

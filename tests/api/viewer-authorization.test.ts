@@ -41,4 +41,35 @@ describe('GET /api/trips/:tripId/viewer', () => {
       tripId: 'trip-1', userId: 'line-session-user', viewerToken: 'token',
     });
   });
+
+  it('allows an authenticated trip member without a viewer grant', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: 'line-session-member', lineUserId: 'line-member', expiresAt: new Date(),
+    });
+    vi.mocked(authorizeTripViewer).mockResolvedValue(true);
+
+    const response = await GET(new Request(
+      'http://localhost/api/trips/trip-1/viewer',
+      { headers: { cookie: 'besafe_session=session-token' } },
+    ), context);
+
+    expect(response.status).toBe(200);
+    expect(authorizeTripViewer).toHaveBeenCalledWith({
+      tripId: 'trip-1', userId: 'line-session-member', viewerToken: undefined,
+    });
+  });
+
+  it('rejects an authenticated nonmember without a viewer grant', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: 'line-session-user', lineUserId: 'line-user', expiresAt: new Date(),
+    });
+    vi.mocked(authorizeTripViewer).mockResolvedValue(false);
+
+    const response = await GET(new Request(
+      'http://localhost/api/trips/trip-1/viewer',
+      { headers: { cookie: 'besafe_session=session-token' } },
+    ), context);
+
+    expect(response.status).toBe(403);
+  });
 });
