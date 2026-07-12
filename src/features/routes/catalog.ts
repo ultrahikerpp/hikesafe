@@ -16,6 +16,10 @@ export type RouteCatalogRecord = RouteInput & {
   isActive: boolean;
 };
 
+export interface RouteCatalogRepository {
+  findActiveRoutes(): Promise<RouteCatalogRecord[]>;
+}
+
 const normalize = (value: string) =>
   value.normalize('NFKC').trim().toLocaleLowerCase('zh-Hant-TW');
 
@@ -77,5 +81,15 @@ const loadActiveRoutes = async (): Promise<RouteCatalogRecord[]> => {
   }));
 };
 
-export const searchRoutes = async (query: RouteSearchQuery) =>
-  filterRoutes(await loadActiveRoutes(), query);
+const databaseRouteCatalogRepository: RouteCatalogRepository = {
+  findActiveRoutes: loadActiveRoutes,
+};
+
+export const searchRoutes = async (
+  query: RouteSearchQuery,
+  repository?: RouteCatalogRepository,
+) =>
+  filterRoutes(
+    await (repository ?? databaseRouteCatalogRepository).findActiveRoutes(),
+    query,
+  );

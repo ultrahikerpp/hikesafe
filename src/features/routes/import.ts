@@ -1,15 +1,35 @@
 import { z } from 'zod';
 
+import canonicalHundredPeakNamesJson from '@/data/routes/hundred-peaks.json';
+
+export const canonicalHundredPeakNames = z
+  .array(z.string().min(1))
+  .length(100)
+  .parse(canonicalHundredPeakNamesJson);
+
+const roundTo = (value: number, decimalPlaces: number) => {
+  const factor = 10 ** decimalPlaces;
+  return Math.round((value + Number.EPSILON) * factor) / factor;
+};
+
 export const routeInputSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/),
   mountainName: z.string().min(1),
   routeName: z.string().min(1),
   region: z.string().min(1),
   kind: z.enum(['hundred_peak', 'suburban']),
-  startLat: z.number().min(21).max(26),
-  startLng: z.number().min(119).max(123),
-  distanceKm: z.number().positive(),
-  elevationGainM: z.number().nonnegative(),
+  startLat: z.number().min(21).max(26).transform((value) => roundTo(value, 6)),
+  startLng: z
+    .number()
+    .min(119)
+    .max(123)
+    .transform((value) => roundTo(value, 6)),
+  distanceKm: z
+    .number()
+    .positive()
+    .transform((value) => roundTo(value, 2))
+    .pipe(z.number().positive()),
+  elevationGainM: z.number().int().nonnegative(),
   durationMinutes: z.number().int().positive(),
   difficulty: z.number().int().min(1).max(5),
   checkpoints: z
@@ -108,6 +128,25 @@ export const analyzeRouteCatalog = (
   if (hundredPeaks !== 100) {
     errors.push(`Expected exactly 100 hundred peaks, found ${hundredPeaks}`);
   }
+
+  const hundredPeakNames = catalog
+    .filter(({ kind }) => kind === 'hundred_peak')
+    .map(({ mountainName }) => mountainName);
+  const hundredPeakNameSet = new Set(hundredPeakNames);
+  const missingHundredPeaks = canonicalHundredPeakNames.filter(
+    (name) => !hundredPeakNameSet.has(name),
+  );
+  const unexpectedHundredPeaks = [...hundredPeakNameSet].filter(
+    (name) => !canonicalHundredPeakNames.includes(name),
+  );
+  if (missingHundredPeaks.length > 0) {
+    errors.push(`Missing canonical hundred peaks: ${missingHundredPeaks.join(', ')}`);
+  }
+  if (unexpectedHundredPeaks.length > 0) {
+    errors.push(
+      `Unexpected hundred peak names: ${unexpectedHundredPeaks.join(', ')}`,
+    );
+  }
   if (suburbanRoutes < 30) {
     errors.push(`Expected at least 30 suburban routes, found ${suburbanRoutes}`);
   }
@@ -173,6 +212,7 @@ export interface RouteCatalogTransaction {
     slug: string,
   ): Promise<StoredRouteVersion | undefined>;
   deactivateVersion(id: string): Promise<void>;
+  findActiveVersions(): Promise<Array<{ id: string; slug: string }>>;
   createVersion(routeId: string, input: RouteInput): Promise<void>;
 }
 
@@ -261,6 +301,12 @@ const createDatabase = async (): Promise<RouteCatalogDatabase> => {
               .set({ isActive: false })
               .where(eq(routeVersions.id, id));
           },
+          findActiveVersions: async () =>
+            transaction
+              .select({ id: routeVersions.id, slug: routes.slug })
+              .from(routeVersions)
+              .innerJoin(routes, eq(routes.id, routeVersions.routeId))
+              .where(eq(routeVersions.isActive, true)),
           createVersion: async (routeId, input) => {
             await transaction.insert(routeVersions).values({
               routeId,
@@ -316,6 +362,14 @@ export const importRouteCatalog = async (
         await transaction.deactivateVersion(activeVersion.id);
       }
       await transaction.createVersion(routeId, input);
+    }
+
+    const importedSlugs = new Set(catalog.map(({ slug }) => slug));
+    const activeVersions = await transaction.findActiveVersions();
+    for (const version of activeVersions) {
+      if (!importedSlugs.has(version.slug)) {
+        await transaction.deactivateVersion(version.id);
+      }
     }
   });
 };

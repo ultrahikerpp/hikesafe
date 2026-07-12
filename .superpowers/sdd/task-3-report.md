@@ -34,13 +34,20 @@ from the authoritative material verified in this task without inventing fields.
 
 ## Source strategy and research
 
-Only an official managing authority URL can be registered. A route is admitted
-only after a human reviewer can trace all required quantitative and safety fields
-to that authority: distance, elevation gain, duration, checkpoints, evacuation
-points, start coordinates, and review/source version metadata.
+Project governance permits only an official managing authority URL to be
+registered. The code validates URL syntax, exact registry membership, review
+metadata, and catalog coverage; it cannot determine whether an organization is an
+authority or whether a page substantiates each field. A human reviewer must trace
+all required quantitative and safety fields to the authority before adding a
+record: distance, elevation gain, duration, checkpoints, evacuation points, start
+coordinates, and review/source version metadata.
 
 Research used `/browse` on 2026-07-12:
 
+- The 100-name product baseline was cross-checked against the ranked list at
+  <https://zh.wikipedia.org/zh-tw/%E5%8F%B0%E7%81%A3%E7%99%BE%E5%B2%B3>.
+  This is a secondary naming reference, not accepted evidence for route metrics or
+  safety fields.
 - Taiwan Government Data Open Platform search for `台灣百岳`:
   <https://data.gov.tw/datasets/search?p=1&size=10&s=_score_desc&rft=%E7%99%BE%E5%B2%B3>
   did not expose a dataset covering the required route records and fields.
@@ -79,8 +86,35 @@ names. This is the intended launch gate.
 
 Run with Node 24 (`/opt/homebrew/opt/node@24/bin`):
 
-- Focused schema/import/API: 3 files, 18 tests passed.
-- Full suite: 7 files, 35 tests passed after the final invariant correction.
+- Focused schema/import/search/API: 5 files, 26 tests passed.
+- Full suite: 9 files, 43 tests passed after the infrastructure review corrections.
 - `next build`: compiled, type-checked, and generated routes successfully after
   the final invariant correction.
 - `routes:verify`: exit 1 with the blocker above.
+- `node --import tsx scripts/import-routes.ts`: exit 1 with `Route catalog
+  rejected before import` and no environment/database initialization error.
+
+## Infrastructure review corrections
+
+The follow-up review added these test-driven gates without weakening the catalog
+blocker:
+
+- `data/routes/hundred-peaks.json` defines the product's exact 100-name baseline.
+  Verification rejects arbitrary 100-name sets, omissions, duplicate substitutions,
+  and spelling variants. This baseline is a naming/coverage rule, not automated
+  evidence that any route details are authoritative.
+- `scripts/import-routes.ts` reads both catalog and source registry and runs the
+  complete analyzer before any database import. The empty launch catalog now fails
+  with a catalog rejection instead of reaching environment/database initialization.
+- Coordinates and distance are canonicalized to the database's 6/6/2 decimal
+  precision before comparison and insertion; elevation gain must be an integer.
+- A successful full-catalog import deactivates active versions whose slugs were
+  withdrawn. Historical versions remain addressable by existing trips.
+- Import and search have in-memory repository contract coverage. No live PostgreSQL
+  service or credentials were supplied, so these tests do not claim live database
+  integration coverage.
+
+The human governance boundary remains explicit: schema validation, canonical-name
+coverage, and source-registry matching do not prove that a source is official,
+current, or supports the entered distance, elevation, duration, checkpoint, or
+evacuation values. Launch approval requires that separate human review.
