@@ -108,7 +108,8 @@ export function TripForm() {
     </section>}
     {step === 3 && <section>
       <h2>3. 留守與行程資訊</h2>
-      <label>已綁定留守 LINE ID（每行一個）<textarea value={guardianBindingIds} onChange={(event) => setGuardianBindingIds(event.target.value)} /></label>
+      <label>留守綁定 ID（每行一個）<textarea value={guardianBindingIds} onChange={(event) => setGuardianBindingIds(event.target.value)} /></label>
+      <p>尚未建立留守綁定時可留空；建立後請填入已綁定留守設定的 ID。</p>
       <label>交通工具<input required value={vehicle} onChange={(event) => setVehicle(event.target.value)} /></label>
       <label>裝備（每行一項）<textarea value={equipment} onChange={(event) => setEquipment(event.target.value)} /></label>
       <label>出發時間<input required type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} /></label>

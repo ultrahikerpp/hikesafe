@@ -10,8 +10,8 @@ const requestSchema = z.object({
   plannedFinishAt: z.coerce.date(),
   members: z.array(z.object({
     userId: z.string().uuid(),
-    role: z.enum(['leader', 'deputy', 'member']),
-  })).min(1),
+    role: z.enum(['deputy', 'member']),
+  })),
   guardianBindingIds: z.array(z.string().uuid()),
   vehicle: z.string(),
   equipment: z.array(z.string()),
@@ -42,6 +42,9 @@ export const handleCreateTrip = async (request: Request) => {
   }
   const parsed = requestSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  if (parsed.data.members.some((member) => member.userId === session.userId)) {
+    return NextResponse.json({ error: 'Session owner must not be submitted as a member' }, { status: 400 });
+  }
 
   try {
     const result = await createTrip({
@@ -49,8 +52,7 @@ export const handleCreateTrip = async (request: Request) => {
       ownerUserId: session.userId,
       members: [
         { userId: session.userId, role: 'leader' },
-        ...parsed.data.members.filter((member) =>
-          member.role !== 'leader' && member.userId !== session.userId),
+        ...parsed.data.members,
       ],
     });
     return NextResponse.json({ tripId: result.tripId }, { status: 201 });

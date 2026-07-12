@@ -15,7 +15,6 @@ const payload = {
   startsAt: '2026-07-13T01:00:00.000Z',
   plannedFinishAt: '2026-07-13T07:00:00.000Z',
   members: [
-    { userId: '11111111-1111-4111-8111-111111111112', role: 'leader' },
     { userId: '11111111-1111-4111-8111-111111111113', role: 'deputy' },
   ],
   guardianBindingIds: ['11111111-1111-4111-8111-111111111114'],
@@ -65,7 +64,7 @@ describe('POST /api/trips', () => {
     }));
   });
 
-  it('assigns the session user as leader instead of trusting a client leader ID', async () => {
+  it('creates a single-person trip by injecting the session user as leader', async () => {
     vi.mocked(verifySession).mockResolvedValue({
       userId: '11111111-1111-4111-8111-111111111112',
       lineUserId: 'line-owner-1',
@@ -78,15 +77,72 @@ describe('POST /api/trips', () => {
       headers: { cookie: 'besafe_session=session-token' },
       body: JSON.stringify({
         ...payload,
-        members: [{ userId: '11111111-1111-4111-8111-111111111113', role: 'deputy' }],
+        members: [],
       }),
     }));
 
     expect(createTrip).toHaveBeenCalledWith(expect.objectContaining({
       members: [
         { userId: '11111111-1111-4111-8111-111111111112', role: 'leader' },
-        { userId: '11111111-1111-4111-8111-111111111113', role: 'deputy' },
       ],
     }));
+  });
+
+  it('rejects a client-supplied leader instead of filtering it silently', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: '11111111-1111-4111-8111-111111111112',
+      lineUserId: 'line-owner-1', expiresAt: new Date(),
+    });
+
+    const response = await handleCreateTrip(new Request('http://localhost/api/trips', {
+      method: 'POST', headers: { cookie: 'besafe_session=session-token' },
+      body: JSON.stringify({
+        ...payload,
+        members: [{ userId: '11111111-1111-4111-8111-111111111119', role: 'leader' }],
+      }),
+    }));
+
+    expect(response.status).toBe(400);
+    expect(createTrip).not.toHaveBeenCalled();
+  });
+
+  it('rejects a repeated session-owner member instead of silently removing it', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: '11111111-1111-4111-8111-111111111112',
+      lineUserId: 'line-owner-1', expiresAt: new Date(),
+    });
+
+    const response = await handleCreateTrip(new Request('http://localhost/api/trips', {
+      method: 'POST', headers: { cookie: 'besafe_session=session-token' },
+      body: JSON.stringify({
+        ...payload,
+        members: [{ userId: '11111111-1111-4111-8111-111111111112', role: 'member' }],
+      }),
+    }));
+
+    expect(response.status).toBe(400);
+    expect(createTrip).not.toHaveBeenCalled();
+  });
+
+  it('rejects a fake leader payload that reuses an idempotency key', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: '11111111-1111-4111-8111-111111111112',
+      lineUserId: 'line-owner-1', expiresAt: new Date(),
+    });
+    vi.mocked(createTrip).mockResolvedValue({ tripId: 'trip-1', viewerGrants: [] });
+
+    await handleCreateTrip(new Request('http://localhost/api/trips', {
+      method: 'POST', headers: { cookie: 'besafe_session=session-token' }, body: JSON.stringify(payload),
+    }));
+    const response = await handleCreateTrip(new Request('http://localhost/api/trips', {
+      method: 'POST', headers: { cookie: 'besafe_session=session-token' },
+      body: JSON.stringify({
+        ...payload,
+        members: [{ userId: '11111111-1111-4111-8111-111111111119', role: 'leader' }],
+      }),
+    }));
+
+    expect(response.status).toBe(400);
+    expect(createTrip).toHaveBeenCalledTimes(1);
   });
 });
