@@ -26,8 +26,11 @@ export const GET = async (
   const authorized = await authorizeTripViewer({
     tripId,
     userId: session.userId,
+    lineUserId: session.lineUserId,
     viewerToken,
   });
-  if (!authorized) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!authorized) return NextResponse.json(viewerToken
+    ? { error: 'Viewer grant requires an individual LINE guardian binding', code: 'REQUIRES_DIRECT_GUARDIAN_BINDING' }
+    : { error: 'Forbidden' }, { status: 403 });
   return NextResponse.json({ authorized: true });
 };

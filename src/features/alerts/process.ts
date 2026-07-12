@@ -23,6 +23,7 @@ export interface AlertDeliveryWork { id: string; retryKey: string; recipientId?:
 export interface ClaimedDeliveryWork { id: string; claimToken: string; }
 export type PreparedDelivery =
   | { outcome: 'skipped' }
+  | { outcome: 'expired' }
   | { outcome: 'ready'; id: string; claimToken?: string; to: string; retryKey: string; messages: LineMessage[] };
 
 export interface AlertProcessRepository extends AlertDeliveryRepository {
@@ -36,12 +37,15 @@ export interface AlertProcessRepository extends AlertDeliveryRepository {
   prepareDelivery?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<PreparedDelivery>;
   markDeliverySent?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<boolean>;
   rescheduleDeliveryFailure?(input: { deliveryId: string; claimToken?: string; now: Date; error: string }): Promise<boolean>;
+  expireDelivery?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<boolean>;
 }
 
 export interface ProcessDueAlertsInput { now: Date; repository?: AlertProcessRepository; send?: (delivery: AlertDelivery) => Promise<void>; }
 export interface AlertProcessResult { claimed: number; sent: number; failed: number; skipped: number; }
 
 const retryDelaysMinutes = [1, 5, 15, 30] as const;
+const retryWindowMs = (23 * 60 + 45) * 60_000;
+export const retryDeadlineAt = (firstAttemptAt: Date) => new Date(firstAttemptAt.getTime() + retryWindowMs);
 export const retryAt = (now: Date, attempt: number) => new Date(now.getTime()
   + retryDelaysMinutes[Math.min(Math.max(attempt, 1), retryDelaysMinutes.length) - 1] * 60_000);
 
@@ -101,6 +105,11 @@ export const processDueAlerts = async ({ now, repository = databaseRepository, s
   if (!repository.claimDueDeliveries || !repository.prepareDelivery || !repository.markDeliverySent || !repository.rescheduleDeliveryFailure) return result;
   for (const delivery of await repository.claimDueDeliveries({ now, limit: 100 })) {
     const prepared = await repository.prepareDelivery({ deliveryId: delivery.id, claimToken: delivery.claimToken, now });
+    if (prepared.outcome === 'expired') {
+      await repository.expireDelivery?.({ deliveryId: delivery.id, claimToken: delivery.claimToken, now });
+      result.skipped += 1;
+      continue;
+    }
     if (prepared.outcome === 'skipped') { result.skipped += 1; continue; }
     try {
       try { await send({ to: prepared.to, messages: prepared.messages, idempotencyKey: prepared.retryKey }); }
@@ -179,13 +188,15 @@ const databaseRepository: AlertProcessRepository = {
       import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm'),
     ]);
     return db.transaction(async (transaction) => {
-      const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, guardianId: alertDeliveries.guardianId, guardianLineUserId: alertDeliveries.guardianLineUserId, viewerGrantEligible: alertDeliveries.viewerGrantEligible, grantVersion: alertDeliveries.grantVersion, stage: alertEvents.stage, tripId: trips.id, tripStatus: trips.status, plannedFinishAt: trips.plannedFinishAt, routeName: routeVersions.routeName, leaderPhone: trips.leaderPhone })
+      const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, guardianId: alertDeliveries.guardianId, guardianLineUserId: alertDeliveries.guardianLineUserId, viewerGrantEligible: alertDeliveries.viewerGrantEligible, grantVersion: alertDeliveries.grantVersion, firstAttemptAt: alertDeliveries.firstAttemptAt, retryDeadlineAt: alertDeliveries.retryDeadlineAt, stage: alertEvents.stage, tripId: trips.id, tripStatus: trips.status, plannedFinishAt: trips.plannedFinishAt, routeName: routeVersions.routeName, leaderPhone: trips.leaderPhone })
         .from(alertDeliveries).innerJoin(alertEvents, eq(alertEvents.id, alertDeliveries.eventId)).innerJoin(trips, eq(trips.id, alertEvents.tripId)).innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
         .where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'claimed'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).for('update').limit(1);
       if (!delivery || delivery.tripStatus !== 'active') {
         if (delivery) await transaction.update(alertDeliveries).set({ status: 'cancelled' }).where(eq(alertDeliveries.id, delivery.id));
         return { outcome: 'skipped' as const };
       }
+      const deadline = delivery.retryDeadlineAt ?? retryDeadlineAt(now);
+      if (deadline <= now) return { outcome: 'expired' as const };
       let messages = delivery.message as LineMessage[] | null;
       if (!messages) {
         const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, locationStatus: checkIns.locationStatus }).from(checkIns).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
@@ -194,12 +205,12 @@ const databaseRepository: AlertProcessRepository = {
           reportText: `BeSafe 通報摘要\n路線：${delivery.routeName}\n隊伍：${members.map((member) => member.name).join('、')}\n預計下山：${delivery.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.createdAt?.toISOString() ?? '尚無回報'}` };
         if (delivery.stage !== 'due' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
           const token = createGrantToken(delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET);
-          await transaction.insert(viewerGrants).values({ tripId: delivery.tripId, guardianId: delivery.guardianId, deliveryId: delivery.id, tokenVersion: delivery.grantVersion, guardianLineUserId: delivery.guardianLineUserId, tokenHash: hashViewerGrant(token), expiresAt: new Date(now.getTime() + 24 * 60 * 60_000) }).onConflictDoNothing();
+          await transaction.insert(viewerGrants).values({ tripId: delivery.tripId, guardianId: delivery.guardianId, deliveryId: delivery.id, tokenVersion: delivery.grantVersion, guardianLineUserId: delivery.guardianLineUserId, tokenHash: hashViewerGrant(token), expiresAt: deadline }).onConflictDoNothing();
           trip.viewerGrantUrl = `https://liff.line.me/${getEnv().NEXT_PUBLIC_LIFF_ID}/api/trips/${delivery.tripId}/guardian-viewer?grant=${grantTokenMarker}`;
         }
         messages = [buildLineMessage(delivery.stage, trip)];
       }
-      await transaction.update(alertDeliveries).set({ status: 'sending', message: messages, claimExpiresAt: new Date(now.getTime() + 5 * 60_000) })
+      await transaction.update(alertDeliveries).set({ status: 'sending', message: messages, firstAttemptAt: delivery.firstAttemptAt ?? now, retryDeadlineAt: deadline, claimExpiresAt: new Date(now.getTime() + 5 * 60_000) })
         .where(and(eq(alertDeliveries.id, delivery.id), eq(alertDeliveries.status, 'claimed'), eq(alertDeliveries.claimToken, delivery.claimToken!)));
       return { outcome: 'ready' as const, id: delivery.id, claimToken: delivery.claimToken!, to: delivery.recipientId, retryKey: delivery.retryKey,
         messages: materializeDeliveryMessages(messages, delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET) };
@@ -214,7 +225,15 @@ const databaseRepository: AlertProcessRepository = {
 
   async rescheduleDeliveryFailure({ deliveryId, claimToken, now, error }) {
     const [{ db }, { alertDeliveries }, { and, eq, sql }] = await Promise.all([import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm')]);
-    const updated = await db.update(alertDeliveries).set({ status: 'pending', claimedAt: null, claimToken: null, claimExpiresAt: null, attempts: sql`attempts + 1`, nextAttemptAt: sql`CASE LEAST(attempts + 1, 4) WHEN 1 THEN ${now} + interval '1 minute' WHEN 2 THEN ${now} + interval '5 minutes' WHEN 3 THEN ${now} + interval '15 minutes' ELSE ${now} + interval '30 minutes' END`, lastError: error.slice(0, 1000) }).where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'sending'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).returning({ id: alertDeliveries.id });
+    const delay = sql`CASE LEAST(attempts + 1, 4) WHEN 1 THEN ${now} + interval '1 minute' WHEN 2 THEN ${now} + interval '5 minutes' WHEN 3 THEN ${now} + interval '15 minutes' ELSE ${now} + interval '30 minutes' END`;
+    const updated = await db.update(alertDeliveries).set({ status: sql`CASE WHEN retry_deadline_at <= ${delay} THEN 'manual_review'::alert_delivery_status ELSE 'pending'::alert_delivery_status END`, claimedAt: null, claimToken: null, claimExpiresAt: null, attempts: sql`attempts + 1`, nextAttemptAt: sql`CASE WHEN retry_deadline_at <= ${delay} THEN NULL ELSE ${delay} END`, lastError: error.slice(0, 1000) }).where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'sending'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).returning({ id: alertDeliveries.id });
+    return updated.length === 1;
+  },
+
+  async expireDelivery({ deliveryId, claimToken, now }) {
+    const [{ db }, { alertDeliveries }, { and, eq }] = await Promise.all([import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm')]);
+    const updated = await db.update(alertDeliveries).set({ status: 'manual_review', claimExpiresAt: null, lastError: 'LINE retry window expired; manual review required' })
+      .where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'claimed'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).returning({ id: alertDeliveries.id });
     return updated.length === 1;
   },
 

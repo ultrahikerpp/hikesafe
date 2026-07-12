@@ -4,6 +4,7 @@ import {
   createGrantToken,
   materializeDeliveryMessages,
   processDueAlerts,
+  retryDeadlineAt,
   retryAt,
   type AlertDeliveryWork,
   type AlertProcessRepository,
@@ -237,5 +238,28 @@ describe('processDueAlerts', () => {
       '2026-07-12T05:30:00.000Z',
       '2026-07-12T05:30:00.000Z',
     ]);
+  });
+
+  it('does not call LINE after the 23h45m retry deadline and records manual review', async () => {
+    const store = repository({
+      claimDueActiveEvents: vi.fn().mockResolvedValue([]),
+      claimDueDeliveries: vi.fn().mockResolvedValue([{ id: 'expired', claimToken: 'claim' }]),
+      prepareDelivery: vi.fn().mockResolvedValue({ outcome: 'expired' }),
+      markDeliverySent: vi.fn(),
+      rescheduleDeliveryFailure: vi.fn(),
+      expireDelivery: vi.fn().mockResolvedValue(true),
+    });
+    const send = vi.fn();
+
+    await expect(processDueAlerts({ now, repository: store, send })).resolves.toEqual({ claimed: 0, sent: 0, failed: 0, skipped: 1 });
+    expect(send).not.toHaveBeenCalled();
+    expect(store.expireDelivery).toHaveBeenCalledWith({ deliveryId: 'expired', claimToken: 'claim', now });
+  });
+
+  it('treats the 23h45m deadline and the 24h boundary as terminal', () => {
+    const firstAttempt = new Date('2026-07-12T05:00:00.000Z');
+    expect(retryDeadlineAt(firstAttempt).toISOString()).toBe('2026-07-13T04:45:00.000Z');
+    expect(retryDeadlineAt(firstAttempt) <= new Date('2026-07-13T04:45:00.000Z')).toBe(true);
+    expect(retryDeadlineAt(firstAttempt) <= new Date('2026-07-13T05:00:00.000Z')).toBe(true);
   });
 });

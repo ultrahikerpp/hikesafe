@@ -55,6 +55,7 @@ export const alertDeliveryStatusEnum = pgEnum('alert_delivery_status', [
   'pending',
   'claimed',
   'sending',
+  'manual_review',
   'sent',
   'cancelled',
 ]);
@@ -328,6 +329,8 @@ export const alertDeliveries = pgTable(
     claimExpiresAt: timestamp('claim_expires_at', { withTimezone: true }),
     sentAt: timestamp('sent_at', { withTimezone: true }),
     attempts: integer('attempts').notNull().default(0),
+    firstAttemptAt: timestamp('first_attempt_at', { withTimezone: true }),
+    retryDeadlineAt: timestamp('retry_deadline_at', { withTimezone: true }),
     lastError: text('last_error'),
     message: jsonb('message'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
