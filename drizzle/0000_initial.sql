@@ -160,7 +160,7 @@ CREATE INDEX "check_ins_last_available_location_idx" ON "check_ins" USING btree 
 CREATE UNIQUE INDEX "guardians_id_trip_unique" ON "guardians" USING btree ("id","trip_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "guardians_trip_line_binding_unique" ON "guardians" USING btree ("trip_id","line_binding_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "idempotency_keys_user_key_unique" ON "idempotency_keys" USING btree ("user_id","key");--> statement-breakpoint
-CREATE UNIQUE INDEX "route_versions_route_source_version_unique" ON "route_versions" USING btree ("route_id","source_version");--> statement-breakpoint
+CREATE INDEX "route_versions_route_source_version_idx" ON "route_versions" USING btree ("route_id","source_version");--> statement-breakpoint
 CREATE UNIQUE INDEX "route_versions_one_active_per_route" ON "route_versions" USING btree ("route_id") WHERE "route_versions"."is_active" = true;--> statement-breakpoint
 CREATE INDEX "route_versions_active_catalog_idx" ON "route_versions" USING btree ("region","kind","mountain_name","route_name") WHERE "route_versions"."is_active" = true;--> statement-breakpoint
 CREATE UNIQUE INDEX "trip_members_trip_user_unique" ON "trip_members" USING btree ("trip_id","user_id");--> statement-breakpoint

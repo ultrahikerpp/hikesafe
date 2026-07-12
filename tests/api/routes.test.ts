@@ -1,0 +1,84 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { validRoute } from '@/tests/fixtures/routes';
+
+vi.mock('@/src/features/routes/catalog', async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import('@/src/features/routes/catalog')>();
+  return { ...original, searchRoutes: vi.fn() };
+});
+
+import { GET } from '@/app/api/routes/route';
+import {
+  filterRoutes,
+  searchRoutes,
+  type RouteCatalogRecord,
+} from '@/src/features/routes/catalog';
+
+const activeRoute: RouteCatalogRecord = {
+  id: 'version-active',
+  routeId: 'route-1',
+  isActive: true,
+  ...validRoute,
+};
+
+describe('route catalog search', () => {
+  it('normalizes substring queries and excludes superseded versions', () => {
+    const routes = [
+      activeRoute,
+      {
+        ...activeRoute,
+        id: 'version-old',
+        sourceVersion: '2026-07-11',
+        reviewedAt: '2026-07-11',
+        isActive: false,
+      },
+      {
+        ...activeRoute,
+        id: 'version-other',
+        routeId: 'route-2',
+        slug: 'qilai-main',
+        mountainName: '奇萊主山',
+      },
+    ];
+
+    expect(
+      filterRoutes(routes, { q: '  合歡  ', kind: 'hundred_peak' }).map(
+        ({ id }) => id,
+      ),
+    ).toEqual(['version-active']);
+  });
+
+  it('filters by region', () => {
+    expect(filterRoutes([activeRoute], { region: '花蓮縣' })).toEqual([]);
+  });
+});
+
+describe('GET /api/routes', () => {
+  beforeEach(() => vi.mocked(searchRoutes).mockReset());
+
+  it('returns approved versions with source metadata', async () => {
+    vi.mocked(searchRoutes).mockResolvedValue([activeRoute]);
+
+    const response = await GET(
+      new Request(
+        'http://localhost/api/routes?q=%E5%90%88%E6%AD%A1&kind=hundred_peak',
+      ),
+    );
+    const body = await response.json();
+
+    expect(searchRoutes).toHaveBeenCalledWith({
+      q: '合歡',
+      region: undefined,
+      kind: 'hundred_peak',
+    });
+    expect(body.routes).toEqual([
+      expect.objectContaining({
+        id: 'version-active',
+        sourceUrl: 'https://www.taroko.gov.tw/',
+        sourceVersion: '2026-07-12',
+        reviewedAt: '2026-07-12',
+      }),
+    ]);
+  });
+});

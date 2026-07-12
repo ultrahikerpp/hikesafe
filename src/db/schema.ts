@@ -110,7 +110,7 @@ export const routeVersions = pgTable(
       .defaultNow(),
   },
   (table) => [
-    uniqueIndex('route_versions_route_source_version_unique').on(
+    index('route_versions_route_source_version_idx').on(
       table.routeId,
       table.sourceVersion,
     ),

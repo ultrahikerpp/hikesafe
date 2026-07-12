@@ -116,8 +116,8 @@ describe('database schema', () => {
     expect(indexes).toEqual(
       expect.arrayContaining([
         {
-          name: 'route_versions_route_source_version_unique',
-          unique: true,
+          name: 'route_versions_route_source_version_idx',
+          unique: false,
           partial: false,
         },
         {
@@ -187,7 +187,7 @@ describe('initial migration contract', () => {
 
   it('creates uniqueness and query indexes with the required predicates', () => {
     expect(migration).toContain(
-      'CREATE UNIQUE INDEX "route_versions_route_source_version_unique" ON "route_versions" USING btree ("route_id","source_version")',
+      'CREATE INDEX "route_versions_route_source_version_idx" ON "route_versions" USING btree ("route_id","source_version")',
     );
     expect(migration).toContain(
       'CREATE UNIQUE INDEX "route_versions_one_active_per_route" ON "route_versions" USING btree ("route_id") WHERE "route_versions"."is_active" = true',

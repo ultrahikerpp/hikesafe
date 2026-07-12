@@ -724,8 +724,8 @@
         }
       },
       "indexes": {
-        "route_versions_route_source_version_unique": {
-          "name": "route_versions_route_source_version_unique",
+        "route_versions_route_source_version_idx": {
+          "name": "route_versions_route_source_version_idx",
           "columns": [
             {
               "expression": "route_id",
@@ -740,7 +740,7 @@
               "nulls": "last"
             }
           ],
-          "isUnique": true,
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
