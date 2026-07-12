@@ -1,6 +1,7 @@
 import { and, eq, gt } from 'drizzle-orm';
 
 import { hashViewerGrant } from '@/src/lib/idempotency';
+import { authorizeViewerGrant } from '@/src/features/auth/viewer-grants';
 
 export interface AuthorizeTripViewerRequest {
   tripId: string;
@@ -50,6 +51,12 @@ export const authorizeTripViewer = async (
   if (!request.userId) return false;
   if (!request.requireGrant && await repository.isTripMember(request.tripId, request.userId)) return true;
   if (!request.viewerToken || !request.lineUserId) return false;
+  if (repository === databaseRepository) return authorizeViewerGrant({
+    tripId: request.tripId,
+    token: request.viewerToken,
+    lineUserId: request.lineUserId,
+    now: request.now,
+  });
   return repository.hasActiveViewerGrant(
     request.tripId,
     hashViewerGrant(request.viewerToken),
