@@ -5,3 +5,27 @@
 body {
   margin: 0;
 }
+
+.trip-new {
+  margin: 0 auto;
+  max-width: 32rem;
+  padding: 1rem;
+}
+
+.trip-form label,
+.trip-form input,
+.trip-form select,
+.trip-form textarea,
+.trip-form button {
+  display: block;
+  width: 100%;
+}
+
+.trip-form label,
+.trip-form button {
+  margin-top: 0.75rem;
+}
+
+.trip-form textarea {
+  min-height: 5rem;
+}
