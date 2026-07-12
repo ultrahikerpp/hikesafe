@@ -13,6 +13,7 @@ export interface CreateTripCommand {
   guardianBindingIds: string[];
   vehicle: string;
   equipment: string[];
+  leaderPhone?: string;
   idempotencyKey: string;
 }
 
@@ -160,6 +161,7 @@ const createDatabaseTransaction = (database: any): CreateTripTransaction => ({
       plannedFinishAt: command.plannedFinishAt,
       vehicle: command.vehicle,
       equipment: command.equipment,
+      leaderPhone: command.leaderPhone ?? '',
     }).returning({ id: trips.id });
     return trip;
   },

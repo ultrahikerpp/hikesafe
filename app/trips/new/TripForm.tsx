@@ -26,6 +26,7 @@ export function TripForm() {
   const [guardianBindingIds, setGuardianBindingIds] = useState('');
   const [vehicle, setVehicle] = useState('');
   const [equipment, setEquipment] = useState('');
+  const [leaderPhone, setLeaderPhone] = useState('');
   const [startsAt, setStartsAt] = useState('');
   const [plannedFinishAt, setPlannedFinishAt] = useState('');
   const [idempotencyKey] = useState(() => crypto.randomUUID());
@@ -67,6 +68,7 @@ export function TripForm() {
         guardianBindingIds: splitLines(guardianBindingIds),
         vehicle,
         equipment: splitLines(equipment),
+        leaderPhone,
         idempotencyKey,
       }),
     });
@@ -112,6 +114,7 @@ export function TripForm() {
       <p>尚未建立留守綁定時可留空；建立後請填入已綁定留守設定的 ID。</p>
       <label>交通工具<input required value={vehicle} onChange={(event) => setVehicle(event.target.value)} /></label>
       <label>裝備（每行一項）<textarea value={equipment} onChange={(event) => setEquipment(event.target.value)} /></label>
+      <label>領隊聯絡電話（供留守聯絡）<input type="tel" value={leaderPhone} onChange={(event) => setLeaderPhone(event.target.value)} /></label>
       <label>出發時間<input required type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} /></label>
       <label>預計結束<input required type="datetime-local" value={plannedFinishAt} onChange={(event) => setPlannedFinishAt(event.target.value)} /></label>
       <button type="button" onClick={() => setStep(2)}>上一步</button>

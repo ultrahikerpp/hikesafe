@@ -18,5 +18,5 @@ export const pushLineMessage = async ({ to, messages, idempotencyKey }: LinePush
     },
     body: JSON.stringify({ to, messages }),
   });
-  if (!response.ok) throw new Error(`LINE push failed (${response.status})`);
+  if (!response.ok) throw Object.assign(new Error(`LINE push failed (${response.status})`), { status: response.status });
 };

@@ -1,24 +1,41 @@
+import { randomBytes } from 'node:crypto';
+
 import type { AlertClaim, AlertDeliveryRepository } from '@/src/features/alerts/delivery-contract';
 import type { AlertStage } from '@/src/features/alerts/domain';
 import { buildLineMessage, type AlertMessageTrip, type LineMessage } from '@/src/features/line/messages';
+import { hashViewerGrant } from '@/src/lib/idempotency';
 
 export interface ConfirmedAlertEvent {
   id: string;
   stage: AlertStage;
   trip: AlertMessageTrip;
-  recipients: Array<{ id: string; name: string }>;
+  recipients: Array<{ id: string; name: string; guardianId?: string }>;
 }
 
 export interface AlertProcessRepository extends AlertDeliveryRepository {
   confirmClaimedActiveEvent(claim: AlertClaim): Promise<ConfirmedAlertEvent | undefined>;
   markSent(input: { claim: AlertClaim; now: Date }): Promise<boolean>;
   rescheduleFailure(input: { claim: AlertClaim; now: Date; error: string }): Promise<boolean>;
+  claimDeliveries?(input: { claim: AlertClaim; now: Date }): Promise<AlertDeliveryWork[]>;
+  deliverLocked?(input: {
+    claim: AlertClaim;
+    delivery: AlertDeliveryWork;
+    now: Date;
+    send: (delivery: AlertDelivery) => Promise<void>;
+  }): Promise<'sent' | 'failed' | 'skipped'>;
 }
 
 export interface AlertDelivery {
   to: string;
   messages: LineMessage[];
   idempotencyKey: string;
+}
+
+export interface AlertDeliveryWork {
+  id: string;
+  retryKey: string;
+  recipientId?: string;
+  guardianId?: string | null;
 }
 
 export interface ProcessDueAlertsInput {
@@ -42,6 +59,9 @@ export const retryAt = (now: Date, attempt: number) => new Date(
 
 const noOpSend = async () => undefined;
 
+const isRetryConflict = (error: unknown) =>
+  typeof error === 'object' && error !== null && 'status' in error && error.status === 409;
+
 export const processDueAlerts = async ({
   now,
   repository = databaseRepository,
@@ -51,6 +71,21 @@ export const processDueAlerts = async ({
   const result: AlertProcessResult = { claimed: claims.length, sent: 0, failed: 0, skipped: 0 };
 
   for (const claim of claims) {
+    if (repository.claimDeliveries && repository.deliverLocked) {
+      const deliveries = await repository.claimDeliveries({ claim, now });
+      for (const delivery of deliveries) {
+        const outcome = await repository.deliverLocked({
+          claim,
+          delivery,
+          now,
+          send: async (input) => {
+            try { await send(input); } catch (error) { if (!isRetryConflict(error)) throw error; }
+          },
+        });
+        result[outcome] += 1;
+      }
+      continue;
+    }
     let confirmed = await repository.confirmClaimedActiveEvent(claim);
     if (!confirmed) {
       result.skipped += 1;
@@ -157,6 +192,7 @@ const databaseRepository: AlertProcessRepository = {
       stage: alertEvents.stage,
       plannedFinishAt: trips.plannedFinishAt,
       routeName: routeVersions.routeName,
+      leaderPhone: trips.leaderPhone,
     }).from(alertEvents)
       .innerJoin(trips, eq(trips.id, alertEvents.tripId))
       .innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
@@ -177,7 +213,7 @@ const databaseRepository: AlertProcessRepository = {
     const members = await db.select({ id: users.lineUserId, name: users.displayName })
       .from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId))
       .where(eq(tripMembers.tripId, event.tripId));
-    const guardianRecipients = await db.select({ id: lineBindings.sourceId, name: lineBindings.displayName })
+    const guardianRecipients = await db.select({ id: lineBindings.sourceId, name: lineBindings.displayName, guardianId: guardians.id })
       .from(guardians).innerJoin(lineBindings, eq(lineBindings.id, guardians.lineBindingId))
       .where(and(
         eq(guardians.tripId, event.tripId),
@@ -196,12 +232,124 @@ const databaseRepository: AlertProcessRepository = {
       lastCheckInAt: lastCheckIn?.createdAt ?? null,
       lastLocationStatus,
       viewerGrantUrl,
+      leaderPhone: event.leaderPhone,
       reportText: `BeSafe 通報摘要\n路線：${event.routeName}\n隊伍：${team.join('、')}\n預計下山：${event.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.createdAt?.toISOString() ?? '尚無回報'}`,
     };
     const recipients = event.stage === 'due'
       ? members
-      : guardianRecipients.map(({ id, name }) => ({ id: id!, name: name ?? '留守人員' }));
+      : guardianRecipients.map(({ id, name, guardianId }) => ({ id: id!, name: name ?? '留守人員', guardianId }));
     return { id: event.id, stage: event.stage, trip, recipients };
+  },
+
+  async claimDeliveries({ claim, now }) {
+    const confirmed = await databaseRepository.confirmClaimedActiveEvent(claim);
+    if (!confirmed) return [];
+    const [{ db }, { alertDeliveries }, { sql }] = await Promise.all([
+      import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm'),
+    ]);
+    return db.transaction(async (transaction) => {
+      await transaction.insert(alertDeliveries).values(confirmed.recipients.map((recipient) => ({
+        eventId: claim.eventId,
+        recipientId: recipient.id,
+        guardianId: recipient.guardianId,
+      }))).onConflictDoNothing();
+      const rows = await transaction.execute(sql`
+        WITH due_deliveries AS (
+          SELECT ${alertDeliveries.id}
+          FROM ${alertDeliveries}
+          WHERE ${alertDeliveries.eventId} = ${claim.eventId}
+            AND ${alertDeliveries.status} = 'pending'
+            AND (${alertDeliveries.nextAttemptAt} IS NULL OR ${alertDeliveries.nextAttemptAt} <= ${now})
+          FOR UPDATE SKIP LOCKED
+        )
+        UPDATE ${alertDeliveries}
+        SET status = 'claimed', claim_token = ${claim.claimToken}, claim_version = ${claim.claimVersion},
+            claimed_at = ${now}, claim_expires_at = ${now} + interval '5 minutes'
+        FROM due_deliveries
+        WHERE ${alertDeliveries.id} = due_deliveries.id
+        RETURNING ${alertDeliveries.id}, ${alertDeliveries.retryKey}, ${alertDeliveries.recipientId}, ${alertDeliveries.guardianId}
+      `);
+      return Array.from(rows as Iterable<{ id: string; retry_key: string; recipient_id: string; guardian_id: string | null }>).map((row) => ({
+        id: row.id, retryKey: row.retry_key, recipientId: row.recipient_id, guardianId: row.guardian_id,
+      }));
+    });
+  },
+
+  async deliverLocked({ claim, delivery, now, send }) {
+    const [{ db }, { alertDeliveries, alertEvents, trips, viewerGrants }, { and, eq, sql }] = await Promise.all([
+      import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm'),
+    ]);
+    try {
+      return await db.transaction(async (transaction) => {
+        const [trip] = await transaction.select({ id: trips.id, status: trips.status })
+          .from(trips).innerJoin(alertEvents, eq(alertEvents.tripId, trips.id))
+          .where(eq(alertEvents.id, claim.eventId)).for('update');
+        if (trip?.status !== 'active') {
+          await transaction.update(alertDeliveries).set({ status: 'cancelled' })
+            .where(eq(alertDeliveries.id, delivery.id));
+          return 'skipped' as const;
+        }
+        const [owned] = await transaction.select({ id: alertDeliveries.id })
+          .from(alertDeliveries).innerJoin(alertEvents, eq(alertEvents.id, alertDeliveries.eventId))
+          .where(and(
+            eq(alertDeliveries.id, delivery.id),
+            eq(alertDeliveries.status, 'claimed'),
+            eq(alertDeliveries.claimToken, claim.claimToken),
+            eq(alertDeliveries.claimVersion, claim.claimVersion),
+            eq(alertEvents.status, 'claimed'),
+            eq(alertEvents.claimToken, claim.claimToken),
+            eq(alertEvents.claimVersion, claim.claimVersion),
+          )).limit(1);
+        if (!owned) return 'skipped' as const;
+        const confirmed = await databaseRepository.confirmClaimedActiveEvent(claim);
+        const recipient = confirmed?.recipients.find(({ id }) => id === delivery.recipientId);
+        if (!confirmed || !recipient) return 'skipped' as const;
+        const messageTrip = { ...confirmed.trip };
+        if (confirmed.stage === 'overdue_120' && recipient.guardianId) {
+          const token = randomBytes(32).toString('base64url');
+          await transaction.insert(viewerGrants).values({
+            tripId: confirmed.trip.id,
+            guardianId: recipient.guardianId,
+            tokenHash: hashViewerGrant(token),
+            expiresAt: new Date(now.getTime() + 24 * 60 * 60_000),
+          });
+          messageTrip.viewerGrantUrl = `https://liff.line.me/${process.env.NEXT_PUBLIC_LIFF_ID}/api/trips/${confirmed.trip.id}/guardian-viewer?grant=${encodeURIComponent(token)}`;
+        }
+        await send({
+          to: recipient.id,
+          messages: [buildLineMessage(confirmed.stage, messageTrip)],
+          idempotencyKey: delivery.retryKey,
+        });
+        await transaction.update(alertDeliveries).set({ status: 'sent', sentAt: now })
+          .where(and(eq(alertDeliveries.id, delivery.id), eq(alertDeliveries.status, 'claimed')));
+        const [pending] = await transaction.select({ id: alertDeliveries.id }).from(alertDeliveries)
+          .where(and(eq(alertDeliveries.eventId, claim.eventId), sql`${alertDeliveries.status} <> 'sent'`)).limit(1);
+        if (!pending) await transaction.update(alertEvents).set({ status: 'sent', sentAt: now })
+          .where(eq(alertEvents.id, claim.eventId));
+        return 'sent' as const;
+      });
+    } catch (error) {
+      await db.update(alertDeliveries).set({
+        status: 'pending', claimedAt: null, claimToken: null, claimExpiresAt: null,
+        attempts: sql`attempts + 1`,
+        nextAttemptAt: sql`CASE LEAST(attempts + 1, 4)
+          WHEN 1 THEN ${now} + interval '1 minute'
+          WHEN 2 THEN ${now} + interval '5 minutes'
+          WHEN 3 THEN ${now} + interval '15 minutes'
+          ELSE ${now} + interval '30 minutes'
+        END`,
+        lastError: error instanceof Error ? error.message.slice(0, 1000) : 'LINE delivery failed',
+      }).where(and(eq(alertDeliveries.id, delivery.id), eq(alertDeliveries.status, 'claimed')));
+      await db.update(alertEvents).set({
+        status: 'pending', claimedAt: null, claimToken: null, claimExpiresAt: null,
+      }).where(and(
+        eq(alertEvents.id, claim.eventId),
+        eq(alertEvents.status, 'claimed'),
+        eq(alertEvents.claimToken, claim.claimToken),
+        eq(alertEvents.claimVersion, claim.claimVersion),
+      ));
+      return 'failed' as const;
+    }
   },
 
   async markSent({ claim, now }) {

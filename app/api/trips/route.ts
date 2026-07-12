@@ -15,6 +15,7 @@ const requestSchema = z.object({
   guardianBindingIds: z.array(z.string().uuid()),
   vehicle: z.string(),
   equipment: z.array(z.string()),
+  leaderPhone: z.string().trim().regex(/^\+?[0-9 -]{7,20}$/).optional().default(''),
   idempotencyKey: z.string().uuid(),
 }).strict();
 

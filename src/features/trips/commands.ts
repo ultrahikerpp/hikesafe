@@ -1,11 +1,10 @@
 import { and, eq, sql } from 'drizzle-orm';
 
 import { alertEvents, checkIns, idempotencyKeys, tripMembers, trips } from '@/src/db/schema';
+import { scheduleAlertEvents } from '@/src/features/alerts/domain';
 import { canFinishTrip, type TripRole, type TripStatus } from '@/src/features/trips/domain';
 import { hashIdempotencyRequest } from '@/src/lib/idempotency';
 import { assertFreshLocation, type LocationFix } from '@/src/lib/location';
-
-type AlertStage = 'due' | 'overdue_60' | 'overdue_120';
 
 interface TripSnapshot {
   id: string;
@@ -82,12 +81,6 @@ export interface FinishTripCommand {
   idempotencyKey: string;
   now: Date;
 }
-
-const stages: ReadonlyArray<{ stage: AlertStage; delayMinutes: number }> = [
-  { stage: 'due', delayMinutes: 0 },
-  { stage: 'overdue_60', delayMinutes: 60 },
-  { stage: 'overdue_120', delayMinutes: 120 },
-];
 
 const assertGps = (location: LocationFix, now: Date) => {
   if (location.source !== 'gps') throw new Error('Location must be GPS');
@@ -257,9 +250,8 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
   async replaceUnsentAlertSchedule({ tripId, plannedFinishAt }) {
     await database.update(alertEvents).set({ status: 'cancelled' })
       .where(and(eq(alertEvents.tripId, tripId), sql`${alertEvents.status} in ('pending', 'claimed')`));
-    await database.insert(alertEvents).values(stages.map(({ stage, delayMinutes }) => ({
-      tripId, stage, status: 'pending' as const,
-      dueAt: new Date(plannedFinishAt.getTime() + delayMinutes * 60_000),
+    await database.insert(alertEvents).values(scheduleAlertEvents(tripId, plannedFinishAt).map(({ stage, dueAt }) => ({
+      tripId, stage, status: 'pending' as const, dueAt,
     })));
     await database.update(trips).set({ plannedFinishAt, updatedAt: new Date() }).where(eq(trips.id, tripId));
   },

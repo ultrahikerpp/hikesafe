@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   processDueAlerts,
   retryAt,
+  type AlertDeliveryWork,
   type AlertProcessRepository,
 } from '@/src/features/alerts/process';
 
@@ -31,6 +32,71 @@ const repository = (overrides: Partial<AlertProcessRepository> = {}): AlertProce
 });
 
 describe('processDueAlerts', () => {
+  it('delivers each recipient independently with its persistent retry key', async () => {
+    const deliveries: AlertDeliveryWork[] = [
+      { id: 'delivery-a', retryKey: 'retry-a' },
+      { id: 'delivery-b', retryKey: 'retry-b' },
+    ];
+    const store = repository({
+      claimDeliveries: vi.fn().mockResolvedValue(deliveries),
+      deliverLocked: vi.fn().mockImplementation(async ({ send, delivery }) => {
+        await send({ to: 'line-user-1', messages: [event], idempotencyKey: delivery.retryKey });
+        return 'sent';
+      }),
+    });
+    const send = vi.fn().mockResolvedValue(undefined);
+
+    await processDueAlerts({ now, repository: store, send });
+
+    expect(store.claimDeliveries).toHaveBeenCalledWith({ claim, now });
+    expect(store.deliverLocked).toHaveBeenCalledTimes(2);
+    expect(send.mock.calls.map(([delivery]) => delivery.idempotencyKey)).toEqual(['retry-a', 'retry-b']);
+  });
+
+  it('treats LINE retry-key conflict (409) as an accepted delivery', async () => {
+    const store = repository({
+      claimDeliveries: vi.fn().mockResolvedValue([{ id: 'delivery-1', retryKey: 'retry-1' }]),
+      deliverLocked: vi.fn().mockImplementation(async ({ send, delivery }) => {
+        try { await send({ to: 'line-user-1', messages: [event], idempotencyKey: delivery.retryKey }); }
+        catch (error) { if ((error as Error & { status?: number }).status !== 409) throw error; }
+        return 'sent';
+      }),
+    });
+    const conflict = Object.assign(new Error('retry key already used'), { status: 409 });
+
+    await expect(processDueAlerts({ now, repository: store, send: vi.fn().mockRejectedValue(conflict) }))
+      .resolves.toEqual({ claimed: 1, sent: 1, failed: 0, skipped: 0 });
+  });
+
+  it('keeps a timed-out recipient pending for its own retry without resending other recipients', async () => {
+    const store = repository({
+      claimDeliveries: vi.fn().mockResolvedValue([
+        { id: 'delivery-a', retryKey: 'retry-a' },
+        { id: 'delivery-b', retryKey: 'retry-b' },
+      ]),
+      deliverLocked: vi.fn()
+        .mockResolvedValueOnce('failed')
+        .mockResolvedValueOnce('sent'),
+    });
+
+    await expect(processDueAlerts({ now, repository: store, send: vi.fn() })).resolves.toEqual({
+      claimed: 1, sent: 1, failed: 1, skipped: 0,
+    });
+  });
+
+  it('does not push when lifecycle cancellation wins the trip lock immediately before delivery', async () => {
+    const store = repository({
+      claimDeliveries: vi.fn().mockResolvedValue([{ id: 'delivery-1', retryKey: 'retry-1' }]),
+      deliverLocked: vi.fn().mockResolvedValue('skipped'),
+    });
+    const send = vi.fn();
+
+    await expect(processDueAlerts({ now, repository: store, send })).resolves.toEqual({
+      claimed: 1, sent: 0, failed: 0, skipped: 1,
+    });
+    expect(send).not.toHaveBeenCalled();
+  });
+
   it('claims no more than 100 events and sends with the stable event ID as idempotency key', async () => {
     const store = repository();
     const send = vi.fn().mockResolvedValue(undefined);

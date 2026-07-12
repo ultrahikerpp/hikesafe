@@ -7,6 +7,7 @@ export interface AuthorizeTripViewerRequest {
   userId?: string;
   viewerToken?: string;
   now?: Date;
+  requireGrant?: boolean;
 }
 
 export interface TripViewerAuthorizationRepository {
@@ -45,7 +46,7 @@ export const authorizeTripViewer = async (
   repository: TripViewerAuthorizationRepository = databaseRepository,
 ) => {
   if (!request.userId) return false;
-  if (await repository.isTripMember(request.tripId, request.userId)) return true;
+  if (!request.requireGrant && await repository.isTripMember(request.tripId, request.userId)) return true;
   if (!request.viewerToken) return false;
   return repository.hasActiveViewerGrant(
     request.tripId,

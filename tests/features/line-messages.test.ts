@@ -22,15 +22,21 @@ describe('buildLineMessage', () => {
   });
 
   it('builds a yellow 60-minute guardian card with route, team, last check-in, call action, and no-signal disclaimer', () => {
-    const message = buildLineMessage('overdue_60', trip);
+    const message = buildLineMessage('overdue_60', { ...trip, leaderPhone: '+886912345678' });
 
     expect(message).toEqual(expect.objectContaining({ type: 'flex', altText: expect.stringContaining('60') }));
     expect(JSON.stringify(message)).toContain('#F5C542');
     expect(JSON.stringify(message)).toContain('玉山主峰線');
     expect(JSON.stringify(message)).toContain('阿山、小玉');
     expect(JSON.stringify(message)).toContain('2026-07-12 04:20 UTC');
-    expect(JSON.stringify(message)).toContain('tel:');
+    expect(JSON.stringify(message)).toContain('tel:+886912345678');
     expect(JSON.stringify(message)).toContain('未回報不代表遇險，也可能是無訊號');
+  });
+
+  it('does not generate an empty tel action when no leader contact is available', () => {
+    const message = buildLineMessage('overdue_60', trip);
+    expect(JSON.stringify(message)).not.toContain('tel:');
+    expect(JSON.stringify(message)).toContain('目前沒有可撥號的領隊聯絡資料');
   });
 
   it('builds a red 120-minute guardian card with viewer URL, location, report copy, 119 action, and no automatic-report claim', () => {

@@ -51,6 +51,12 @@ export const alertStatusEnum = pgEnum('alert_status', [
   'sent',
   'cancelled',
 ]);
+export const alertDeliveryStatusEnum = pgEnum('alert_delivery_status', [
+  'pending',
+  'claimed',
+  'sent',
+  'cancelled',
+]);
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -142,6 +148,7 @@ export const trips = pgTable(
     finishedAt: timestamp('finished_at', { withTimezone: true }),
     vehicle: text('vehicle').notNull().default(''),
     equipment: jsonb('equipment').notNull().default([]),
+    leaderPhone: text('leader_phone').notNull().default(''),
     createdAt: timestamp('created_at', { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -298,6 +305,32 @@ export const alertEvents = pgTable(
       .where(
         sql`${table.status} = 'pending' and ${table.nextAttemptAt} is not null`,
       ),
+  ],
+);
+
+export const alertDeliveries = pgTable(
+  'alert_deliveries',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    eventId: uuid('event_id').notNull().references(() => alertEvents.id),
+    recipientId: text('recipient_id').notNull(),
+    guardianId: uuid('guardian_id').references(() => guardians.id),
+    retryKey: uuid('retry_key').notNull().defaultRandom().unique(),
+    status: alertDeliveryStatusEnum('status').notNull().default('pending'),
+    nextAttemptAt: timestamp('next_attempt_at', { withTimezone: true }),
+    claimedAt: timestamp('claimed_at', { withTimezone: true }),
+    claimToken: text('claim_token'),
+    claimVersion: integer('claim_version').notNull().default(0),
+    claimExpiresAt: timestamp('claim_expires_at', { withTimezone: true }),
+    sentAt: timestamp('sent_at', { withTimezone: true }),
+    attempts: integer('attempts').notNull().default(0),
+    lastError: text('last_error'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('alert_deliveries_event_recipient_unique').on(table.eventId, table.recipientId),
+    index('alert_deliveries_pending_idx').on(table.nextAttemptAt)
+      .where(sql`${table.status} = 'pending'`),
   ],
 );
 
