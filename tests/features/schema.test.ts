@@ -71,6 +71,16 @@ describe('database schema', () => {
     expect(activeAlertIndex.config.where).toBeDefined();
   });
 
+  it('stores opaque ownership and expiry for a claimed alert delivery', () => {
+    const columns = getTableConfig(alertEvents).columns.map((column) => column.name);
+
+    expect(columns).toEqual(expect.arrayContaining([
+      'claim_token',
+      'claim_version',
+      'claim_expires_at',
+    ]));
+  });
+
   it('keeps location status and nullable location fields consistent', () => {
     const config = getTableConfig(checkIns);
     const locationColumns = [
@@ -188,6 +198,12 @@ describe('initial migration contract', () => {
     expect(migration).toContain(
       `CREATE UNIQUE INDEX "alert_events_active_trip_stage_unique" ON "alert_events" USING btree ("trip_id","stage") WHERE "alert_events"."status" in ('pending', 'claimed')`,
     );
+  });
+
+  it('persists claimed alert ownership and expiry', () => {
+    expect(migration).toContain('"claim_token" text');
+    expect(migration).toContain('"claim_version" integer DEFAULT 0 NOT NULL');
+    expect(migration).toContain('"claim_expires_at" timestamp with time zone');
   });
 
   it('uses a composite guardian foreign key for viewer grants', () => {

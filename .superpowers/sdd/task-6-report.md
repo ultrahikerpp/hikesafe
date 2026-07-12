@@ -62,3 +62,23 @@ ready for production use.
 - Focused lifecycle/UI/contract tests: 17 passed.
 - Full suite: 99 passed across 21 files.
 - Production build: passed with Node 24.
+
+## Reviewer P1 claim-ownership correction
+
+- The Task 7 contract now matches a claimed-worker lifecycle. Atomic due-event
+  claiming must create a fresh opaque `claimToken`, increment
+  `claimVersion`, and store a `claimExpiresAt` deadline.
+- Immediately before provider delivery, the worker must confirm the event ID,
+  exact token/version, `claimed` status, unexpired deadline, and active trip.
+  A different worker, expired claim, or cancellation is skipped; the valid
+  claimed owner proceeds. Provider idempotency remains the stable event ID.
+- Added the token, version, and expiry columns to the Drizzle schema, initial
+  migration, and migration snapshot; extension and finish continue to cancel
+  both `pending` and `claimed` events.
+- Added red/green contract and migration coverage for the corrected protocol.
+
+### Claim-ownership verification
+
+- Focused contract/schema tests: 16 passed.
+- Full suite: 102 passed across 21 files.
+- Production build: passed with Node 24.
