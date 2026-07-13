@@ -12,9 +12,10 @@ Use Node 24.x and copy `.env.example` to `.env.local`. `src/env.ts` currently de
 - `SESSION_SECRET`, `JOB_SECRET`, and `GRANT_TOKEN_SECRET`: independently generated secrets of at least 32 characters.
 - `NEXT_PUBLIC_LIFF_ID`: LIFF application ID.
 
-Apply the Drizzle migrations to PostgreSQL before creating trips. Import only a verified route catalog after `npm run routes:verify` succeeds.
+Apply migrations before creating trips; `npm run db:migrate` is repeatable and records a checksum for each applied file. Import only a verified route catalog after `npm run routes:verify` succeeds.
 
 ```sh
+npm run db:migrate
 npm test
 npm run build
 npm run routes:verify
@@ -43,6 +44,6 @@ For a local development fixture, inject the repository dependencies used by the 
 
 ## Verification scope
 
-`tests/integration/full-trip-flow.test.ts` uses the existing repository abstractions and MSW to exercise the lifecycle, three alert stages, finish cancellation, and 91-day retention. `tests/integration/alert-race.test.ts` covers two workers racing a deputy finish and a LINE 500 followed by a successful retry.
+`tests/integration/full-trip-flow.test.ts` uses the existing repository abstractions and MSW to exercise the lifecycle, three alert stages, finish cancellation, and 91-day retention. `tests/integration/alert-race.test.ts` covers two workers racing a deputy finish and a LINE 500 followed by a successful retry. `tests/integration/postgres-alerts.test.ts` resets `BESAFE_TEST_DATABASE_URL` (or its local test default), reapplies migrations, and verifies PostgreSQL row locks, delivery claiming, cancellation ordering, and lease reclaim.
 
-No PostgreSQL integration service is configured in this workspace. Therefore PostgreSQL row-lock behavior (`FOR UPDATE SKIP LOCKED`), transaction isolation under separate database connections, and migration/data-backfill execution remain unverified here. They must be tested against a disposable PostgreSQL database before deployment.
+PostgreSQL integration is covered locally with a disposable test database. Real LINE Login, Messaging API, LIFF, webhook, and Vercel credential values remain blocked until the operator supplies them; no live LINE request or deployment has been attempted.

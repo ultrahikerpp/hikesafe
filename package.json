@@ -14,7 +14,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "routes:verify": "tsx scripts/verify-route-catalog.ts"
+    "routes:verify": "tsx scripts/verify-route-catalog.ts",
+    "db:migrate": "tsx scripts/migrate.ts"
   },
   "keywords": [],
   "author": "",

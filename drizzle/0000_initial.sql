@@ -155,12 +155,12 @@ ALTER TABLE "trip_members" ADD CONSTRAINT "trip_members_user_id_users_id_fk" FOR
 ALTER TABLE "trips" ADD CONSTRAINT "trips_owner_user_id_users_id_fk" FOREIGN KEY ("owner_user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "trips" ADD CONSTRAINT "trips_route_version_id_route_versions_id_fk" FOREIGN KEY ("route_version_id") REFERENCES "public"."route_versions"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "viewer_grants" ADD CONSTRAINT "viewer_grants_trip_id_trips_id_fk" FOREIGN KEY ("trip_id") REFERENCES "public"."trips"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "guardians_id_trip_unique" ON "guardians" USING btree ("id","trip_id");--> statement-breakpoint
 ALTER TABLE "viewer_grants" ADD CONSTRAINT "viewer_grants_guardian_trip_guardians_id_trip_fk" FOREIGN KEY ("guardian_id","trip_id") REFERENCES "public"."guardians"("id","trip_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "alert_events_active_trip_stage_unique" ON "alert_events" USING btree ("trip_id","stage") WHERE "alert_events"."status" in ('pending', 'claimed');--> statement-breakpoint
 CREATE INDEX "alert_events_pending_due_idx" ON "alert_events" USING btree ("due_at") WHERE "alert_events"."status" = 'pending' and "alert_events"."next_attempt_at" is null;--> statement-breakpoint
 CREATE INDEX "alert_events_pending_next_attempt_idx" ON "alert_events" USING btree ("next_attempt_at") WHERE "alert_events"."status" = 'pending' and "alert_events"."next_attempt_at" is not null;--> statement-breakpoint
 CREATE INDEX "check_ins_last_available_location_idx" ON "check_ins" USING btree ("trip_id","created_at" DESC NULLS LAST) WHERE "check_ins"."location_status" = 'available';--> statement-breakpoint
-CREATE UNIQUE INDEX "guardians_id_trip_unique" ON "guardians" USING btree ("id","trip_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "guardians_trip_line_binding_unique" ON "guardians" USING btree ("trip_id","line_binding_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "idempotency_keys_user_key_unique" ON "idempotency_keys" USING btree ("user_id","key");--> statement-breakpoint
 CREATE INDEX "route_versions_route_source_version_idx" ON "route_versions" USING btree ("route_id","source_version");--> statement-breakpoint

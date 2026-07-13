@@ -124,18 +124,37 @@ export const processDueAlerts = async ({ now, repository = databaseRepository, s
   return result;
 };
 
+export const createDatabaseAlertProcessRepository = (db: any) => ({
+  async claimDueDeliveries({ now, limit }: { now: Date; limit: number }) {
+    const [{ alertDeliveries }, { sql }] = await Promise.all([import('@/src/db/schema'), import('drizzle-orm')]);
+    const instant = now.toISOString();
+    const rows = await db.transaction((transaction: any) => transaction.execute(sql`
+      WITH due_deliveries AS (
+        SELECT ${alertDeliveries.id} FROM ${alertDeliveries}
+        WHERE (${alertDeliveries.status} = 'pending' AND (${alertDeliveries.nextAttemptAt} IS NULL OR ${alertDeliveries.nextAttemptAt} <= ${instant}))
+          OR (${alertDeliveries.status} IN ('claimed', 'sending') AND ${alertDeliveries.claimExpiresAt} <= ${instant})
+        ORDER BY COALESCE(${alertDeliveries.nextAttemptAt}, ${alertDeliveries.createdAt}) FOR UPDATE SKIP LOCKED LIMIT ${limit}
+      ) UPDATE ${alertDeliveries} SET status = 'claimed', claimed_at = ${instant}, claim_token = replace(gen_random_uuid()::text, '-', ''),
+        claim_version = claim_version + 1, claim_expires_at = ${instant}::timestamptz + interval '5 minutes'
+      FROM due_deliveries WHERE ${alertDeliveries.id} = due_deliveries.id
+      RETURNING ${alertDeliveries.id}, ${alertDeliveries.claimToken}`));
+    return Array.from(rows as Iterable<{ id: string; claim_token: string }>).map((row) => ({ id: row.id, claimToken: row.claim_token }));
+  },
+});
+
 const databaseRepository: AlertProcessRepository = {
   async claimDueActiveEvents({ now, limit }) {
     const [{ db }, { alertEvents, trips }, { sql }] = await Promise.all([import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm')]);
+    const instant = now.toISOString();
     const rows = await db.transaction((transaction) => transaction.execute(sql`
       WITH due_events AS (
         SELECT ${alertEvents.id} FROM ${alertEvents} INNER JOIN ${trips} ON ${trips.id} = ${alertEvents.tripId}
-        WHERE ${trips.status} = 'active' AND (( ${alertEvents.status} = 'pending' AND ${alertEvents.dueAt} <= ${now}
-          AND (${alertEvents.nextAttemptAt} IS NULL OR ${alertEvents.nextAttemptAt} <= ${now}))
-          OR (${alertEvents.status} = 'claimed' AND ${alertEvents.claimExpiresAt} <= ${now}))
+        WHERE ${trips.status} = 'active' AND (( ${alertEvents.status} = 'pending' AND ${alertEvents.dueAt} <= ${instant}
+          AND (${alertEvents.nextAttemptAt} IS NULL OR ${alertEvents.nextAttemptAt} <= ${instant}))
+          OR (${alertEvents.status} = 'claimed' AND ${alertEvents.claimExpiresAt} <= ${instant}))
         ORDER BY ${alertEvents.dueAt} FOR UPDATE OF ${alertEvents} SKIP LOCKED LIMIT ${limit}
-      ) UPDATE ${alertEvents} SET status = 'claimed', claimed_at = ${now}, claim_token = replace(gen_random_uuid()::text, '-', ''),
-          claim_version = claim_version + 1, claim_expires_at = ${now} + interval '5 minutes'
+      ) UPDATE ${alertEvents} SET status = 'claimed', claimed_at = ${instant}, claim_token = replace(gen_random_uuid()::text, '-', ''),
+          claim_version = claim_version + 1, claim_expires_at = ${instant}::timestamptz + interval '5 minutes'
       FROM due_events WHERE ${alertEvents.id} = due_events.id
       RETURNING ${alertEvents.id}, ${alertEvents.claimToken}, ${alertEvents.claimVersion}`));
     return Array.from(rows as Iterable<{ id: string; claim_token: string; claim_version: number }>).map((row) => ({ eventId: row.id, claimToken: row.claim_token, claimVersion: row.claim_version }));
@@ -169,18 +188,8 @@ const databaseRepository: AlertProcessRepository = {
   },
 
   async claimDueDeliveries({ now, limit }) {
-    const [{ db }, { alertDeliveries }, { sql }] = await Promise.all([import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm')]);
-    const rows = await db.transaction((transaction) => transaction.execute(sql`
-      WITH due_deliveries AS (
-        SELECT ${alertDeliveries.id} FROM ${alertDeliveries}
-        WHERE (${alertDeliveries.status} = 'pending' AND (${alertDeliveries.nextAttemptAt} IS NULL OR ${alertDeliveries.nextAttemptAt} <= ${now}))
-          OR (${alertDeliveries.status} IN ('claimed', 'sending') AND ${alertDeliveries.claimExpiresAt} <= ${now})
-        ORDER BY COALESCE(${alertDeliveries.nextAttemptAt}, ${alertDeliveries.createdAt}) FOR UPDATE SKIP LOCKED LIMIT ${limit}
-      ) UPDATE ${alertDeliveries} SET status = 'claimed', claimed_at = ${now}, claim_token = replace(gen_random_uuid()::text, '-', ''),
-        claim_version = claim_version + 1, claim_expires_at = ${now} + interval '5 minutes'
-      FROM due_deliveries WHERE ${alertDeliveries.id} = due_deliveries.id
-      RETURNING ${alertDeliveries.id}, ${alertDeliveries.claimToken}`));
-    return Array.from(rows as Iterable<{ id: string; claim_token: string }>).map((row) => ({ id: row.id, claimToken: row.claim_token }));
+    const { db } = await import('@/src/db/client');
+    return createDatabaseAlertProcessRepository(db).claimDueDeliveries({ now, limit });
   },
 
   async prepareDelivery({ deliveryId, claimToken, now }) {
@@ -225,7 +234,8 @@ const databaseRepository: AlertProcessRepository = {
 
   async rescheduleDeliveryFailure({ deliveryId, claimToken, now, error }) {
     const [{ db }, { alertDeliveries }, { and, eq, sql }] = await Promise.all([import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm')]);
-    const delay = sql`CASE LEAST(attempts + 1, 4) WHEN 1 THEN ${now} + interval '1 minute' WHEN 2 THEN ${now} + interval '5 minutes' WHEN 3 THEN ${now} + interval '15 minutes' ELSE ${now} + interval '30 minutes' END`;
+    const instant = now.toISOString();
+    const delay = sql`CASE LEAST(attempts + 1, 4) WHEN 1 THEN ${instant}::timestamptz + interval '1 minute' WHEN 2 THEN ${instant}::timestamptz + interval '5 minutes' WHEN 3 THEN ${instant}::timestamptz + interval '15 minutes' ELSE ${instant}::timestamptz + interval '30 minutes' END`;
     const updated = await db.update(alertDeliveries).set({ status: sql`CASE WHEN retry_deadline_at <= ${delay} THEN 'manual_review'::alert_delivery_status ELSE 'pending'::alert_delivery_status END`, claimedAt: null, claimToken: null, claimExpiresAt: null, attempts: sql`attempts + 1`, nextAttemptAt: sql`CASE WHEN retry_deadline_at <= ${delay} THEN NULL ELSE ${delay} END`, lastError: error.slice(0, 1000) }).where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'sending'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).returning({ id: alertDeliveries.id });
     return updated.length === 1;
   },

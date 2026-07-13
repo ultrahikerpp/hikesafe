@@ -8,7 +8,7 @@ describe('home navigation', () => {
     render(<Home />);
     expect(screen.getByRole('navigation', { name: '主要操作' })).toBeInTheDocument();
     for (const label of ['建立行程', '開始登山', '進度回報', '安全下山']) {
-      expect(screen.getByRole('link', { name: label })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: label })).toHaveAttribute('href', '/trips/new');
     }
   });
 });
