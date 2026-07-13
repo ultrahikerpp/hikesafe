@@ -16,9 +16,14 @@ export type LineMessage =
   | { type: 'text'; text: string }
   | { type: 'flex'; altText: string; contents: Record<string, unknown> };
 
-const formatTime = (value: Date | null) => value
-  ? `${value.toISOString().slice(0, 16).replace('T', ' ')} UTC`
-  : '尚無回報';
+const formatTime = (value: Date | null) => {
+  if (!value) return '尚無回報';
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(value);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value;
+  return `${part('year')}-${part('month')}-${part('day')} ${part('hour')}:${part('minute')} Asia/Taipei`;
+};
 
 const locationText = (status: AlertMessageTrip['lastLocationStatus']) => ({
   available: '最後位置：可用',
@@ -61,6 +66,16 @@ const card = (
 });
 
 export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): LineMessage => {
+  if (stage === 'started') {
+    return card('#2E8B57', '已啟程：BeSafe 留守通知', trip, [
+      '隊伍已在登山口啟程；此通知不代表持續 GPS 追蹤。',
+    ], []);
+  }
+  if (stage === 'extended') {
+    return card('#2F80ED', '下山時間已調整', trip, [
+      '新的預計下山時間已更新，後續逾時提醒會依此時間計算。',
+    ], []);
+  }
   if (stage === 'due') {
     return {
       type: 'text',

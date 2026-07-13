@@ -7,8 +7,9 @@ describe('home navigation', () => {
   it('keeps the four primary trip actions available as semantic navigation', () => {
     render(<Home />);
     expect(screen.getByRole('navigation', { name: '主要操作' })).toBeInTheDocument();
-    for (const label of ['建立行程', '開始登山', '進度回報', '安全下山']) {
-      expect(screen.getByRole('link', { name: label })).toHaveAttribute('href', '/trips/new');
-    }
+    expect(screen.getByRole('link', { name: '建立行程' })).toHaveAttribute('href', '/trips/new');
+    expect(screen.getByRole('link', { name: '開始登山' })).toHaveAttribute('href', '/trips/active');
+    expect(screen.getByRole('link', { name: '進度回報' })).toHaveAttribute('href', '/trips/active#check-in');
+    expect(screen.getByRole('link', { name: '安全下山' })).toHaveAttribute('href', '/trips/active#finish');
   });
 });

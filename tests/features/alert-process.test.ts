@@ -68,13 +68,35 @@ describe('processDueAlerts', () => {
       markDeliverySent: vi.fn().mockResolvedValue(true),
       rescheduleDeliveryFailure: vi.fn().mockResolvedValue(true),
     });
+    const beginDeliverySend = vi.fn().mockResolvedValue({ outcome: 'ready' as const, ...prepared });
+    Object.assign(store, { beginDeliverySend });
     const send = vi.fn().mockResolvedValue(undefined);
 
     await processDueAlerts({ now, repository: store, send });
 
     expect(store.prepareDelivery.mock.invocationCallOrder[0]).toBeLessThan(send.mock.invocationCallOrder[0]);
+    expect(beginDeliverySend.mock.invocationCallOrder[0]).toBeLessThan(send.mock.invocationCallOrder[0]);
     expect(send).toHaveBeenCalledWith({ to: 'line-user-1', messages: prepared.messages, idempotencyKey: 'retry-1' });
     expect(store.markDeliverySent).toHaveBeenCalledWith({ deliveryId: 'delivery-1', now });
+  });
+
+  it('does not call LINE when finish cancels a prepared delivery before external-send linearization', async () => {
+    const store = repository({
+      claimDueActiveEvents: vi.fn().mockResolvedValue([]),
+      claimDueDeliveries: vi.fn().mockResolvedValue([{ id: 'prepared', claimToken: 'claim' }]),
+      prepareDelivery: vi.fn().mockResolvedValue({
+        outcome: 'ready', id: 'prepared', claimToken: 'claim', to: 'line-user-1', retryKey: 'retry-prepared', messages: [message],
+      }),
+      markDeliverySent: vi.fn(),
+      rescheduleDeliveryFailure: vi.fn(),
+    });
+    const beginDeliverySend = vi.fn().mockResolvedValue({ outcome: 'skipped' as const });
+    Object.assign(store, { beginDeliverySend });
+    const send = vi.fn();
+
+    await expect(processDueAlerts({ now, repository: store, send })).resolves.toEqual({ claimed: 0, sent: 0, failed: 0, skipped: 1 });
+    expect(beginDeliverySend).toHaveBeenCalledWith({ deliveryId: 'prepared', claimToken: 'claim', now });
+    expect(send).not.toHaveBeenCalled();
   });
 
   it('reclaims an expired sending lease and preserves the persistent retry key and message', async () => {

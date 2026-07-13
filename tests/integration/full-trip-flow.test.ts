@@ -18,7 +18,7 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => { linePushes.length = 0; server.resetHandlers(); });
 afterAll(() => server.close());
 
-type Event = { id: string; stage: 'due' | 'overdue_60' | 'overdue_120'; dueAt: Date; status: 'pending' | 'claimed' | 'sent' | 'cancelled'; token?: string };
+type Event = { id: string; stage: 'started' | 'extended' | 'due' | 'overdue_60' | 'overdue_120'; dueAt: Date; status: 'pending' | 'claimed' | 'sent' | 'cancelled'; token?: string };
 type Delivery = { id: string; eventId: string; status: 'pending' | 'claimed' | 'sending' | 'sent' | 'cancelled'; retryKey: string; token?: string; attempts: number; message?: Array<{ type: 'text'; text: string }> };
 
 class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertProcessRepository, RetentionRepository {
@@ -47,10 +47,11 @@ class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertPr
   async lockTrip(id: string) { return id === this.trip.id ? this.trip : undefined; }
   async findMembership(_tripId: string, userId: string) { return userId === 'leader-1' ? 'leader' : userId === 'deputy-1' ? 'deputy' : userId === 'member-1' ? 'member' : undefined; }
   async activateTrip({ startedAt }: any) { this.trip.status = 'active'; this.trip.startedAt = startedAt; }
+  async createLifecycleNotification({ kind, dueAt }: any) { this.events.push({ id: `event-${++this.next}`, stage: kind, dueAt, status: 'pending' }); }
   async insertCheckIn(input: any) { const checkIn = { id: `check-in-${this.checkIns.length + 1}`, ...input }; this.checkIns.push(checkIn); return checkIn; }
   async replaceUnsentAlertSchedule({ plannedFinishAt }: any) {
     this.trip.plannedFinishAt = plannedFinishAt;
-    this.events.forEach((event) => { if (event.status === 'pending' || event.status === 'claimed') event.status = 'cancelled'; });
+    this.events.forEach((event) => { if ((event.stage === 'due' || event.stage === 'overdue_60' || event.stage === 'overdue_120') && (event.status === 'pending' || event.status === 'claimed')) event.status = 'cancelled'; });
     for (const [stage, offset] of [['due', 0], ['overdue_60', 60], ['overdue_120', 120]] as const) {
       this.events.push({ id: `event-${++this.next}`, stage, dueAt: new Date(plannedFinishAt.getTime() + offset * 60_000), status: 'pending' });
     }
@@ -73,8 +74,9 @@ class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertPr
     const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); const event = this.events.find((candidate) => candidate.id === delivery?.eventId);
     if (!delivery || !event || delivery.status !== 'claimed' || delivery.token !== claimToken || this.trip.status !== 'active') return { outcome: 'skipped' as const };
     const messages = delivery.message ?? [{ type: 'text' as const, text: `BeSafe ${event.stage} ${this.trip.id}` }];
-    delivery.message = messages; delivery.status = 'sending'; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages };
+    delivery.message = messages; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages };
   }
+  async beginDeliverySend({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); if (!delivery || delivery.status !== 'claimed' || delivery.token !== claimToken || this.trip.status !== 'active') return { outcome: 'skipped' as const }; delivery.status = 'sending'; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages: delivery.message! }; }
   async markDeliverySent({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); if (!delivery || delivery.status !== 'sending' || delivery.token !== claimToken) return false; delivery.status = 'sent'; return true; }
   async rescheduleDeliveryFailure({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); if (!delivery || delivery.status !== 'sending' || delivery.token !== claimToken) return false; delivery.status = 'pending'; delivery.attempts += 1; return true; }
   async confirmClaimedActiveEvent() { return undefined; }
@@ -103,10 +105,10 @@ describe('full trip flow with an explicit development repository fixture', () =>
     await recordCheckIn({ tripId: created.tripId, userId: 'member-1', message: '平安', location: gps('2026-07-12T01:10:00.000Z'), idempotencyKey: 'check-1', now: new Date('2026-07-12T01:10:00.000Z') }, store);
     await extendTrip({ tripId: created.tripId, userId: 'deputy-1', plannedFinishAt: extended, idempotencyKey: 'extend-1', now: new Date('2026-07-12T01:15:00.000Z') }, store);
     for (const at of [extended, new Date(extended.getTime() + 60 * 60_000), new Date(extended.getTime() + 120 * 60_000)]) await processDueAlerts({ now: at, repository: store, send: sendLine });
-    expect(linePushes.map((push) => push.text)).toEqual(['BeSafe due trip-1', 'BeSafe overdue_60 trip-1', 'BeSafe overdue_120 trip-1']);
+    expect(linePushes.map((push) => push.text)).toEqual(['BeSafe started trip-1', 'BeSafe due trip-1', 'BeSafe extended trip-1', 'BeSafe overdue_60 trip-1', 'BeSafe overdue_120 trip-1']);
     await finishTrip({ tripId: created.tripId, userId: 'deputy-1', location: gps('2026-07-12T05:01:00.000Z'), idempotencyKey: 'finish-1', now: new Date('2026-07-12T05:01:00.000Z') }, store);
     await processDueAlerts({ now: new Date('2026-07-12T05:02:00.000Z'), repository: store, send: sendLine });
-    expect(linePushes).toHaveLength(3);
+    expect(linePushes).toHaveLength(5);
     await expect(deleteExpiredPreciseLocations(() => new Date('2026-10-12T05:02:00.000Z'), store)).resolves.toEqual({ deleted: 2 });
     expect(store.checkIns.every((checkIn) => checkIn.locationStatus !== 'available')).toBe(true);
   });

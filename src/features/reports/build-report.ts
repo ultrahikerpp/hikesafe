@@ -13,8 +13,8 @@ export interface EmergencyReportInput {
   lastCheckIn: { at: Date; location: EmergencyReportLocation | null } | null;
   vehicle: string;
   equipment: string[];
-  checkpoints: string[];
-  evacuationPoints: string[];
+  checkpoints: Array<string | { name: string }>;
+  evacuationPoints: Array<string | { name: string }>;
   previousAvailableLocation?: EmergencyReportLocation;
 }
 
@@ -36,7 +36,17 @@ export interface EmergencyReport {
   data: EmergencyReportData;
 }
 
-const list = (items: string[]) => items.length ? items.join('、') : '未提供';
+const list = (items: Array<string | { name: string }>) => items.length
+  ? items.map((item) => typeof item === 'string' ? item : item.name).join('、')
+  : '未提供';
+
+const taipeiTime = (value: string) => {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value;
+  return `${part('year')}-${part('month')}-${part('day')} ${part('hour')}:${part('minute')} Asia/Taipei`;
+};
 
 export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyReport => {
   const location = trip.lastCheckIn?.location;
@@ -56,24 +66,24 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     } : null,
     vehicle: trip.vehicle,
     equipment: trip.equipment,
-    checkpoints: trip.checkpoints,
-    evacuationPoints: trip.evacuationPoints,
+    checkpoints: trip.checkpoints.map((item) => typeof item === 'string' ? item : item.name),
+    evacuationPoints: trip.evacuationPoints.map((item) => typeof item === 'string' ? item : item.name),
     automatic119Report: false,
   };
   const lines = [
     'BeSafe 通報摘要',
     `隊伍：${list(data.team)}`,
     `路線：${data.route}`,
-    `開始時間：${data.startedAt}`,
-    `預計下山：${data.plannedFinishAt}`,
-    `最後成功回報：${data.lastCheckIn?.at ?? '尚無回報'}`,
+    `開始時間：${taipeiTime(data.startedAt)}`,
+    `預計下山：${taipeiTime(data.plannedFinishAt)}`,
+    `最後成功回報：${data.lastCheckIn ? taipeiTime(data.lastCheckIn.at) : '尚無回報'}`,
   ];
   if (data.lastCheckIn?.location) {
     const current = data.lastCheckIn.location;
     lines.push(
       `最後位置：${current.latitude}, ${current.longitude}`,
       `GPS 精度：${current.accuracyMeters} 公尺`,
-      `GPS 時間：${current.capturedAt}`,
+      `GPS 時間：${taipeiTime(current.capturedAt)}`,
     );
   } else {
     lines.push('最後位置未取得');

@@ -12,6 +12,7 @@ interface RouteOption {
   sourceVersion: string;
   reviewedAt: string;
 }
+interface GuardianBinding { id: string; sourceType: 'user' | 'group' | 'room' | null; displayName: string | null; sourceId: string | null; boundAt: string | null; }
 
 const splitLines = (value: string) => value.split(/\n|,/).map((item) => item.trim()).filter(Boolean);
 
@@ -23,7 +24,9 @@ export function TripForm() {
   const [mountain, setMountain] = useState('');
   const [deputyId, setDeputyId] = useState('');
   const [memberIds, setMemberIds] = useState('');
-  const [guardianBindingIds, setGuardianBindingIds] = useState('');
+  const [bindings, setBindings] = useState<GuardianBinding[]>([]);
+  const [guardianBindingIds, setGuardianBindingIds] = useState<string[]>([]);
+  const [bindingCode, setBindingCode] = useState('');
   const [vehicle, setVehicle] = useState('');
   const [equipment, setEquipment] = useState('');
   const [leaderPhone, setLeaderPhone] = useState('');
@@ -40,6 +43,20 @@ export function TripForm() {
       setRoutes(body.routes);
     }).catch(() => setError('目前沒有可用的已啟用路線版本。正式路線目錄尚未通過安全驗證時，無法建立行程。'));
   }, []);
+  const refreshBindings = async () => {
+    const response = await fetch('/api/guardian-bindings');
+    if (!response.ok) throw new Error('Guardian bindings unavailable');
+    setBindings((await response.json() as { bindings: GuardianBinding[] }).bindings);
+  };
+  useEffect(() => { void refreshBindings().catch(() => setError('請先完成 LINE 登入，才能管理留守綁定。')); }, []);
+  const createBinding = async () => {
+    setError('');
+    const response = await fetch('/api/guardian-bindings', { method: 'POST' });
+    const body = await response.json() as { code?: string; error?: string };
+    if (!response.ok || !body.code) { setError(body.error ?? '無法建立綁定碼'); return; }
+    setBindingCode(body.code);
+    await refreshBindings();
+  };
 
   const regions = useMemo(() => [...new Set(routes.map((route) => route.region))], [routes]);
   const mountains = useMemo(() => [...new Set(routes
@@ -65,7 +82,7 @@ export function TripForm() {
         startsAt: new Date(startsAt).toISOString(),
         plannedFinishAt: new Date(plannedFinishAt).toISOString(),
         members,
-        guardianBindingIds: splitLines(guardianBindingIds),
+        guardianBindingIds,
         vehicle,
         equipment: splitLines(equipment),
         leaderPhone,
@@ -78,6 +95,7 @@ export function TripForm() {
       return;
     }
     setCreatedTripId(body.tripId);
+    window.location.assign(`/trips/${body.tripId}`);
   };
 
   if (createdTripId) return <p>行程草稿已建立：{createdTripId}</p>;
@@ -110,8 +128,14 @@ export function TripForm() {
     </section>}
     {step === 3 && <section>
       <h2>3. 留守與行程資訊</h2>
-      <label>留守綁定 ID（每行一個）<textarea value={guardianBindingIds} onChange={(event) => setGuardianBindingIds(event.target.value)} /></label>
-      <p>尚未建立留守綁定時可留空；建立後請填入已綁定留守設定的 ID。</p>
+      <h3>留守綁定</h3>
+      <p>建立綁定碼後，請在 BeSafe 官方帳號私訊、群組或聊天室輸入「綁定 {bindingCode || '六碼綁定碼'}」。不需要也不能手動輸入內部 ID。</p>
+      <button type="button" onClick={() => void createBinding()}>建立留守綁定碼</button>
+      {bindingCode && <p role="status">本次綁定碼：{bindingCode}（10 分鐘有效）</p>}
+      {bindings.filter((binding) => binding.boundAt && binding.sourceId).map((binding) => <label key={binding.id}>
+        <input type="checkbox" checked={guardianBindingIds.includes(binding.id)} onChange={(event) => setGuardianBindingIds((ids) => event.target.checked ? [...ids, binding.id] : ids.filter((id) => id !== binding.id))} />
+        {binding.displayName || binding.sourceType === 'group' ? '已綁定群組' : '已綁定留守人'}
+      </label>)}
       <label>交通工具<input required value={vehicle} onChange={(event) => setVehicle(event.target.value)} /></label>
       <label>裝備（每行一項）<textarea value={equipment} onChange={(event) => setEquipment(event.target.value)} /></label>
       <label>領隊聯絡電話（供留守聯絡）<input type="tel" value={leaderPhone} onChange={(event) => setLeaderPhone(event.target.value)} /></label>

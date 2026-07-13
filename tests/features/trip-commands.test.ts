@@ -46,6 +46,7 @@ const makeRepository = (): TripCommandsRepository & {
       idempotency.set(`${userId}:${key}`, { requestHash: idempotency.get(`${userId}:${key}`)!.requestHash, result });
     },
     activateTrip: async ({ startedAt }) => { repository.calls.push('activate'); repository.trip = { ...repository.trip, status: 'active', startedAt }; },
+    createLifecycleNotification: async ({ kind }) => { repository.calls.push(`notify-${kind}`); },
     insertCheckIn: async (checkIn) => { repository.calls.push('check-in'); const result = { id: `check-in-${repository.checkIns.length + 1}`, ...checkIn }; repository.checkIns.push(result); return result; },
     replaceUnsentAlertSchedule: async ({ plannedFinishAt }) => {
       repository.calls.push('replace-alerts');
@@ -67,6 +68,7 @@ describe('trip lifecycle commands', () => {
     await startTrip(command, repository);
     expect(repository.trip).toMatchObject({ status: 'active', startedAt: now });
     expect(repository.calls.filter((call) => call === 'activate')).toHaveLength(1);
+    expect(repository.calls.filter((call) => call === 'notify-started')).toHaveLength(1);
     expect(repository.alertEvents.filter((event) => event.id.startsWith('new-'))).toHaveLength(3);
     await expect(startTrip({ tripId: 'trip-1', userId: 'leader-1', location: { ...freshGps, capturedAt: new Date('2026-07-12T00:54:59.000Z') }, idempotencyKey: 'stale-1', now }, makeRepository())).rejects.toThrow('Location is stale');
   });
@@ -96,6 +98,7 @@ describe('trip lifecycle commands', () => {
     await extendTrip(command, repository);
     expect(repository.calls).toContain('replace-alerts');
     expect(repository.calls.filter((call) => call === 'replace-alerts')).toHaveLength(1);
+    expect(repository.calls.filter((call) => call === 'notify-extended')).toHaveLength(1);
     expect(repository.alertEvents.filter((event) => event.id.startsWith('old-') && event.status === 'cancelled')).toHaveLength(2);
     expect(repository.alertEvents.filter((event) => event.id.startsWith('new-') && event.status === 'pending')).toHaveLength(3);
     await expect(extendTrip({ tripId: 'trip-1', userId: 'member-1', plannedFinishAt, idempotencyKey: 'extend-2', now }, makeRepository())).rejects.toThrow('Only leader or deputy may extend or finish');

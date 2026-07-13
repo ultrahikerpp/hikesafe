@@ -1,9 +1,12 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres, { type Sql } from 'postgres';
+import { mkdtemp, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { tmpdir } from 'node:os';
 
 import { applyMigrations } from '@/src/db/migrations';
-import { createDatabaseAlertProcessRepository } from '@/src/features/alerts/process';
+import { createDatabaseAlertProcessRepository, databaseAlertProcessRepository } from '@/src/features/alerts/process';
 import { finishTrip } from '@/src/features/trips/commands';
 
 const databaseUrl = process.env.BESAFE_TEST_DATABASE_URL
@@ -95,7 +98,7 @@ afterAll(async () => {
 });
 
 describe('PostgreSQL alert concurrency', () => {
-  it('applies migrations 0000 through 0003 to a clean PostgreSQL schema', async () => {
+  it('applies migrations 0000 through 0004 to a clean PostgreSQL schema', async () => {
     const rows = await admin<{ version: string }[]>`
       SELECT version FROM __besafe_migrations ORDER BY version
     `;
@@ -104,8 +107,27 @@ describe('PostgreSQL alert concurrency', () => {
       '0001_alert-deliveries.sql',
       '0002_cultured_mad_thinker.sql',
       '0003_nervous_umar.sql',
+      '0004_lifecycle_notifications.sql',
     ]);
     await expect(admin`SELECT 'manual_review'::alert_delivery_status`).resolves.toHaveLength(1);
+  });
+
+  it('rolls back an entire failed migration and safely reruns it with its checksum record', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'besafe-migrations-'));
+    await writeFile(path.join(directory, '9000_atomic.sql'), 'CREATE TABLE migration_atomic_marker (id integer);');
+    const failing = path.join(directory, '9001_failing.sql');
+    await writeFile(failing, 'CREATE TABLE migration_atomic_second (id integer);--> statement-breakpoint\nSELECT missing_column FROM migration_atomic_second;');
+
+    await expect((applyMigrations as any)(admin, directory)).rejects.toThrow(/missing_column/);
+    await expect(admin`SELECT to_regclass('public.migration_atomic_marker') AS marker, to_regclass('public.migration_atomic_second') AS second`)
+      .resolves.toEqual([{ marker: 'migration_atomic_marker', second: null }]);
+    await expect(admin<{ count: string }[]>`SELECT count(*) FROM __besafe_migrations WHERE version LIKE '900%'`)
+      .resolves.toEqual([{ count: '1' }]);
+
+    await writeFile(failing, 'CREATE TABLE migration_atomic_second (id integer);');
+    await (applyMigrations as any)(admin, directory);
+    await expect(admin<{ version: string }[]>`SELECT version FROM __besafe_migrations WHERE version LIKE '900%' ORDER BY version`)
+      .resolves.toEqual([{ version: '9000_atomic.sql' }, { version: '9001_failing.sql' }]);
   });
 
   it('claims child deliveries once across independent connections while a row is SKIP LOCKED', async () => {
@@ -171,7 +193,7 @@ describe('PostgreSQL alert concurrency', () => {
     const [{ retry_key: retryKey, message }] = await admin<{ retry_key: string; message: unknown }[]>`
       SELECT retry_key, message FROM alert_deliveries WHERE id = ${delivery.id}
     `;
-    const worker = createDatabaseAlertProcessRepository(drizzle(first!));
+    const worker = databaseAlertProcessRepository;
 
     await expect(worker.claimDueDeliveries?.({ now: new Date(), limit: 10 })).resolves.toEqual([
       expect.objectContaining({ id: delivery.id }),
@@ -181,5 +203,48 @@ describe('PostgreSQL alert concurrency', () => {
     `).resolves.toEqual([expect.objectContaining({
       status: 'claimed', retry_key: retryKey, message, claim_version: 1,
     })]);
+  });
+
+  it('does not call the provider when finish commits after prepare but before external-send linearization', async () => {
+    const { tripId, deputyId } = await seedTrip();
+    await seedDelivery(tripId);
+    const worker = databaseAlertProcessRepository;
+    const [claim] = await worker.claimDueDeliveries?.({ now: new Date(), limit: 1 }) ?? [];
+    const prepared = await worker.prepareDelivery?.({ deliveryId: claim.id, claimToken: claim.claimToken, now: new Date() });
+    expect(prepared).toMatchObject({ outcome: 'ready' });
+
+    await finishTrip({ tripId, userId: deputyId, idempotencyKey: 'finish-before-send', now: new Date() });
+    const linearized = await worker.beginDeliverySend?.({ deliveryId: claim.id, claimToken: claim.claimToken, now: new Date() });
+    const provider = vi.fn();
+    if (linearized?.outcome === 'ready') await provider(linearized);
+
+    expect(linearized).toEqual({ outcome: 'skipped' });
+    expect(provider).not.toHaveBeenCalled();
+    await expect(admin<{ status: string }[]>`SELECT status::text FROM alert_deliveries WHERE id = ${claim.id}`)
+      .resolves.toEqual([{ status: 'cancelled' }]);
+  });
+
+  it('retains an auditable sending delivery when external-send linearization wins before finish', async () => {
+    const { tripId, deputyId } = await seedTrip();
+    await seedDelivery(tripId);
+    const worker = databaseAlertProcessRepository;
+    const [claim] = await worker.claimDueDeliveries?.({ now: new Date(), limit: 1 }) ?? [];
+    await worker.prepareDelivery?.({ deliveryId: claim.id, claimToken: claim.claimToken, now: new Date() });
+    const linearized = await worker.beginDeliverySend?.({ deliveryId: claim.id, claimToken: claim.claimToken, now: new Date() });
+    expect(linearized).toMatchObject({ outcome: 'ready' });
+
+    await finishTrip({ tripId, userId: deputyId, idempotencyKey: 'finish-after-send-linearization', now: new Date() });
+    const provider = vi.fn();
+    if (linearized?.outcome === 'ready') {
+      await provider(linearized);
+      await worker.markDeliverySent?.({ deliveryId: linearized.id, claimToken: linearized.claimToken, now: new Date() });
+    }
+
+    expect(provider).toHaveBeenCalledTimes(1);
+    await expect(admin<{ trip: string; delivery: string; first_attempt_at: Date | null; sent_at: Date | null }[]>`
+      SELECT t.status::text AS trip, d.status::text AS delivery, d.first_attempt_at, d.sent_at
+      FROM trips t JOIN alert_events e ON e.trip_id = t.id JOIN alert_deliveries d ON d.event_id = e.id
+      WHERE d.id = ${claim.id}
+    `).resolves.toEqual([expect.objectContaining({ trip: 'finished', delivery: 'sent', first_attempt_at: expect.any(Date), sent_at: expect.any(Date) })]);
   });
 });

@@ -11,7 +11,7 @@ const splitStatements = (migration: string) => migration
   .map((statement) => statement.trim())
   .filter(Boolean);
 
-export const applyMigrations = async (database: Sql) => {
+export const applyMigrations = async (database: Sql, directory = migrationsDirectory) => {
   await database.unsafe(`
     CREATE TABLE IF NOT EXISTS __besafe_migrations (
       version text PRIMARY KEY,
@@ -19,12 +19,12 @@ export const applyMigrations = async (database: Sql) => {
       applied_at timestamp with time zone NOT NULL DEFAULT now()
     )
   `);
-  const files = (await readdir(migrationsDirectory))
+  const files = (await readdir(directory))
     .filter((file) => /^\d{4}_.+\.sql$/.test(file))
     .sort();
 
   for (const version of files) {
-    const migration = await readFile(path.join(migrationsDirectory, version), 'utf8');
+    const migration = await readFile(path.join(directory, version), 'utf8');
     const checksum = createHash('sha256').update(migration).digest('hex');
     const [applied] = await database<{ checksum: string }[]>`
       SELECT checksum FROM __besafe_migrations WHERE version = ${version}
@@ -33,9 +33,11 @@ export const applyMigrations = async (database: Sql) => {
       if (applied.checksum !== checksum) throw new Error(`Migration checksum mismatch: ${version}`);
       continue;
     }
-    for (const statement of splitStatements(migration)) await database.unsafe(statement);
-    await database`
-      INSERT INTO __besafe_migrations (version, checksum) VALUES (${version}, ${checksum})
-    `;
+    await database.begin(async (transaction) => {
+      for (const statement of splitStatements(migration)) await transaction.unsafe(statement);
+      await transaction`
+        INSERT INTO __besafe_migrations (version, checksum) VALUES (${version}, ${checksum})
+      `;
+    });
   }
 };

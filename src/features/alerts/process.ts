@@ -4,6 +4,7 @@ import type { AlertClaim, AlertDeliveryRepository } from '@/src/features/alerts/
 import type { AlertStage } from '@/src/features/alerts/domain';
 import { getEnv } from '@/src/env';
 import { buildLineMessage, type AlertMessageTrip, type LineMessage } from '@/src/features/line/messages';
+import { buildEmergencyReport } from '@/src/features/reports/build-report';
 import { hashViewerGrant } from '@/src/lib/idempotency';
 
 export interface ConfirmedAlertEvent {
@@ -35,6 +36,7 @@ export interface AlertProcessRepository extends AlertDeliveryRepository {
   dispatchClaim?(input: { claim: AlertClaim; now: Date }): Promise<'dispatched' | 'skipped'>;
   claimDueDeliveries?(input: { now: Date; limit: number }): Promise<ClaimedDeliveryWork[]>;
   prepareDelivery?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<PreparedDelivery>;
+  beginDeliverySend?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<PreparedDelivery>;
   markDeliverySent?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<boolean>;
   rescheduleDeliveryFailure?(input: { deliveryId: string; claimToken?: string; now: Date; error: string }): Promise<boolean>;
   expireDelivery?(input: { deliveryId: string; claimToken?: string; now: Date }): Promise<boolean>;
@@ -111,13 +113,22 @@ export const processDueAlerts = async ({ now, repository = databaseRepository, s
       continue;
     }
     if (prepared.outcome === 'skipped') { result.skipped += 1; continue; }
+    const linearized = repository.beginDeliverySend
+      ? await repository.beginDeliverySend({ deliveryId: prepared.id, claimToken: prepared.claimToken, now })
+      : prepared;
+    if (linearized.outcome === 'expired') {
+      await repository.expireDelivery?.({ deliveryId: prepared.id, claimToken: prepared.claimToken, now });
+      result.skipped += 1;
+      continue;
+    }
+    if (linearized.outcome === 'skipped') { result.skipped += 1; continue; }
     try {
-      try { await send({ to: prepared.to, messages: prepared.messages, idempotencyKey: prepared.retryKey }); }
+      try { await send({ to: linearized.to, messages: linearized.messages, idempotencyKey: linearized.retryKey }); }
       catch (error) { if (!isRetryConflict(error)) throw error; }
-      if (await repository.markDeliverySent({ deliveryId: prepared.id, claimToken: prepared.claimToken, now })) result.sent += 1;
+      if (await repository.markDeliverySent({ deliveryId: linearized.id, claimToken: linearized.claimToken, now })) result.sent += 1;
       else result.skipped += 1;
     } catch (error) {
-      if (await repository.rescheduleDeliveryFailure({ deliveryId: prepared.id, claimToken: prepared.claimToken, now, error: errorMessage(error) })) result.failed += 1;
+      if (await repository.rescheduleDeliveryFailure({ deliveryId: linearized.id, claimToken: linearized.claimToken, now, error: errorMessage(error) })) result.failed += 1;
       else result.skipped += 1;
     }
   }
@@ -142,7 +153,7 @@ export const createDatabaseAlertProcessRepository = (db: any) => ({
   },
 });
 
-const databaseRepository: AlertProcessRepository = {
+export const databaseAlertProcessRepository: AlertProcessRepository = {
   async claimDueActiveEvents({ now, limit }) {
     const [{ db }, { alertEvents, trips }, { sql }] = await Promise.all([import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm')]);
     const instant = now.toISOString();
@@ -197,7 +208,7 @@ const databaseRepository: AlertProcessRepository = {
       import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm'),
     ]);
     return db.transaction(async (transaction) => {
-      const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, guardianId: alertDeliveries.guardianId, guardianLineUserId: alertDeliveries.guardianLineUserId, viewerGrantEligible: alertDeliveries.viewerGrantEligible, grantVersion: alertDeliveries.grantVersion, firstAttemptAt: alertDeliveries.firstAttemptAt, retryDeadlineAt: alertDeliveries.retryDeadlineAt, stage: alertEvents.stage, tripId: trips.id, tripStatus: trips.status, plannedFinishAt: trips.plannedFinishAt, routeName: routeVersions.routeName, leaderPhone: trips.leaderPhone })
+      const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, guardianId: alertDeliveries.guardianId, guardianLineUserId: alertDeliveries.guardianLineUserId, viewerGrantEligible: alertDeliveries.viewerGrantEligible, grantVersion: alertDeliveries.grantVersion, firstAttemptAt: alertDeliveries.firstAttemptAt, retryDeadlineAt: alertDeliveries.retryDeadlineAt, stage: alertEvents.stage, tripId: trips.id, tripStatus: trips.status, plannedFinishAt: trips.plannedFinishAt, startedAt: trips.startedAt, startsAt: trips.startsAt, vehicle: trips.vehicle, equipment: trips.equipment, routeName: routeVersions.routeName, checkpoints: routeVersions.checkpoints, evacuationPoints: routeVersions.evacuationPoints, leaderPhone: trips.leaderPhone })
         .from(alertDeliveries).innerJoin(alertEvents, eq(alertEvents.id, alertDeliveries.eventId)).innerJoin(trips, eq(trips.id, alertEvents.tripId)).innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
         .where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'claimed'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).for('update').limit(1);
       if (!delivery || delivery.tripStatus !== 'active') {
@@ -208,21 +219,50 @@ const databaseRepository: AlertProcessRepository = {
       if (deadline <= now) return { outcome: 'expired' as const };
       let messages = delivery.message as LineMessage[] | null;
       if (!messages) {
-        const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, locationStatus: checkIns.locationStatus }).from(checkIns).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
+        const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, locationStatus: checkIns.locationStatus, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationCapturedAt: checkIns.locationCapturedAt }).from(checkIns).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
         const members = await transaction.select({ name: users.displayName }).from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId)).where(eq(tripMembers.tripId, delivery.tripId));
+        const location = lastCheckIn?.locationStatus === 'available' && lastCheckIn.latitude !== null && lastCheckIn.longitude !== null && lastCheckIn.accuracyMeters !== null && lastCheckIn.locationCapturedAt !== null
+          ? { latitude: lastCheckIn.latitude, longitude: lastCheckIn.longitude, accuracyMeters: lastCheckIn.accuracyMeters, capturedAt: lastCheckIn.locationCapturedAt }
+          : null;
+        const report = buildEmergencyReport({
+          team: members.map((member) => member.name), route: delivery.routeName,
+          startedAt: delivery.startedAt ?? delivery.startsAt, plannedFinishAt: delivery.plannedFinishAt,
+          lastCheckIn: lastCheckIn ? { at: lastCheckIn.createdAt, location } : null,
+          vehicle: delivery.vehicle, equipment: delivery.equipment as string[],
+          checkpoints: delivery.checkpoints as string[], evacuationPoints: delivery.evacuationPoints as string[],
+        });
         const trip: AlertMessageTrip = { id: delivery.tripId, routeName: delivery.routeName, plannedFinishAt: delivery.plannedFinishAt, team: members.map((member) => member.name), lastCheckInAt: lastCheckIn?.createdAt ?? null, lastLocationStatus: lastCheckIn?.locationStatus ?? 'unavailable', leaderPhone: delivery.leaderPhone,
-          reportText: `BeSafe 通報摘要\n路線：${delivery.routeName}\n隊伍：${members.map((member) => member.name).join('、')}\n預計下山：${delivery.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.createdAt?.toISOString() ?? '尚無回報'}` };
-        if (delivery.stage !== 'due' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
+          reportText: report.text };
+        if (delivery.stage === 'overdue_120' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
           const token = createGrantToken(delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET);
           await transaction.insert(viewerGrants).values({ tripId: delivery.tripId, guardianId: delivery.guardianId, deliveryId: delivery.id, tokenVersion: delivery.grantVersion, guardianLineUserId: delivery.guardianLineUserId, tokenHash: hashViewerGrant(token), expiresAt: deadline }).onConflictDoNothing();
           trip.viewerGrantUrl = `https://liff.line.me/${getEnv().NEXT_PUBLIC_LIFF_ID}/api/trips/${delivery.tripId}/guardian-viewer?grant=${grantTokenMarker}`;
         }
         messages = [buildLineMessage(delivery.stage, trip)];
       }
-      await transaction.update(alertDeliveries).set({ status: 'sending', message: messages, firstAttemptAt: delivery.firstAttemptAt ?? now, retryDeadlineAt: deadline, claimExpiresAt: new Date(now.getTime() + 5 * 60_000) })
+      await transaction.update(alertDeliveries).set({ message: messages, retryDeadlineAt: deadline })
+        .where(and(eq(alertDeliveries.id, delivery.id), eq(alertDeliveries.status, 'claimed'), eq(alertDeliveries.claimToken, delivery.claimToken!)));
+      return { outcome: 'ready' as const, id: delivery.id, claimToken: delivery.claimToken!, to: delivery.recipientId, retryKey: delivery.retryKey, messages };
+    });
+  },
+
+  async beginDeliverySend({ deliveryId, claimToken, now }) {
+    const [{ db }, { alertDeliveries, alertEvents, trips }, { and, eq }] = await Promise.all([
+      import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm'),
+    ]);
+    return db.transaction(async (transaction) => {
+      const [trip] = await transaction.select({ status: trips.status }).from(trips)
+        .innerJoin(alertEvents, eq(alertEvents.tripId, trips.id))
+        .innerJoin(alertDeliveries, eq(alertDeliveries.eventId, alertEvents.id))
+        .where(eq(alertDeliveries.id, deliveryId)).for('update').limit(1);
+      const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, grantVersion: alertDeliveries.grantVersion, firstAttemptAt: alertDeliveries.firstAttemptAt, retryDeadlineAt: alertDeliveries.retryDeadlineAt })
+        .from(alertDeliveries).where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'claimed'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).for('update').limit(1);
+      if (!trip || !delivery || trip.status !== 'active') return { outcome: 'skipped' as const };
+      if (!delivery.message || (delivery.retryDeadlineAt && delivery.retryDeadlineAt <= now)) return { outcome: 'expired' as const };
+      await transaction.update(alertDeliveries).set({ status: 'sending', firstAttemptAt: delivery.firstAttemptAt ?? now, claimExpiresAt: new Date(now.getTime() + 5 * 60_000) })
         .where(and(eq(alertDeliveries.id, delivery.id), eq(alertDeliveries.status, 'claimed'), eq(alertDeliveries.claimToken, delivery.claimToken!)));
       return { outcome: 'ready' as const, id: delivery.id, claimToken: delivery.claimToken!, to: delivery.recipientId, retryKey: delivery.retryKey,
-        messages: materializeDeliveryMessages(messages, delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET) };
+        messages: materializeDeliveryMessages(delivery.message as LineMessage[], delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET) };
     });
   },
 
@@ -252,3 +292,5 @@ const databaseRepository: AlertProcessRepository = {
   async markSent() { return false; },
   async rescheduleFailure() { return false; },
 };
+
+const databaseRepository = databaseAlertProcessRepository;

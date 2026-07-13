@@ -41,6 +41,8 @@ export const locationStatusEnum = pgEnum('location_status', [
   'redacted',
 ]);
 export const alertStageEnum = pgEnum('alert_stage', [
+  'started',
+  'extended',
   'due',
   'overdue_60',
   'overdue_120',

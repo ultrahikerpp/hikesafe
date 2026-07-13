@@ -28,7 +28,7 @@ describe('buildLineMessage', () => {
     expect(JSON.stringify(message)).toContain('#F5C542');
     expect(JSON.stringify(message)).toContain('玉山主峰線');
     expect(JSON.stringify(message)).toContain('阿山、小玉');
-    expect(JSON.stringify(message)).toContain('2026-07-12 04:20 UTC');
+    expect(JSON.stringify(message)).toContain('2026-07-12 12:20 Asia/Taipei');
     expect(JSON.stringify(message)).toContain('tel:+886912345678');
     expect(JSON.stringify(message)).toContain('未回報不代表遇險，也可能是無訊號');
   });
@@ -63,5 +63,7 @@ describe('buildLineMessage', () => {
     const message = buildLineMessage('overdue_120', { ...trip, viewerGrantUrl: undefined });
     expect(JSON.stringify(message)).toContain('請透過 LINE 聯絡已綁定的個別留守人員');
     expect(JSON.stringify(message)).not.toContain('besafe.example');
+    expect(JSON.stringify(message)).toContain('119 通報摘要');
+    expect(JSON.stringify(message)).toContain('"clipboard"');
   });
 });
