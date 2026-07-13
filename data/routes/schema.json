@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://besafe.tw/schemas/route-catalog.json",
-  "title": "BeSafe reviewed route catalog",
+  "title": "HikeSafe reviewed route catalog",
   "type": "array",
   "items": {
     "type": "object",

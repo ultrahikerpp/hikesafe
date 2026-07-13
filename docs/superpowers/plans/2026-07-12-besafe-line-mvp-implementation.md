@@ -1,4 +1,4 @@
-# BeSafe LINE MVP Implementation Plan
+# HikeSafe LINE MVP Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -187,7 +187,7 @@ const nextConfig: NextConfig = {};
 export default nextConfig;
 ```
 
-Set `app/layout.tsx` metadata title to `BeSafe 登山留守` and description to `把路線與最後回報留給重要的人`.
+Set `app/layout.tsx` metadata title to `HikeSafe 登山留守` and description to `把路線與最後回報留給重要的人`.
 
 - [ ] **Step 5: Verify and commit**
 
@@ -197,7 +197,7 @@ Expected: 2 tests PASS and production build succeeds.
 
 ```bash
 git add package.json package-lock.json tsconfig.json next.config.ts vitest.config.ts tests src app vercel.ts
-git commit -m "chore: scaffold BeSafe application"
+git commit -m "chore: scaffold HikeSafe application"
 ```
 
 ---
@@ -438,7 +438,7 @@ Sign an httpOnly, secure, sameSite=lax session with `jose`; store only internal 
 
 - [ ] **Step 3: Implement webhook binding**
 
-Validate `x-line-signature` before reading events. A binding code is single-use and expires after 10 minutes. For group binding, store the group ID from the webhook source; do not use discontinued LIFF `groupId`. Reply with `已綁定 BeSafe 留守通知` after success.
+Validate `x-line-signature` before reading events. A binding code is single-use and expires after 10 minutes. For group binding, store the group ID from the webhook source; do not use discontinued LIFF `groupId`. Reply with `已綁定 HikeSafe 留守通知` after success.
 
 - [ ] **Step 4: Verify and commit**
 
@@ -626,7 +626,7 @@ git commit -m "feat: add overdue alert escalation"
 
 - [ ] **Step 1: Write failing report and privacy tests**
 
-Assert the report includes team, route, start, planned finish, last successful check-in, GPS accuracy/time when present, vehicle, equipment, checkpoints, evacuation points, and `BeSafe 尚未代為通報 119`. Assert it says `最後位置未取得` when absent and never substitutes an older coordinate as current.
+Assert the report includes team, route, start, planned finish, last successful check-in, GPS accuracy/time when present, vehicle, equipment, checkpoints, evacuation points, and `HikeSafe 尚未代為通報 119`. Assert it says `最後位置未取得` when absent and never substitutes an older coordinate as current.
 
 Assert viewer grants require both a valid LINE session and matching hashed bearer token, and use constant-time hash comparison. Delivery-derived grants retain their short retry/deadline cap; the 90-day GPS retention policy does not extend that authority. Assert retention deletes latitude, longitude, and accuracy only for finished trips older than 90 days while preserving active and unresolved-alert trips.
 
@@ -703,7 +703,7 @@ Then use `/browse` against the local app to verify at 375×812 and 1280×720: cr
 
 ```bash
 git add app tests README.md .env.example
-git commit -m "feat: complete BeSafe LINE MVP"
+git commit -m "feat: complete HikeSafe LINE MVP"
 ```
 
 ---

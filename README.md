@@ -1,6 +1,6 @@
-# BeSafe LINE MVP
+# HikeSafe LINE MVP
 
-BeSafe records an active hiking trip, accepts explicit GPS or text-only check-ins, and schedules LINE reminders at the planned finish time, +60 minutes, and +120 minutes. It is a leave-behind information tool, not navigation, background tracking, satellite communications, or an emergency dispatch service.
+HikeSafe records an active hiking trip, accepts explicit GPS or text-only check-ins, and schedules LINE reminders at the planned finish time, +60 minutes, and +120 minutes. It is a leave-behind information tool, not navigation, background tracking, satellite communications, or an emergency dispatch service.
 
 ## Local setup
 
@@ -40,7 +40,7 @@ For a local development fixture, inject the repository dependencies used by the 
 - GPS is collected only during explicit start, check-in, and finish actions. A text-only check-in is marked as unavailable location, never as a current GPS fix.
 - Offline check-ins remain pending until successfully sent. A pending entry is not a delivered safety confirmation.
 - LINE delivery cannot be atomically committed with PostgreSQL. The worker persists a retry key and message before sending so LINE can deduplicate retries.
-- BeSafe does not infer a rescue need from missing updates and does not automatically contact 112 or 119.
+- HikeSafe does not infer a rescue need from missing updates and does not automatically contact 112 or 119.
 
 ## Verification scope
 

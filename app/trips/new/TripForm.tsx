@@ -121,7 +121,7 @@ export function TripForm() {
     {step === 3 && <section>
       <h2>3. 留守與行程資訊</h2>
       <h3>留守綁定</h3>
-      <p>建立綁定碼後，請在 BeSafe 官方帳號私訊、群組或聊天室輸入「綁定 {bindingCode || '六碼綁定碼'}」。不需要也不能手動輸入內部 ID。</p>
+      <p>建立綁定碼後，請在 HikeSafe 官方帳號私訊、群組或聊天室輸入「綁定 {bindingCode || '六碼綁定碼'}」。不需要也不能手動輸入內部 ID。</p>
       <button type="button" onClick={() => void createBinding()}>建立留守綁定碼</button>
       {bindingCode && <p role="status">本次綁定碼：{bindingCode}（10 分鐘有效）</p>}
       {bindings.filter((binding) => binding.boundAt && binding.sourceId).map((binding) => <label key={binding.id}>

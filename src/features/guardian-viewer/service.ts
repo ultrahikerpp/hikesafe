@@ -21,5 +21,5 @@ export const loadGuardianViewer = async ({ tripId }: { tripId: string }): Promis
     ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters } : null;
   const lastCheckIn = checkIn ? { at: checkIn.createdAt.toISOString(), location } : null;
   return { route: trip.route, team: team.map((member) => member.name), lastCheckIn,
-    report: `BeSafe 通報摘要\n路線：${trip.route}\n隊伍：${team.map((member) => member.name).join('、')}\n預計下山：${trip.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.at ?? '尚無回報'}` };
+    report: `HikeSafe 通報摘要\n路線：${trip.route}\n隊伍：${team.map((member) => member.name).join('、')}\n預計下山：${trip.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.at ?? '尚無回報'}` };
 };

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'BeSafe 登山留守',
+  title: 'HikeSafe 登山留守',
   description: '把路線與最後回報留給重要的人',
 };
 

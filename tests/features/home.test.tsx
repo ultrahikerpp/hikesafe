@@ -6,6 +6,7 @@ import Home from '@/app/page';
 describe('home navigation', () => {
   it('keeps the four primary trip actions available as semantic navigation', () => {
     render(<Home />);
+    expect(screen.getByRole('heading', { name: 'HikeSafe 登山留守' })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: '主要操作' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '建立行程' })).toHaveAttribute('href', '/trips/new');
     expect(screen.getByRole('link', { name: '開始登山' })).toHaveAttribute('href', '/trips/active');

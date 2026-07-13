@@ -74,7 +74,7 @@ class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertPr
   async prepareDelivery({ deliveryId, claimToken }: any) {
     const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); const event = this.events.find((candidate) => candidate.id === delivery?.eventId);
     if (!delivery || !event || delivery.status !== 'claimed' || delivery.token !== claimToken || !(this.trip.status === 'active' || (this.trip.status === 'finished' && event.stage === 'finished'))) return { outcome: 'skipped' as const };
-    const messages = delivery.message ?? [{ type: 'text' as const, text: `BeSafe ${event.stage} ${this.trip.id}` }];
+    const messages = delivery.message ?? [{ type: 'text' as const, text: `HikeSafe ${event.stage} ${this.trip.id}` }];
     delivery.message = messages; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages };
   }
   async beginDeliverySend({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); const event = this.events.find((candidate) => candidate.id === delivery?.eventId); if (!delivery || !event || delivery.status !== 'claimed' || delivery.token !== claimToken || !(this.trip.status === 'active' || (this.trip.status === 'finished' && event.stage === 'finished'))) return { outcome: 'skipped' as const }; delivery.status = 'sending'; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages: delivery.message! }; }
@@ -106,7 +106,7 @@ describe('full trip flow with an explicit development repository fixture', () =>
     await recordCheckIn({ tripId: created.tripId, userId: 'member-1', message: '平安', location: gps('2026-07-12T01:10:00.000Z'), idempotencyKey: 'check-1', now: new Date('2026-07-12T01:10:00.000Z') }, store);
     await extendTrip({ tripId: created.tripId, userId: 'deputy-1', plannedFinishAt: extended, idempotencyKey: 'extend-1', now: new Date('2026-07-12T01:15:00.000Z') }, store);
     for (const at of [extended, new Date(extended.getTime() + 60 * 60_000), new Date(extended.getTime() + 120 * 60_000)]) await processDueAlerts({ now: at, repository: store, send: sendLine });
-    expect(linePushes.map((push) => push.text)).toEqual(['BeSafe started trip-1', 'BeSafe due trip-1', 'BeSafe extended trip-1', 'BeSafe overdue_60 trip-1', 'BeSafe overdue_120 trip-1']);
+    expect(linePushes.map((push) => push.text)).toEqual(['HikeSafe started trip-1', 'HikeSafe due trip-1', 'HikeSafe extended trip-1', 'HikeSafe overdue_60 trip-1', 'HikeSafe overdue_120 trip-1']);
     await finishTrip({ tripId: created.tripId, userId: 'deputy-1', location: gps('2026-07-12T05:01:00.000Z'), idempotencyKey: 'finish-1', now: new Date('2026-07-12T05:01:00.000Z') }, store);
     await processDueAlerts({ now: new Date('2026-07-12T05:02:00.000Z'), repository: store, send: sendLine });
     expect(linePushes).toHaveLength(6);

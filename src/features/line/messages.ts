@@ -67,7 +67,7 @@ const card = (
 
 export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): LineMessage => {
   if (stage === 'started') {
-    return card('#2E8B57', '已啟程：BeSafe 留守通知', trip, [
+    return card('#2E8B57', '已啟程：HikeSafe 留守通知', trip, [
       '隊伍已在登山口啟程；此通知不代表持續 GPS 追蹤。',
     ], []);
   }
@@ -77,7 +77,7 @@ export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): Lin
     ], []);
   }
   if (stage === 'help') {
-    return card('#D64545', '需要協助：請立即聯絡隊員', trip, [locationText(trip.lastLocationStatus), '此訊息不代表 BeSafe 已代為通報 119。'], [
+    return card('#D64545', '需要協助：請立即聯絡隊員', trip, [locationText(trip.lastLocationStatus), '此訊息不代表 HikeSafe 已代為通報 119。'], [
       ...(trip.viewerGrantUrl ? [{ label: '查看行程', uri: trip.viewerGrantUrl }] : []),
       { label: '複製通報摘要', clipboardText: trip.reportText ?? '' }, { label: '撥打 119', uri: 'tel:119' },
     ]);
@@ -88,7 +88,7 @@ export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): Lin
   if (stage === 'due') {
     return {
       type: 'text',
-      text: `BeSafe 提醒：${trip.routeName} 預計下山時間是 ${formatTime(trip.plannedFinishAt)}，請回報目前進度或延長下山時間。`,
+      text: `HikeSafe 提醒：${trip.routeName} 預計下山時間是 ${formatTime(trip.plannedFinishAt)}，請回報目前進度或延長下山時間。`,
     };
   }
   if (stage === 'overdue_60') {

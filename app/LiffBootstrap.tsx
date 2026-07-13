@@ -24,6 +24,6 @@ export function LiffBootstrap({ onReady }: { onReady?: () => void }) {
 
   if (state === 'ready') return null;
   if (state === 'unconfigured') return <p role="status">LINE LIFF 憑證尚未設定；目前無法登入或建立正式行程。</p>;
-  if (state === 'error') return <p role="alert">LINE 登入未完成。請在 LINE 內重新開啟 BeSafe 後再試。</p>;
+  if (state === 'error') return <p role="alert">LINE 登入未完成。請在 LINE 內重新開啟 HikeSafe 後再試。</p>;
   return <p role="status">正在確認 LINE 登入…</p>;
 }

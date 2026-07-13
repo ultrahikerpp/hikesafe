@@ -71,7 +71,7 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     automatic119Report: false,
   };
   const lines = [
-    'BeSafe 通報摘要',
+    'HikeSafe 通報摘要',
     `隊伍：${list(data.team)}`,
     `路線：${data.route}`,
     `開始時間：${taipeiTime(data.startedAt)}`,
@@ -93,7 +93,7 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     `裝備：${list(data.equipment)}`,
     `檢查點：${list(data.checkpoints)}`,
     `撤離點：${list(data.evacuationPoints)}`,
-    'BeSafe 尚未代為通報 119',
+    'HikeSafe 尚未代為通報 119',
   );
   return { text: lines.join('\n'), data };
 };

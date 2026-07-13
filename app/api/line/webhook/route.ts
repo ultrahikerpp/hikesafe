@@ -113,7 +113,7 @@ export const handleLineWebhook = async (
     try {
       await (dependencies.reply ?? replyToLine)(
         event.replyToken,
-        '已綁定 BeSafe 留守通知',
+        '已綁定 HikeSafe 留守通知',
       );
     } catch {
       (dependencies.logger ?? console).error('Unable to send LINE binding reply');

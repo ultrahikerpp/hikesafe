@@ -129,7 +129,7 @@ describe('LINE webhook binding', () => {
 
     expect(response.status).toBe(200);
     expect(repository.bound).toEqual([{ sourceType, sourceId }]);
-    expect(reply).toHaveBeenCalledWith('reply-token', '已綁定 BeSafe 留守通知');
+    expect(reply).toHaveBeenCalledWith('reply-token', '已綁定 HikeSafe 留守通知');
     expect(JSON.stringify(logger.error.mock.calls)).not.toContain(accessToken);
   });
 

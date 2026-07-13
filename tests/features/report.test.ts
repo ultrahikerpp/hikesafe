@@ -39,7 +39,7 @@ describe('buildEmergencyReport', () => {
     expect(report.text).toContain('裝備：頭燈、保暖衣');
     expect(report.text).toContain('檢查點：排雲山莊');
     expect(report.text).toContain('撤離點：塔塔加登山口');
-    expect(report.text).toContain('BeSafe 尚未代為通報 119');
+    expect(report.text).toContain('HikeSafe 尚未代為通報 119');
     expect(report.data.lastCheckIn?.location).toEqual(expect.objectContaining({ accuracyMeters: 12 }));
   });
 
