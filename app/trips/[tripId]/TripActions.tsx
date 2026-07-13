@@ -107,6 +107,7 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
   };
 
   return <section aria-label="進行中行程">
+    <p className="alert-label" aria-live="polite">安全狀態：<strong>留意</strong>，請持續回報行程進度</p>
     <dl>
       <div><dt>經過時間</dt><dd>{formatElapsed(initialState.startedAt, initialState.now)}</dd></div>
       <div><dt>預計下山</dt><dd>{formatTime(initialState.plannedFinishAt)}</dd></div>
@@ -118,7 +119,8 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     <button onClick={() => void reportProgress()}>回報目前進度</button>
     <button onClick={() => void extend()}>延長下山時間</button>
     <button onClick={() => setNotice('請自行聯絡 119 或同行者；BeSafe 不會自動通報。')}>需要協助</button>
-    <button onClick={() => void finish()}>確認全隊安全下山</button>
+    <span id="finish-description" hidden>安全下山，確認全隊已安全下山</span>
+    <button aria-describedby="finish-description" onClick={() => void finish()}>確認全隊安全下山</button>
     {notice && <p role="status">{notice}</p>}
   </section>;
 }

@@ -16,5 +16,9 @@ export const GET = async (request: Request) => {
     return NextResponse.json({ error: 'Invalid route query' }, { status: 400 });
   }
 
-  return NextResponse.json({ routes: await searchRoutes(query.data) });
+  try {
+    return NextResponse.json({ routes: await searchRoutes(query.data) });
+  } catch {
+    return NextResponse.json({ error: 'Route catalog unavailable' }, { status: 503 });
+  }
 };

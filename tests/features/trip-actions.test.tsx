@@ -27,4 +27,19 @@ describe('TripActions', () => {
       expect(screen.getByRole('button', { name: action })).toBeInTheDocument();
     }
   });
+
+  it('exposes text alert status and an accessible action label for mobile users', () => {
+    render(<TripActions tripId="trip-1" initialState={{
+      startedAt: '2026-07-12T00:00:00.000Z',
+      plannedFinishAt: '2026-07-12T05:00:00.000Z',
+      lastSuccessfulCheckInAt: undefined,
+      gpsFreshness: '未取得 GPS',
+      now: '2026-07-12T01:00:00.000Z',
+      pendingQueueCount: 0,
+    }} />);
+
+    expect(screen.getAllByText('留意')).not.toHaveLength(0);
+    expect(screen.getAllByRole('button', { name: '確認全隊安全下山' }).at(-1))
+      .toHaveAttribute('aria-describedby', 'finish-description');
+  });
 });
