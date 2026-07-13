@@ -628,7 +628,7 @@ git commit -m "feat: add overdue alert escalation"
 
 Assert the report includes team, route, start, planned finish, last successful check-in, GPS accuracy/time when present, vehicle, equipment, checkpoints, evacuation points, and `BeSafe 尚未代為通報 119`. Assert it says `最後位置未取得` when absent and never substitutes an older coordinate as current.
 
-Assert viewer grants require both a valid LINE session and matching hashed bearer token, expire 90 days after finish, and use constant-time hash comparison. Assert retention deletes latitude, longitude, and accuracy only for finished trips older than 90 days while preserving active and unresolved-alert trips.
+Assert viewer grants require both a valid LINE session and matching hashed bearer token, and use constant-time hash comparison. Delivery-derived grants retain their short retry/deadline cap; the 90-day GPS retention policy does not extend that authority. Assert retention deletes latitude, longitude, and accuracy only for finished trips older than 90 days while preserving active and unresolved-alert trips.
 
 - [ ] **Step 2: Run and confirm failure**
 

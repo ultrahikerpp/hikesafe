@@ -22,8 +22,6 @@ export function TripForm() {
   const [routeVersionId, setRouteVersionId] = useState('');
   const [region, setRegion] = useState('');
   const [mountain, setMountain] = useState('');
-  const [deputyId, setDeputyId] = useState('');
-  const [memberIds, setMemberIds] = useState('');
   const [bindings, setBindings] = useState<GuardianBinding[]>([]);
   const [guardianBindingIds, setGuardianBindingIds] = useState<string[]>([]);
   const [bindingCode, setBindingCode] = useState('');
@@ -70,10 +68,6 @@ export function TripForm() {
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    const members = [
-      ...(deputyId ? [{ userId: deputyId, role: 'deputy' }] : []),
-      ...splitLines(memberIds).map((userId) => ({ userId, role: 'member' })),
-    ];
     const response = await fetch('/api/trips', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -81,7 +75,7 @@ export function TripForm() {
         routeVersionId,
         startsAt: new Date(startsAt).toISOString(),
         plannedFinishAt: new Date(plannedFinishAt).toISOString(),
-        members,
+        members: [],
         guardianBindingIds,
         vehicle,
         equipment: splitLines(equipment),
@@ -120,9 +114,7 @@ export function TripForm() {
     </section>}
     {step === 2 && <section>
       <h2>2. 隊員與角色</h2>
-      <p>目前登入者會自動設為隊長。</p>
-      <label>副領隊使用者 ID<input value={deputyId} onChange={(event) => setDeputyId(event.target.value)} /></label>
-      <label>成員使用者 ID（每行一位）<textarea value={memberIds} onChange={(event) => setMemberIds(event.target.value)} /></label>
+      <p>目前版本預設單人行程，登入者會自動設為隊長。小隊邀請與加入流程尚未提供，因此不會要求輸入任何使用者 ID。</p>
       <button type="button" onClick={() => setStep(1)}>上一步</button>
       <button type="button" onClick={() => setStep(3)}>下一步</button>
     </section>}

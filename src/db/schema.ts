@@ -229,6 +229,16 @@ export const guardians = pgTable(
   ],
 );
 
+export const tripInvites = pgTable('trip_invites', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tripId: uuid('trip_id').notNull().references(() => trips.id),
+  tokenHash: text('token_hash').notNull().unique(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  acceptedByUserId: uuid('accepted_by_user_id').references(() => users.id),
+  acceptedAt: timestamp('accepted_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const checkIns = pgTable(
   'check_ins',
   {
@@ -298,7 +308,7 @@ export const alertEvents = pgTable(
   (table) => [
     uniqueIndex('alert_events_active_trip_stage_unique')
       .on(table.tripId, table.stage)
-      .where(sql`${table.status} in ('pending', 'claimed')`),
+      .where(sql`${table.status} in ('pending', 'claimed') and ${table.stage} in ('due', 'overdue_60', 'overdue_120')`),
     index('alert_events_pending_due_idx')
       .on(table.dueAt)
       .where(

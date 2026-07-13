@@ -19,7 +19,7 @@ describe('TripActions', () => {
     }} />);
 
     expect(screen.getByText('最後成功送出')).toBeInTheDocument();
-    expect(screen.getByText('2026-07-12 00:30 UTC')).toBeInTheDocument();
+    expect(screen.getByText('2026-07-12 08:30 Asia/Taipei')).toBeInTheDocument();
     expect(screen.getByText('待傳送回報')).toBeInTheDocument();
     expect(screen.getByText('2 筆')).toBeInTheDocument();
     expect(screen.queryByText(/已送出.*2/)).not.toBeInTheDocument();

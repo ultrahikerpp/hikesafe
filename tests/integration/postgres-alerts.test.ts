@@ -7,7 +7,8 @@ import { tmpdir } from 'node:os';
 
 import { applyMigrations } from '@/src/db/migrations';
 import { createDatabaseAlertProcessRepository, databaseAlertProcessRepository } from '@/src/features/alerts/process';
-import { finishTrip } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip } from '@/src/features/trips/commands';
+import { acceptTripInvite, assignDeputy, createTripInvite } from '@/src/features/trips/invites';
 
 const databaseUrl = process.env.BESAFE_TEST_DATABASE_URL
   ?? 'postgres://miroppp@127.0.0.1:55432/besafe_test';
@@ -63,7 +64,7 @@ const seedTrip = async () => {
     INSERT INTO trip_members (trip_id, user_id, role)
     VALUES (${tripId}, ${ownerId}, 'leader'), (${tripId}, ${deputyId}, 'deputy')
   `;
-  return { tripId, deputyId };
+  return { tripId, ownerId, deputyId };
 };
 
 const seedDelivery = async (tripId: string, status: 'pending' | 'sending' = 'pending') => {
@@ -98,7 +99,7 @@ afterAll(async () => {
 });
 
 describe('PostgreSQL alert concurrency', () => {
-  it('applies migrations 0000 through 0004 to a clean PostgreSQL schema', async () => {
+  it('applies migrations 0000 through 0005 to a clean PostgreSQL schema', async () => {
     const rows = await admin<{ version: string }[]>`
       SELECT version FROM __besafe_migrations ORDER BY version
     `;
@@ -108,6 +109,8 @@ describe('PostgreSQL alert concurrency', () => {
       '0002_cultured_mad_thinker.sql',
       '0003_nervous_umar.sql',
       '0004_lifecycle_notifications.sql',
+      '0005_alert_stage_index.sql',
+      '0006_trip_invites.sql',
     ]);
     await expect(admin`SELECT 'manual_review'::alert_delivery_status`).resolves.toHaveLength(1);
   });
@@ -246,5 +249,29 @@ describe('PostgreSQL alert concurrency', () => {
       FROM trips t JOIN alert_events e ON e.trip_id = t.id JOIN alert_deliveries d ON d.event_id = e.id
       WHERE d.id = ${claim.id}
     `).resolves.toEqual([expect.objectContaining({ trip: 'finished', delivery: 'sent', first_attempt_at: expect.any(Date), sent_at: expect.any(Date) })]);
+  });
+
+  it('records two undispatched extension notifications without conflicting with scheduled alert stages', async () => {
+    const { tripId, deputyId } = await seedTrip();
+    const firstFinish = new Date(Date.now() + 2 * 60 * 60_000);
+    const secondFinish = new Date(Date.now() + 3 * 60 * 60_000);
+
+    await extendTrip({ tripId, userId: deputyId, plannedFinishAt: firstFinish, idempotencyKey: 'extend-one', now: new Date() });
+    await extendTrip({ tripId, userId: deputyId, plannedFinishAt: secondFinish, idempotencyKey: 'extend-two', now: new Date(Date.now() + 1_000) });
+
+    await expect(admin<{ count: string }[]>`SELECT count(*) FROM alert_events WHERE trip_id = ${tripId} AND stage = 'extended' AND status = 'pending'`)
+      .resolves.toEqual([{ count: '2' }]);
+  });
+
+  it('persists a one-time draft invite, joins the LINE user as member, and lets the owner designate deputy', async () => {
+    const { tripId, ownerId } = await seedTrip();
+    await admin`UPDATE trips SET status = 'draft', started_at = null WHERE id = ${tripId}`;
+    const [{ id: memberId }] = await admin<{ id: string }[]>`INSERT INTO users (line_user_id, display_name) VALUES ('invite-member', 'Invite Member') RETURNING id`;
+    const invite = await createTripInvite({ tripId, ownerUserId: ownerId, now: new Date() });
+    await expect(acceptTripInvite({ token: invite.token, userId: memberId, now: new Date() })).resolves.toEqual({ tripId });
+    await assignDeputy({ tripId, ownerUserId: ownerId, memberUserId: memberId });
+    await expect(admin<{ role: string }[]>`SELECT role::text FROM trip_members WHERE trip_id = ${tripId} AND user_id = ${memberId}`)
+      .resolves.toEqual([{ role: 'deputy' }]);
+    await expect(acceptTripInvite({ token: invite.token, userId: memberId, now: new Date() })).rejects.toThrow('Invite is invalid or expired');
   });
 });

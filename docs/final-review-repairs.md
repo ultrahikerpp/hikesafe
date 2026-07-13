@@ -2,6 +2,7 @@
 
 - Delivery processing has two durable boundaries: `prepareDelivery` stores the recipient-specific message snapshot while the delivery remains cancellable; `beginDeliverySend` locks the trip and records `sending` immediately before an external LINE push. A finish committed before that boundary cancels the delivery. A push that has crossed it is intentionally not cancelled and remains auditable through `first_attempt_at`, retry key, status, and `sent_at`.
 - The 90-day rule applies to removal of precise completed-trip GPS. It does **not** extend dynamic viewer-grant authority to 90 days. Delivery grants retain their earlier expiry cap (including the short retry window); completed-trip authorization uses the earlier of that cap and the retention boundary.
+- The creation form supports solo trips only. Small-team invitation and role assignment require a session-bound LINE invite/join flow, which is not yet shipped; the UI deliberately exposes no internal user UUID fields.
 
 ## Browser QA, 2026-07-13
 

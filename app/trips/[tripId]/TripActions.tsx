@@ -12,9 +12,14 @@ import type { ActiveTripInitialState } from '@/src/features/trips/active-trip';
 
 export type ActiveTripState = ActiveTripInitialState;
 
-export const formatTime = (value?: string) => value
-  ? `${new Date(value).toISOString().slice(0, 16).replace('T', ' ')} UTC`
-  : '尚未取得';
+export const formatTime = (value?: string) => {
+  if (!value) return '尚未取得';
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value;
+  return `${part('year')}-${part('month')}-${part('day')} ${part('hour')}:${part('minute')} Asia/Taipei`;
+};
 
 export const formatElapsed = (startedAt?: string, now = new Date().toISOString()) => {
   if (!startedAt) return '尚未取得';
