@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   extendTrip,
   finishTrip,
+  requestHelp,
   recordCheckIn,
   startTrip,
   type TripCommandsRepository,
@@ -36,6 +37,7 @@ const makeRepository = (): TripCommandsRepository & {
     transaction: async (operation) => operation(repository),
     lockTrip: async (tripId) => tripId === 'trip-1' ? repository.trip : undefined,
     findMembership: async (_tripId, userId) => userId === 'leader-1' ? 'leader' : userId === 'deputy-1' ? 'deputy' : userId === 'member-1' ? 'member' : undefined,
+    listMembershipRoles: async () => ['leader'],
     reserveIdempotency: async ({ userId, key, requestHash }) => {
       const existing = idempotency.get(`${userId}:${key}`);
       if (existing) return { kind: 'existing', ...existing };
@@ -55,6 +57,7 @@ const makeRepository = (): TripCommandsRepository & {
       repository.trip = { ...repository.trip, plannedFinishAt };
     },
     finishTrip: async ({ finishedAt }) => { repository.calls.push('finish'); repository.trip = { ...repository.trip, status: 'finished', finishedAt }; },
+    recordHelpRequested: async () => { repository.calls.push('help-requested'); },
     cancelUnsentAlerts: async () => { repository.calls.push('cancel-alerts'); repository.alertEvents = repository.alertEvents.map((event) => event.status === 'pending' || event.status === 'claimed' ? { ...event, status: 'cancelled' } : event); },
   };
   return repository;
@@ -71,6 +74,13 @@ describe('trip lifecycle commands', () => {
     expect(repository.calls.filter((call) => call === 'notify-started')).toHaveLength(1);
     expect(repository.alertEvents.filter((event) => event.id.startsWith('new-'))).toHaveLength(3);
     await expect(startTrip({ tripId: 'trip-1', userId: 'leader-1', location: { ...freshGps, capturedAt: new Date('2026-07-12T00:54:59.000Z') }, idempotencyKey: 'stale-1', now }, makeRepository())).rejects.toThrow('Location is stale');
+  });
+
+  it('refuses to start a multi-person draft until a deputy has been designated', async () => {
+    const repository = makeRepository();
+    repository.listMembershipRoles = async () => ['leader', 'member'];
+    await expect(startTrip({ tripId: 'trip-1', userId: 'leader-1', location: freshGps, idempotencyKey: 'start-without-deputy', now }, repository))
+      .rejects.toThrow('Multi-person trips require a deputy before start');
   });
 
   it('lets a member record a text-only check-in with explicit unavailable location', async () => {
@@ -114,5 +124,17 @@ describe('trip lifecycle commands', () => {
     expect(repository.trip).toMatchObject({ status: 'finished', finishedAt: now });
     expect(repository.alertEvents.filter((event) => event.status === 'pending')).toHaveLength(0);
     expect(repository.calls.filter((call) => call === 'finish')).toHaveLength(1);
+    expect(repository.calls).toContain('notify-finished');
+  });
+
+  it('records an idempotent help request with explicit unavailable location and reliable guardian notification', async () => {
+    const repository = makeRepository();
+    repository.trip.status = 'active';
+    const command = { tripId: 'trip-1', userId: 'member-1', message: '需要協助', idempotencyKey: 'help-1', now };
+    await requestHelp(command, repository);
+    await requestHelp(command, repository);
+    expect(repository.checkIns).toEqual([expect.objectContaining({ locationStatus: 'unavailable', message: '需要協助' })]);
+    expect(repository.calls.filter((call) => call === 'help-requested')).toHaveLength(1);
+    expect(repository.calls.filter((call) => call === 'notify-help')).toHaveLength(1);
   });
 });

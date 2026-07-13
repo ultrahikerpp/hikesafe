@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 
 import { applyMigrations } from '@/src/db/migrations';
 import { createDatabaseAlertProcessRepository, databaseAlertProcessRepository } from '@/src/features/alerts/process';
-import { extendTrip, finishTrip } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip, startTrip } from '@/src/features/trips/commands';
 import { acceptTripInvite, assignDeputy, createTripInvite } from '@/src/features/trips/invites';
 
 const databaseUrl = process.env.BESAFE_TEST_DATABASE_URL
@@ -111,6 +111,7 @@ describe('PostgreSQL alert concurrency', () => {
       '0004_lifecycle_notifications.sql',
       '0005_alert_stage_index.sql',
       '0006_trip_invites.sql',
+      '0007_help_and_finish_notifications.sql',
     ]);
     await expect(admin`SELECT 'manual_review'::alert_delivery_status`).resolves.toHaveLength(1);
   });
@@ -273,5 +274,24 @@ describe('PostgreSQL alert concurrency', () => {
     await expect(admin<{ role: string }[]>`SELECT role::text FROM trip_members WHERE trip_id = ${tripId} AND user_id = ${memberId}`)
       .resolves.toEqual([{ role: 'deputy' }]);
     await expect(acceptTripInvite({ token: invite.token, userId: memberId, now: new Date() })).rejects.toThrow('Invite is invalid or expired');
+  });
+
+  it('serializes start and invite acceptance on the draft trip lock, so a late join cannot enter an active trip', async () => {
+    const { tripId, ownerId } = await seedTrip();
+    await admin`UPDATE trips SET status = 'draft', started_at = null WHERE id = ${tripId}`;
+    const [{ id: memberId }] = await admin<{ id: string }[]>`INSERT INTO users (line_user_id, display_name) VALUES ('race-member', 'Race Member') RETURNING id`;
+    const invite = await createTripInvite({ tripId, ownerUserId: ownerId, now: new Date() });
+    let start: Promise<unknown> | undefined;
+    let join: Promise<unknown> | undefined;
+    await first!.begin(async (transaction) => {
+      await transaction`SELECT id FROM trips WHERE id = ${tripId} FOR UPDATE`;
+      start = startTrip({ tripId, userId: ownerId, location: { latitude: 24.1, longitude: 121.1, accuracyMeters: 12, capturedAt: new Date(), source: 'gps' }, idempotencyKey: 'race-start', now: new Date() });
+      join = acceptTripInvite({ token: invite.token, userId: memberId, now: new Date() });
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    });
+    await expect(start).resolves.toMatchObject({ status: 'active' });
+    await expect(join).rejects.toThrow('Invite is invalid or expired');
+    await expect(admin<{ count: string }[]>`SELECT count(*) FROM trip_members WHERE trip_id = ${tripId} AND user_id = ${memberId}`)
+      .resolves.toEqual([{ count: '0' }]);
   });
 });

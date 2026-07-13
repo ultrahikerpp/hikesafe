@@ -35,13 +35,15 @@ type IdempotencyReservation =
 export interface TripCommandsTransaction {
   lockTrip(tripId: string): Promise<TripSnapshot | undefined>;
   findMembership(tripId: string, userId: string): Promise<TripRole | undefined>;
+  listMembershipRoles(tripId: string): Promise<TripRole[]>;
   reserveIdempotency(input: { userId: string; key: string; requestHash: string }): Promise<IdempotencyReservation>;
   saveIdempotencyResponse(input: { userId: string; key: string; result: unknown }): Promise<void>;
   activateTrip(input: { tripId: string; startedAt: Date }): Promise<void>;
-  createLifecycleNotification(input: { tripId: string; kind: 'started' | 'extended'; dueAt: Date }): Promise<void>;
+  createLifecycleNotification(input: { tripId: string; kind: 'started' | 'extended' | 'help' | 'finished'; dueAt: Date }): Promise<void>;
   insertCheckIn(input: Omit<StoredCheckIn, 'id'>): Promise<StoredCheckIn>;
   replaceUnsentAlertSchedule(input: { tripId: string; plannedFinishAt: Date }): Promise<void>;
   finishTrip(input: { tripId: string; finishedAt: Date }): Promise<void>;
+  recordHelpRequested(input: { tripId: string; at: Date }): Promise<void>;
   cancelUnsentAlerts(tripId: string): Promise<void>;
 }
 
@@ -82,6 +84,7 @@ export interface FinishTripCommand {
   idempotencyKey: string;
   now: Date;
 }
+export interface HelpTripCommand extends FinishTripCommand {}
 
 const assertGps = (location: LocationFix, now: Date) => {
   if (location.source !== 'gps') throw new Error('Location must be GPS');
@@ -158,6 +161,8 @@ export const startTrip = async (
   }, async () => {
     assertStatus(trip, 'draft');
     assertGps(command.location, command.now);
+    const roles = await transaction.listMembershipRoles(trip.id);
+    if (roles.length > 1 && !roles.includes('deputy')) throw new Error('Multi-person trips require a deputy before start');
     await transaction.activateTrip({ tripId: trip.id, startedAt: command.now });
     await transaction.replaceUnsentAlertSchedule({ tripId: trip.id, plannedFinishAt: trip.plannedFinishAt });
     await transaction.createLifecycleNotification({ tripId: trip.id, kind: 'started', dueAt: command.now });
@@ -214,7 +219,24 @@ export const finishTrip = async (
     const finalCheckIn = await transaction.insertCheckIn(checkInValues(command));
     await transaction.finishTrip({ tripId: trip.id, finishedAt: command.now });
     await transaction.cancelUnsentAlerts(trip.id);
+    await transaction.createLifecycleNotification({ tripId: trip.id, kind: 'finished', dueAt: command.now });
     return { tripId: trip.id, finishedAt: command.now, finalCheckInId: finalCheckIn.id };
+  });
+});
+
+export const requestHelp = async (
+  command: HelpTripCommand,
+  repository: TripCommandsRepository = databaseRepository,
+) => repository.transaction(async (transaction) => {
+  const trip = await transaction.lockTrip(command.tripId);
+  if (!trip) throw new Error('Trip not found');
+  assertMember(await transaction.findMembership(command.tripId, command.userId));
+  return runIdempotent(transaction, command.userId, command.idempotencyKey, { tripId: command.tripId, message: command.message, location: command.location, kind: 'help' }, async () => {
+    assertStatus(trip, 'active');
+    const checkIn = await transaction.insertCheckIn(checkInValues(command));
+    await transaction.recordHelpRequested({ tripId: trip.id, at: command.now });
+    await transaction.createLifecycleNotification({ tripId: trip.id, kind: 'help', dueAt: command.now });
+    return { tripId: trip.id, helpCheckInId: checkIn.id, requestedAt: command.now };
   });
 });
 
@@ -230,6 +252,10 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
     const [membership] = await database.select({ role: tripMembers.role }).from(tripMembers)
       .where(and(eq(tripMembers.tripId, tripId), eq(tripMembers.userId, userId))).limit(1);
     return membership?.role;
+  },
+  async listMembershipRoles(tripId) {
+    const memberships = await database.select({ role: tripMembers.role }).from(tripMembers).where(eq(tripMembers.tripId, tripId));
+    return memberships.map((membership: { role: TripRole }) => membership.role);
   },
   async reserveIdempotency({ userId, key, requestHash }) {
     const [inserted] = await database.insert(idempotencyKeys).values({ userId, key, requestHash })
@@ -248,6 +274,9 @@ const databaseTransaction = (database: any): TripCommandsTransaction => ({
   },
   async createLifecycleNotification({ tripId, kind, dueAt }) {
     await database.insert(alertEvents).values({ tripId, stage: kind, status: 'pending', dueAt });
+  },
+  async recordHelpRequested({ tripId, at }) {
+    await database.update(trips).set({ helpRequestedAt: at, updatedAt: at }).where(eq(trips.id, tripId));
   },
   async insertCheckIn(value) {
     const [checkIn] = await database.insert(checkIns).values(value).returning();

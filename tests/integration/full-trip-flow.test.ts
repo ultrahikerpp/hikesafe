@@ -46,6 +46,7 @@ class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertPr
   }
   async lockTrip(id: string) { return id === this.trip.id ? this.trip : undefined; }
   async findMembership(_tripId: string, userId: string) { return userId === 'leader-1' ? 'leader' : userId === 'deputy-1' ? 'deputy' : userId === 'member-1' ? 'member' : undefined; }
+  async listMembershipRoles() { return ['leader']; }
   async activateTrip({ startedAt }: any) { this.trip.status = 'active'; this.trip.startedAt = startedAt; }
   async createLifecycleNotification({ kind, dueAt }: any) { this.events.push({ id: `event-${++this.next}`, stage: kind, dueAt, status: 'pending' }); }
   async insertCheckIn(input: any) { const checkIn = { id: `check-in-${this.checkIns.length + 1}`, ...input }; this.checkIns.push(checkIn); return checkIn; }
@@ -59,24 +60,24 @@ class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertPr
   async finishTrip({ finishedAt }: any) { this.trip.status = 'finished'; this.trip.finishedAt = finishedAt; }
   async cancelUnsentAlerts() { this.events.forEach((event) => { if (event.status === 'pending' || event.status === 'claimed') event.status = 'cancelled'; }); this.deliveries.forEach((delivery) => { if (delivery.status !== 'sent') delivery.status = 'cancelled'; }); }
   async claimDueActiveEvents({ now }: any) {
-    return this.events.filter((event) => this.trip.status === 'active' && event.status === 'pending' && event.dueAt <= now).map((event) => {
+    return this.events.filter((event) => (this.trip.status === 'active' || (this.trip.status === 'finished' && event.stage === 'finished')) && event.status === 'pending' && event.dueAt <= now).map((event) => {
       event.status = 'claimed'; event.token = `event-token-${event.id}`; return { eventId: event.id, claimToken: event.token!, claimVersion: 1 };
     });
   }
   async dispatchClaim({ claim }: any) {
     const event = this.events.find((candidate) => candidate.id === claim.eventId);
-    if (!event || event.status !== 'claimed' || this.trip.status !== 'active') return 'skipped' as const;
+    if (!event || event.status !== 'claimed' || !(this.trip.status === 'active' || (this.trip.status === 'finished' && event.stage === 'finished'))) return 'skipped' as const;
     event.status = 'sent'; this.deliveries.push({ id: `delivery-${event.id}`, eventId: event.id, status: 'pending', retryKey: `retry-${event.id}`, attempts: 0 });
     return 'dispatched' as const;
   }
   async claimDueDeliveries() { return this.deliveries.filter((delivery) => delivery.status === 'pending').map((delivery) => { delivery.status = 'claimed'; delivery.token = `delivery-token-${delivery.id}-${delivery.attempts}`; return { id: delivery.id, claimToken: delivery.token! }; }); }
   async prepareDelivery({ deliveryId, claimToken }: any) {
     const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); const event = this.events.find((candidate) => candidate.id === delivery?.eventId);
-    if (!delivery || !event || delivery.status !== 'claimed' || delivery.token !== claimToken || this.trip.status !== 'active') return { outcome: 'skipped' as const };
+    if (!delivery || !event || delivery.status !== 'claimed' || delivery.token !== claimToken || !(this.trip.status === 'active' || (this.trip.status === 'finished' && event.stage === 'finished'))) return { outcome: 'skipped' as const };
     const messages = delivery.message ?? [{ type: 'text' as const, text: `BeSafe ${event.stage} ${this.trip.id}` }];
     delivery.message = messages; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages };
   }
-  async beginDeliverySend({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); if (!delivery || delivery.status !== 'claimed' || delivery.token !== claimToken || this.trip.status !== 'active') return { outcome: 'skipped' as const }; delivery.status = 'sending'; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages: delivery.message! }; }
+  async beginDeliverySend({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); const event = this.events.find((candidate) => candidate.id === delivery?.eventId); if (!delivery || !event || delivery.status !== 'claimed' || delivery.token !== claimToken || !(this.trip.status === 'active' || (this.trip.status === 'finished' && event.stage === 'finished'))) return { outcome: 'skipped' as const }; delivery.status = 'sending'; return { outcome: 'ready' as const, id: delivery.id, claimToken, to: 'line-recipient-1', retryKey: delivery.retryKey, messages: delivery.message! }; }
   async markDeliverySent({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); if (!delivery || delivery.status !== 'sending' || delivery.token !== claimToken) return false; delivery.status = 'sent'; return true; }
   async rescheduleDeliveryFailure({ deliveryId, claimToken }: any) { const delivery = this.deliveries.find((candidate) => candidate.id === deliveryId); if (!delivery || delivery.status !== 'sending' || delivery.token !== claimToken) return false; delivery.status = 'pending'; delivery.attempts += 1; return true; }
   async confirmClaimedActiveEvent() { return undefined; }
@@ -108,7 +109,7 @@ describe('full trip flow with an explicit development repository fixture', () =>
     expect(linePushes.map((push) => push.text)).toEqual(['BeSafe started trip-1', 'BeSafe due trip-1', 'BeSafe extended trip-1', 'BeSafe overdue_60 trip-1', 'BeSafe overdue_120 trip-1']);
     await finishTrip({ tripId: created.tripId, userId: 'deputy-1', location: gps('2026-07-12T05:01:00.000Z'), idempotencyKey: 'finish-1', now: new Date('2026-07-12T05:01:00.000Z') }, store);
     await processDueAlerts({ now: new Date('2026-07-12T05:02:00.000Z'), repository: store, send: sendLine });
-    expect(linePushes).toHaveLength(5);
+    expect(linePushes).toHaveLength(6);
     await expect(deleteExpiredPreciseLocations(() => new Date('2026-10-12T05:02:00.000Z'), store)).resolves.toEqual({ deleted: 2 });
     expect(store.checkIns.every((checkIn) => checkIn.locationStatus !== 'available')).toBe(true);
   });

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export function LiffBootstrap() {
+export function LiffBootstrap({ onReady }: { onReady?: () => void }) {
   const [state, setState] = useState<'loading' | 'ready' | 'unconfigured' | 'error'>('loading');
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function LiffBootstrap() {
         if (!idToken) throw new Error('LINE ID token unavailable');
         const response = await fetch('/api/auth/line', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ idToken }) });
         if (!response.ok) throw new Error('LINE login failed');
-        setState('ready');
+        setState('ready'); onReady?.();
       } catch { setState('error'); }
     })();
   }, []);

@@ -160,7 +160,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
     const rows = await db.transaction((transaction) => transaction.execute(sql`
       WITH due_events AS (
         SELECT ${alertEvents.id} FROM ${alertEvents} INNER JOIN ${trips} ON ${trips.id} = ${alertEvents.tripId}
-        WHERE ${trips.status} = 'active' AND (( ${alertEvents.status} = 'pending' AND ${alertEvents.dueAt} <= ${instant}
+        WHERE (${trips.status} = 'active' OR (${trips.status} = 'finished' AND ${alertEvents.stage} = 'finished')) AND (( ${alertEvents.status} = 'pending' AND ${alertEvents.dueAt} <= ${instant}
           AND (${alertEvents.nextAttemptAt} IS NULL OR ${alertEvents.nextAttemptAt} <= ${instant}))
           OR (${alertEvents.status} = 'claimed' AND ${alertEvents.claimExpiresAt} <= ${instant}))
         ORDER BY ${alertEvents.dueAt} FOR UPDATE OF ${alertEvents} SKIP LOCKED LIMIT ${limit}
@@ -179,7 +179,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
       const [event] = await transaction.select({ id: alertEvents.id, tripId: trips.id, stage: alertEvents.stage, status: trips.status })
         .from(alertEvents).innerJoin(trips, eq(trips.id, alertEvents.tripId))
         .where(and(eq(alertEvents.id, claim.eventId), eq(alertEvents.status, 'claimed'), eq(alertEvents.claimToken, claim.claimToken), eq(alertEvents.claimVersion, claim.claimVersion))).for('update').limit(1);
-      if (!event || event.status !== 'active') {
+      if (!event || !(event.status === 'active' || (event.status === 'finished' && event.stage === 'finished'))) {
         if (event) await transaction.update(alertEvents).set({ status: 'cancelled' }).where(eq(alertEvents.id, event.id));
         return 'skipped' as const;
       }
@@ -211,7 +211,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
       const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, guardianId: alertDeliveries.guardianId, guardianLineUserId: alertDeliveries.guardianLineUserId, viewerGrantEligible: alertDeliveries.viewerGrantEligible, grantVersion: alertDeliveries.grantVersion, firstAttemptAt: alertDeliveries.firstAttemptAt, retryDeadlineAt: alertDeliveries.retryDeadlineAt, stage: alertEvents.stage, tripId: trips.id, tripStatus: trips.status, plannedFinishAt: trips.plannedFinishAt, startedAt: trips.startedAt, startsAt: trips.startsAt, vehicle: trips.vehicle, equipment: trips.equipment, routeName: routeVersions.routeName, checkpoints: routeVersions.checkpoints, evacuationPoints: routeVersions.evacuationPoints, leaderPhone: trips.leaderPhone })
         .from(alertDeliveries).innerJoin(alertEvents, eq(alertEvents.id, alertDeliveries.eventId)).innerJoin(trips, eq(trips.id, alertEvents.tripId)).innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
         .where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'claimed'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).for('update').limit(1);
-      if (!delivery || delivery.tripStatus !== 'active') {
+      if (!delivery || !(delivery.tripStatus === 'active' || (delivery.tripStatus === 'finished' && delivery.stage === 'finished'))) {
         if (delivery) await transaction.update(alertDeliveries).set({ status: 'cancelled' }).where(eq(alertDeliveries.id, delivery.id));
         return { outcome: 'skipped' as const };
       }
@@ -236,7 +236,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
         if (delivery.stage === 'overdue_120' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
           const token = createGrantToken(delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET);
           await transaction.insert(viewerGrants).values({ tripId: delivery.tripId, guardianId: delivery.guardianId, deliveryId: delivery.id, tokenVersion: delivery.grantVersion, guardianLineUserId: delivery.guardianLineUserId, tokenHash: hashViewerGrant(token), expiresAt: deadline }).onConflictDoNothing();
-          trip.viewerGrantUrl = `https://liff.line.me/${getEnv().NEXT_PUBLIC_LIFF_ID}/api/trips/${delivery.tripId}/guardian-viewer?grant=${grantTokenMarker}`;
+          trip.viewerGrantUrl = `https://liff.line.me/${getEnv().NEXT_PUBLIC_LIFF_ID}/trips/${delivery.tripId}/guardian-viewer?grant=${grantTokenMarker}`;
         }
         messages = [buildLineMessage(delivery.stage, trip)];
       }
@@ -251,13 +251,13 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
       import('@/src/db/client'), import('@/src/db/schema'), import('drizzle-orm'),
     ]);
     return db.transaction(async (transaction) => {
-      const [trip] = await transaction.select({ status: trips.status }).from(trips)
+      const [trip] = await transaction.select({ status: trips.status, stage: alertEvents.stage }).from(trips)
         .innerJoin(alertEvents, eq(alertEvents.tripId, trips.id))
         .innerJoin(alertDeliveries, eq(alertDeliveries.eventId, alertEvents.id))
         .where(eq(alertDeliveries.id, deliveryId)).for('update').limit(1);
       const [delivery] = await transaction.select({ id: alertDeliveries.id, claimToken: alertDeliveries.claimToken, retryKey: alertDeliveries.retryKey, message: alertDeliveries.message, recipientId: alertDeliveries.recipientId, grantVersion: alertDeliveries.grantVersion, firstAttemptAt: alertDeliveries.firstAttemptAt, retryDeadlineAt: alertDeliveries.retryDeadlineAt })
         .from(alertDeliveries).where(and(eq(alertDeliveries.id, deliveryId), eq(alertDeliveries.status, 'claimed'), claimToken ? eq(alertDeliveries.claimToken, claimToken) : undefined!)).for('update').limit(1);
-      if (!trip || !delivery || trip.status !== 'active') return { outcome: 'skipped' as const };
+      if (!trip || !delivery || !(trip.status === 'active' || (trip.status === 'finished' && trip.stage === 'finished'))) return { outcome: 'skipped' as const };
       if (!delivery.message || (delivery.retryDeadlineAt && delivery.retryDeadlineAt <= now)) return { outcome: 'expired' as const };
       await transaction.update(alertDeliveries).set({ status: 'sending', firstAttemptAt: delivery.firstAttemptAt ?? now, claimExpiresAt: new Date(now.getTime() + 5 * 60_000) })
         .where(and(eq(alertDeliveries.id, delivery.id), eq(alertDeliveries.status, 'claimed'), eq(alertDeliveries.claimToken, delivery.claimToken!)));

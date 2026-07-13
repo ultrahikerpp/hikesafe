@@ -43,6 +43,8 @@ export const locationStatusEnum = pgEnum('location_status', [
 export const alertStageEnum = pgEnum('alert_stage', [
   'started',
   'extended',
+  'help',
+  'finished',
   'due',
   'overdue_60',
   'overdue_120',
@@ -150,6 +152,7 @@ export const trips = pgTable(
     }).notNull(),
     startedAt: timestamp('started_at', { withTimezone: true }),
     finishedAt: timestamp('finished_at', { withTimezone: true }),
+    helpRequestedAt: timestamp('help_requested_at', { withTimezone: true }),
     vehicle: text('vehicle').notNull().default(''),
     equipment: jsonb('equipment').notNull().default([]),
     leaderPhone: text('leader_phone').notNull().default(''),

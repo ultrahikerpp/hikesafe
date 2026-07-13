@@ -110,6 +110,12 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     });
     setNotice(response.ok ? '行程已結束' : '無法結束行程');
   };
+  const help = async () => {
+    const message = window.prompt('求助內容（可在無定位時只送文字）') ?? undefined;
+    const location = await locationFix();
+    const response = await fetch(`/api/trips/${tripId}/help`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message, location, idempotencyKey: crypto.randomUUID() }) });
+    setNotice(response.ok ? '求助通知已建立並送往留守人。' : '無法建立求助通知。');
+  };
 
   return <section aria-label="進行中行程">
     <p className="alert-label" aria-live="polite">安全狀態：<strong>留意</strong>，請持續回報行程進度</p>
@@ -123,7 +129,7 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     {pendingQueueCount > 0 && <button onClick={() => void retryPending()}>重試待傳送回報</button>}
     <button onClick={() => void reportProgress()}>回報目前進度</button>
     <button onClick={() => void extend()}>延長下山時間</button>
-    <button onClick={() => setNotice('請自行聯絡 119 或同行者；BeSafe 不會自動通報。')}>需要協助</button>
+    <button onClick={() => void help()}>需要協助</button>
     <span id="finish-description" hidden>安全下山，確認全隊已安全下山</span>
     <button aria-describedby="finish-description" onClick={() => void finish()}>確認全隊安全下山</button>
     {notice && <p role="status">{notice}</p>}

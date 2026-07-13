@@ -66,9 +66,13 @@ function databaseTransaction(database: any): TripInviteRepository {
       await database.insert(tripInvites).values(value);
     },
     async consumeInvite({ tokenHash, userId, now }) {
-      const [{ and, eq, gt, isNull }, { tripInvites }] = await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
+      const [{ and, eq, gt, isNull }, { tripInvites, trips }] = await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
+      const [candidate] = await database.select({ id: tripInvites.id, tripId: tripInvites.tripId }).from(tripInvites)
+        .innerJoin(trips, eq(trips.id, tripInvites.tripId))
+        .where(and(eq(tripInvites.tokenHash, tokenHash), gt(tripInvites.expiresAt, now), isNull(tripInvites.acceptedAt), eq(trips.status, 'draft'))).for('update').limit(1);
+      if (!candidate) return undefined;
       const [invite] = await database.update(tripInvites).set({ acceptedByUserId: userId, acceptedAt: now })
-        .where(and(eq(tripInvites.tokenHash, tokenHash), gt(tripInvites.expiresAt, now), isNull(tripInvites.acceptedAt))).returning({ tripId: tripInvites.tripId });
+        .where(and(eq(tripInvites.id, candidate.id), isNull(tripInvites.acceptedAt))).returning({ tripId: tripInvites.tripId });
       return invite?.tripId;
     },
     async addMember({ tripId, userId }) {

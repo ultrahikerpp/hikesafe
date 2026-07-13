@@ -31,10 +31,12 @@ class RaceStore implements AlertProcessRepository, TripCommandsRepository {
   async transaction<T>(operation: (transaction: any) => Promise<T>) { return operation(this); }
   async lockTrip(id: string) { return id === this.trip.id ? this.trip : undefined; }
   async findMembership(_tripId: string, userId: string) { return userId === 'deputy-1' ? 'deputy' : undefined; }
+  async listMembershipRoles() { return ['leader', 'deputy']; }
   async reserveIdempotency({ userId, key, requestHash }: any) { const id = `${userId}:${key}`; const existing = this.idempotency.get(id); if (existing) return { kind: 'existing' as const, ...existing }; this.idempotency.set(id, { requestHash, result: undefined }); return { kind: 'reserved' as const }; }
   async saveIdempotencyResponse({ userId, key, result }: any) { this.idempotency.set(`${userId}:${key}`, { requestHash: this.idempotency.get(`${userId}:${key}`)!.requestHash, result }); }
   async insertCheckIn(input: any) { return { id: 'finish-checkin', ...input }; }
   async finishTrip({ finishedAt }: any) { this.trip.status = 'finished'; this.trip.finishedAt = finishedAt; }
+  async createLifecycleNotification() {}
   async cancelUnsentAlerts() { this.events.forEach((event) => { if (event.status !== 'cancelled') event.status = 'cancelled'; }); this.deliveries.forEach((delivery) => { if (delivery.status !== 'sent') delivery.status = 'cancelled'; }); }
   async activateTrip() {}
   async replaceUnsentAlertSchedule() {}

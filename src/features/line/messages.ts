@@ -76,6 +76,15 @@ export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): Lin
       '新的預計下山時間已更新，後續逾時提醒會依此時間計算。',
     ], []);
   }
+  if (stage === 'help') {
+    return card('#D64545', '需要協助：請立即聯絡隊員', trip, [locationText(trip.lastLocationStatus), '此訊息不代表 BeSafe 已代為通報 119。'], [
+      ...(trip.viewerGrantUrl ? [{ label: '查看行程', uri: trip.viewerGrantUrl }] : []),
+      { label: '複製通報摘要', clipboardText: trip.reportText ?? '' }, { label: '撥打 119', uri: 'tel:119' },
+    ]);
+  }
+  if (stage === 'finished') {
+    return card('#2E8B57', '已安全下山', trip, [locationText(trip.lastLocationStatus), '行程已結束，未送出的逾時警示已取消。'], []);
+  }
   if (stage === 'due') {
     return {
       type: 'text',
