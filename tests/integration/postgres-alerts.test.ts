@@ -99,7 +99,7 @@ afterAll(async () => {
 });
 
 describe('PostgreSQL alert concurrency', () => {
-  it('applies migrations 0000 through 0005 to a clean PostgreSQL schema', async () => {
+  it('applies migrations 0000 through 0007 to a clean PostgreSQL schema', async () => {
     const rows = await admin<{ version: string }[]>`
       SELECT version FROM __besafe_migrations ORDER BY version
     `;
