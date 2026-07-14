@@ -47,14 +47,22 @@ const seedTrip = async () => {
     INSERT INTO route_versions (
       route_id, mountain_name, route_name, region, kind, start_latitude,
       start_longitude, distance_km, elevation_gain_meters, duration_minutes,
-      difficulty, checkpoints, evacuation_points, permit_notes,
+      elevation_difference_meters, designations, difficulty, checkpoints, evacuation_points, permit_notes,
       source_organization, source_url, source_version, reviewed_at
     ) VALUES (
       ${routeId}, 'Test Mountain', 'Test Route', 'test', 'suburban', 24.1,
-      121.1, 1, 1, 60, 1, '[]'::jsonb, '[]'::jsonb, '',
+      121.1, 1, ${null}, 60, 597, '["taiwan_small_hundred_peak"]'::jsonb, 1, '[]'::jsonb, '[]'::jsonb, '',
       'Test', 'https://example.test', '1', now()
     ) RETURNING id
   `;
+  await expect(admin<{ elevation_gain_meters: number | null; elevation_difference_meters: number | null; designations: string[] }[]>`
+    SELECT elevation_gain_meters, elevation_difference_meters, designations
+    FROM route_versions WHERE id = ${routeVersionId}
+  `).resolves.toEqual([{
+    elevation_gain_meters: null,
+    elevation_difference_meters: 597,
+    designations: ['taiwan_small_hundred_peak'],
+  }]);
   const [{ id: tripId }] = await admin<{ id: string }[]>`
     INSERT INTO trips (owner_user_id, route_version_id, status, starts_at, planned_finish_at, started_at)
     VALUES (${ownerId}, ${routeVersionId}, 'active', now() - interval '1 hour', now() + interval '1 hour', now())
@@ -99,7 +107,7 @@ afterAll(async () => {
 });
 
 describe('PostgreSQL alert concurrency', () => {
-  it('applies migrations 0000 through 0007 to a clean PostgreSQL schema', async () => {
+  it('applies migrations 0000 through 0008 to a clean PostgreSQL schema', async () => {
     const rows = await admin<{ version: string }[]>`
       SELECT version FROM __besafe_migrations ORDER BY version
     `;
@@ -112,6 +120,7 @@ describe('PostgreSQL alert concurrency', () => {
       '0005_alert_stage_index.sql',
       '0006_trip_invites.sql',
       '0007_help_and_finish_notifications.sql',
+      '0008_route_catalog_designations.sql',
     ]);
     await expect(admin`SELECT 'manual_review'::alert_delivery_status`).resolves.toHaveLength(1);
   });
