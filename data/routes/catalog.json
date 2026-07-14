@@ -55,5 +55,359 @@
     ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "jingualiao-fish-fern-trail",
+    "mountainName": "金瓜寮魚蕨步道",
+    "routeName": "金瓜寮魚蕨步道",
+    "region": "新北市坪林區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 10,
+    "durationMinutes": 35,
+    "difficulty": 1,
+    "checkpoints": [
+      { "name": "金瓜寮魚蕨步道北口", "order": 1 },
+      { "name": "觀魚、鳥平臺叉路", "order": 2 },
+      { "name": "金瓜寮魚蕨步道南口", "order": 3 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=004",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=004",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "jiaoxi-paoma-ancient-trail",
+    "mountainName": "礁溪跑馬古道",
+    "routeName": "礁溪跑馬古道",
+    "region": "新北市坪林區；宜蘭縣礁溪鄉、頭城鎮",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 169,
+    "durationMinutes": 135,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "南出入口", "order": 1 },
+      { "name": "山神廟", "order": 2 },
+      { "name": "跑馬勒石", "order": 3 },
+      { "name": "上新花園", "order": 4 },
+      { "name": "北出入口", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=007",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=007",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "linmei-shipan-trail",
+    "mountainName": "林美石磐步道",
+    "routeName": "林美石磐步道",
+    "region": "宜蘭縣礁溪鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 100,
+    "durationMinutes": 60,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "林美石磐步道入口", "order": 1 },
+      { "name": "木馬道", "order": 2 },
+      { "name": "水圳遺跡", "order": 3 },
+      { "name": "木橋", "order": 4 },
+      { "name": "觀瀑亭", "order": 5 },
+      { "name": "石磐瀑布", "order": 6 },
+      { "name": "竹林區", "order": 7 },
+      { "name": "林美石磐步道入口", "order": 8 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=008",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=008",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "cuifeng-lake-circuit-trail",
+    "mountainName": "翠峰湖環山步道",
+    "routeName": "翠峰湖環山步道",
+    "region": "宜蘭縣南澳鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3.95,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 160,
+    "durationMinutes": 135,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "步道西口/翠峰景觀道路15.5K處", "order": 1 },
+      { "name": "解說展示站", "order": 2 },
+      { "name": "景觀平臺", "order": 3 },
+      { "name": "觀湖平臺", "order": 4 },
+      { "name": "觀日臺", "order": 5 },
+      { "name": "觀湖平臺", "order": 6 },
+      { "name": "步道東口/翠峰景觀道路16.5K處", "order": 7 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=014",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=014",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "tonghou-crossing-trail",
+    "mountainName": "桶後越嶺步道",
+    "routeName": "桶後越嶺步道",
+    "region": "新北市烏來區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 280,
+    "durationMinutes": 180,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "桶後吊橋登山口", "order": 1 },
+      { "name": "雙溪口過桶後溪", "order": 2 },
+      { "name": "廢棄吊橋", "order": 3 },
+      { "name": "烘爐地山岔路", "order": 4 },
+      { "name": "越嶺鞍部", "order": 5 },
+      { "name": "鞍部溪谷", "order": 6 },
+      { "name": "烘爐地山、小礁溪山岔路", "order": 7 },
+      { "name": "7K登山口", "order": 8 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=028",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=028",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "hengling-mountain-trail",
+    "mountainName": "橫嶺山步道",
+    "routeName": "橫嶺山步道",
+    "region": "臺中市和平區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 6.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 350,
+    "durationMinutes": 210,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "橫嶺山隧道口", "order": 1 },
+      { "name": "0.9K橫嶺山主峰岔路", "order": 2 },
+      { "name": "2.5K指標（工寮遺跡岔路）", "order": 3 },
+      { "name": "3.5K指標", "order": 4 },
+      { "name": "大雪山生態教室", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=048",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=048",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "yuanzui-shaolai-xiaoxueshan-national-trail",
+    "mountainName": "鳶嘴稍來小雪山國家步道",
+    "routeName": "鳶嘴稍來小雪山國家步道",
+    "region": "臺中市和平區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 15.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 800,
+    "durationMinutes": 540,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "鳶嘴山登山口/大雪山林道27K", "order": 1 },
+      { "name": "鳶嘴山", "order": 2 },
+      { "name": "稍來山", "order": 3 },
+      { "name": "大雪山林道35.1K收費站", "order": 4 },
+      { "name": "船型山", "order": 5 },
+      { "name": "瞭望台", "order": 6 },
+      { "name": "鞍馬山", "order": 7 },
+      { "name": "小雪山旅遊資訊站停車場/大雪山林道49K", "order": 8 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=060",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=060",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "hehuan-peak-trail",
+    "mountainName": "合歡尖山步道",
+    "routeName": "合歡尖山步道",
+    "region": "南投縣仁愛鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 0.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 107,
+    "durationMinutes": 30,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "合歡山莊旁登山口", "order": 1 },
+      { "name": "合歡尖山山頂", "order": 2 },
+      { "name": "台14甲線33.4K停車場", "order": 3 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=061",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=061",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "tefuyo-ancient-trail",
+    "mountainName": "特富野古道",
+    "routeName": "特富野古道",
+    "region": "嘉義縣阿里山鄉；南投縣信義鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 6.32,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 484,
+    "durationMinutes": 150,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "自忠登山口", "order": 1 },
+      { "name": "東水山登山口岔路", "order": 2 },
+      { "name": "鐵道中止處", "order": 3 },
+      { "name": "岔路口", "order": 4 },
+      { "name": "特富野登山口", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=081",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=081",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "erwanping-trail",
+    "mountainName": "二萬坪步道",
+    "routeName": "二萬坪步道",
+    "region": "嘉義縣阿里山鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 0.3,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 9,
+    "durationMinutes": 15,
+    "difficulty": 1,
+    "checkpoints": [
+      { "name": "二萬坪步道起點", "order": 1 },
+      { "name": "二萬坪步道終點", "order": 2 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=095",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=095",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
   }
 ]
