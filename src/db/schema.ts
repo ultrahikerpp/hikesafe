@@ -116,6 +116,7 @@ export const routeVersions = pgTable(
     permitNotes: text('permit_notes'),
     sourceOrganization: text('source_organization').notNull(),
     sourceUrl: text('source_url').notNull(),
+    sourceReferences: jsonb('source_references').notNull().default([]),
     sourceVersion: text('source_version').notNull(),
     reviewedAt: timestamp('reviewed_at', { withTimezone: true }).notNull(),
     isActive: boolean('is_active').notNull().default(true),

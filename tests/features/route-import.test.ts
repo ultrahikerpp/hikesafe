@@ -24,14 +24,40 @@ const sourceRegistry = [
     organization: validRoute.sourceOrganization,
     url: validRoute.sourceUrl,
   },
+  {
+    organization: '農業部林業及自然保育署',
+    url: 'https://recreation.forest.gov.tw/Trail/RT?tr_id=140',
+  },
 ];
+
+const routeWithSourceReferences = {
+  ...validRoute,
+  sourceReferences: [
+    {
+      organization: validRoute.sourceOrganization,
+      url: validRoute.sourceUrl,
+      fields: ['startLat', 'startLng'],
+    },
+    {
+      organization: '農業部林業及自然保育署',
+      url: 'https://recreation.forest.gov.tw/Trail/RT?tr_id=140',
+      fields: [
+        'distanceKm',
+        'durationMinutes',
+        'difficulty',
+        'checkpoints',
+        'permitNotes',
+      ],
+    },
+  ],
+};
 
 const routeFor = (
   mountainName: string,
   kind: 'hundred_peak' | 'suburban',
   index: number,
 ) => ({
-  ...validRoute,
+  ...routeWithSourceReferences,
   slug: `${kind.replace('_', '-')}-${index}`,
   mountainName,
   kind,
@@ -48,11 +74,34 @@ const launchCatalog = [
 ];
 
 it('requires traceable source and review metadata', () => {
-  expect(validateRouteInput(validRoute).sourceUrl).toMatch(/^https:/);
-  expect(() => validateRouteInput({ ...validRoute, sourceUrl: '' })).toThrow();
-  expect(() => validateRouteInput({ ...validRoute, checkpoints: [] })).toThrow();
+  expect(validateRouteInput(routeWithSourceReferences).sourceUrl).toMatch(
+    /^https:/,
+  );
+  expect(() =>
+    validateRouteInput({ ...routeWithSourceReferences, sourceUrl: '' }),
+  ).toThrow();
+  expect(() =>
+    validateRouteInput({ ...routeWithSourceReferences, checkpoints: [] }),
+  ).toThrow();
   expect(
-    () => validateRouteInput({ ...validRoute, elevationDifferenceM: -1 }),
+    () => validateRouteInput({ ...routeWithSourceReferences, elevationDifferenceM: -1 }),
+  ).toThrow();
+});
+
+it('requires ordered field-level official source references', () => {
+  expect(validateRouteInput(routeWithSourceReferences).sourceReferences).toEqual(
+    routeWithSourceReferences.sourceReferences,
+  );
+  expect(() =>
+    validateRouteInput({
+      ...routeWithSourceReferences,
+      sourceReferences: [
+        {
+          ...routeWithSourceReferences.sourceReferences[0],
+          fields: [],
+        },
+      ],
+    }),
   ).toThrow();
 });
 
@@ -112,7 +161,7 @@ class MemoryRouteTransaction implements RouteCatalogTransaction {
 describe('route catalog import', () => {
   it('preserves official source gaps through validation and import', async () => {
     const routeWithOfficialGaps = validateRouteInput({
-      ...validRoute,
+      ...routeWithSourceReferences,
       startLat: null,
       startLng: null,
       permitNotes: null,
@@ -130,18 +179,19 @@ describe('route catalog import', () => {
       startLng: null,
       permitNotes: null,
       difficulty: 0,
+      sourceReferences: routeWithSourceReferences.sourceReferences,
     });
   });
 
   it('rejects inferred coordinates and out-of-range official difficulty', () => {
     expect(() =>
-      validateRouteInput({ ...validRoute, difficulty: 7 }),
+      validateRouteInput({ ...routeWithSourceReferences, difficulty: 7 }),
     ).toThrow();
     expect(() =>
-      validateRouteInput({ ...validRoute, startLat: null }),
+      validateRouteInput({ ...routeWithSourceReferences, startLat: null }),
     ).toThrow();
     expect(() =>
-      validateRouteInput({ ...validRoute, startLng: null }),
+      validateRouteInput({ ...routeWithSourceReferences, startLng: null }),
     ).toThrow();
   });
 
@@ -151,17 +201,20 @@ describe('route catalog import', () => {
       transaction: async (callback) => callback(tx),
     };
     const withdrawnRoute = {
-      ...validRoute,
+      ...routeWithSourceReferences,
       slug: 'qilai-main',
       mountainName: '奇萊主山',
     };
 
-    await importRouteCatalog([validRoute, withdrawnRoute], database);
-    await importRouteCatalog([validRoute], database);
+    await importRouteCatalog(
+      [routeWithSourceReferences, withdrawnRoute],
+      database,
+    );
+    await importRouteCatalog([routeWithSourceReferences], database);
 
     expect(
       (await tx.findActiveVersions()).map(({ slug }) => slug),
-    ).toEqual([validRoute.slug]);
+    ).toEqual([routeWithSourceReferences.slug]);
   });
 
   it('canonicalizes database numeric precision before comparing versions', async () => {
@@ -170,7 +223,7 @@ describe('route catalog import', () => {
       transaction: async (callback) => callback(tx),
     };
     const highPrecisionRoute = {
-      ...validRoute,
+      ...routeWithSourceReferences,
       startLat: 24.18191234,
       startLng: 121.28141234,
       distanceKm: 5.234,
@@ -197,7 +250,10 @@ describe('route catalog import', () => {
 
     await expect(
       importRouteCatalog(
-        [validRoute, { ...validRoute, slug: 'invalid slug' }],
+        [
+          routeWithSourceReferences,
+          { ...routeWithSourceReferences, slug: 'invalid slug' },
+        ],
         database,
       ),
     ).rejects.toThrow();
@@ -210,16 +266,22 @@ describe('route catalog import', () => {
       transaction: async (callback) => callback(tx),
     };
 
-    await importRouteCatalog([validRoute], database);
-    await importRouteCatalog([validRoute], database);
+    await importRouteCatalog([routeWithSourceReferences], database);
+    await importRouteCatalog([routeWithSourceReferences], database);
     await importRouteCatalog(
-      [{ ...validRoute, sourceVersion: '2026-07-13', reviewedAt: '2026-07-13' }],
+      [
+        {
+          ...routeWithSourceReferences,
+          sourceVersion: '2026-07-13',
+          reviewedAt: '2026-07-13',
+        },
+      ],
       database,
     );
     await importRouteCatalog(
       [
         {
-          ...validRoute,
+          ...routeWithSourceReferences,
           routeName: '小風口原路往返',
           sourceVersion: '2026-07-13',
           reviewedAt: '2026-07-13',
@@ -272,6 +334,24 @@ describe('launch catalog verification', () => {
     expect(report.valid).toBe(true);
     expect(report.suburbanRoutes).toBe(100);
     expect(report.smallHundredPeaks).toBe(100);
+  });
+
+  it('requires every field-level source to be registered', () => {
+    const catalog = launchCatalog.map((route, index) =>
+      index === 0
+        ? {
+            ...route,
+            sourceReferences: [
+              {
+                ...route.sourceReferences[0],
+                url: 'https://example.gov.tw/unregistered',
+              },
+            ],
+          }
+        : route,
+    );
+
+    expect(analyzeRouteCatalog(catalog, sourceRegistry).valid).toBe(false);
   });
 
   it('rejects missing or duplicate Small Hundred Peak designations', () => {
@@ -340,7 +420,7 @@ describe('launch catalog verification', () => {
   });
 
   it('blocks launch when required route coverage or sources are missing', () => {
-    const report = analyzeRouteCatalog([validRoute], []);
+    const report = analyzeRouteCatalog([routeWithSourceReferences], []);
 
     expect(report.valid).toBe(false);
     expect(report.hundredPeaks).toBe(1);
@@ -352,7 +432,7 @@ describe('launch catalog verification', () => {
 
   it('reports duplicate slugs', () => {
     const report = analyzeRouteCatalog(
-      [validRoute, validRoute],
+      [routeWithSourceReferences, routeWithSourceReferences],
       [
         {
           organization: validRoute.sourceOrganization,

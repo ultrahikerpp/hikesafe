@@ -21,6 +21,24 @@ const activeRoute: RouteCatalogRecord = {
   isActive: true,
   ...validRoute,
   designations: ['taiwan_small_hundred_peak:001'],
+  sourceReferences: [
+    {
+      organization: validRoute.sourceOrganization,
+      url: validRoute.sourceUrl,
+      fields: ['startLat', 'startLng'],
+    },
+    {
+      organization: validRoute.sourceOrganization,
+      url: validRoute.sourceUrl,
+      fields: [
+        'distanceKm',
+        'durationMinutes',
+        'difficulty',
+        'checkpoints',
+        'permitNotes',
+      ],
+    },
+  ],
 };
 
 describe('route catalog search', () => {
@@ -80,6 +98,7 @@ describe('GET /api/routes', () => {
         elevationGainM: null,
         elevationDifferenceM: 597,
         sourceUrl: 'https://www.taroko.gov.tw/',
+        sourceReferences: activeRoute.sourceReferences,
         sourceVersion: '2026-07-12',
         reviewedAt: '2026-07-12',
       }),

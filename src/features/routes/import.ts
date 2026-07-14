@@ -48,6 +48,33 @@ const orderedPlaceSchema = z.object({
   order: z.number().int().positive(),
 });
 
+const routeSourceFieldSchema = z.enum([
+  'slug',
+  'mountainName',
+  'routeName',
+  'region',
+  'kind',
+  'startLat',
+  'startLng',
+  'distanceKm',
+  'designations',
+  'elevationGainM',
+  'elevationDifferenceM',
+  'durationMinutes',
+  'difficulty',
+  'checkpoints',
+  'evacuationPoints',
+  'permitNotes',
+]);
+
+export const routeSourceReferenceSchema = z.object({
+  organization: z.string().min(1),
+  url: z.string().url().refine((url) => new URL(url).protocol === 'https:', {
+    message: 'Source reference URL must use HTTPS',
+  }),
+  fields: z.array(routeSourceFieldSchema).min(1),
+});
+
 export const routeInputSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/),
   mountainName: z.string().min(1),
@@ -87,6 +114,7 @@ export const routeInputSchema = z.object({
   permitNotes: z.string().nullable(),
   sourceOrganization: z.string().min(1),
   sourceUrl: z.string().url(),
+  sourceReferences: z.array(routeSourceReferenceSchema).min(1),
   sourceVersion: z.string().min(1),
   reviewedAt: z.iso.date(),
 }).refine(
@@ -232,8 +260,11 @@ export const analyzeRouteCatalog = (
     sources.map(({ organization, url }) => `${organization}\u0000${url}`),
   );
   const missingSources = catalog.filter(
-    ({ sourceOrganization, sourceUrl }) =>
-      !sourceKeys.has(`${sourceOrganization}\u0000${sourceUrl}`),
+    ({ sourceOrganization, sourceUrl, sourceReferences }) =>
+      !sourceKeys.has(`${sourceOrganization}\u0000${sourceUrl}`) ||
+      sourceReferences.some(
+        ({ organization, url }) => !sourceKeys.has(`${organization}\u0000${url}`),
+      ),
   ).length;
   if (missingSources > 0) {
     errors.push(`Routes missing a registered source: ${missingSources}`);
@@ -361,6 +392,9 @@ const createDatabase = async (): Promise<RouteCatalogDatabase> => {
                 permitNotes: version.permitNotes,
                 sourceOrganization: version.sourceOrganization,
                 sourceUrl: version.sourceUrl,
+                sourceReferences: routeInputSchema.shape.sourceReferences.parse(
+                  version.sourceReferences,
+                ),
                 sourceVersion: version.sourceVersion,
                 reviewedAt: version.reviewedAt.toISOString().slice(0, 10),
               },
@@ -398,6 +432,7 @@ const createDatabase = async (): Promise<RouteCatalogDatabase> => {
               permitNotes: input.permitNotes,
               sourceOrganization: input.sourceOrganization,
               sourceUrl: input.sourceUrl,
+              sourceReferences: input.sourceReferences,
               sourceVersion: input.sourceVersion,
               reviewedAt: new Date(`${input.reviewedAt}T00:00:00.000Z`),
               isActive: true,

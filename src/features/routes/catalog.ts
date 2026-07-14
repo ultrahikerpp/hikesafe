@@ -77,6 +77,7 @@ const loadActiveRoutes = async (): Promise<RouteCatalogRecord[]> => {
       permitNotes: version.permitNotes,
       sourceOrganization: version.sourceOrganization,
       sourceUrl: version.sourceUrl,
+      sourceReferences: version.sourceReferences,
       sourceVersion: version.sourceVersion,
       reviewedAt: version.reviewedAt.toISOString().slice(0, 10),
     }),
