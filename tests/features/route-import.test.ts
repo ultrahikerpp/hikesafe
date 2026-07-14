@@ -202,6 +202,7 @@ describe('launch catalog verification', () => {
   it('loads the reviewed canonical hundred peak baseline', () => {
     expect(canonicalHundredPeakNames).toEqual(canonicalHundredPeakNamesFixture);
     expect(new Set(canonicalHundredPeakNames).size).toBe(100);
+    expect(requiredSuburbanRouteNames).toHaveLength(100);
     expect(requiredSmallHundredPeakDesignations).toHaveLength(100);
   });
 
@@ -226,6 +227,21 @@ describe('launch catalog verification', () => {
     for (const catalog of [missing, duplicated]) {
       expect(analyzeRouteCatalog(catalog, sourceRegistry).valid).toBe(false);
     }
+  });
+
+  it('reports unexpected Small Hundred Peak designations before schema rejection', () => {
+    const catalog = launchCatalog.map((route, index) =>
+      index === 100
+        ? { ...route, designations: ['taiwan_small_hundred_peak:101'] }
+        : route,
+    );
+
+    const report = analyzeRouteCatalog(catalog, sourceRegistry);
+
+    expect(report.errors).toContain('Catalog schema validation failed');
+    expect(report.errors).toContain(
+      'Unexpected Small Hundred Peak designations: taiwan_small_hundred_peak:101',
+    );
   });
 
   it('requires the exact canonical hundred peak set, not any 100 names', () => {
@@ -271,7 +287,7 @@ describe('launch catalog verification', () => {
     expect(report.suburbanRoutes).toBe(0);
     expect(report.missingSources).toBe(1);
     expect(report.errors).toContain('Expected exactly 100 hundred peaks, found 1');
-    expect(report.errors).toContain('Expected at least 30 suburban routes, found 0');
+    expect(report.errors).toContain('Expected at least 100 suburban routes, found 0');
   });
 
   it('reports duplicate slugs', () => {

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import canonicalHundredPeakNamesJson from '@/data/routes/hundred-peaks.json';
 import smallHundredPeaksJson from '@/data/routes/small-hundred-peaks.json';
+import suburbanRouteNamesJson from '@/data/routes/suburban-routes.json';
 
 export const canonicalHundredPeakNames = z
   .array(z.string().min(1))
@@ -96,38 +97,10 @@ export const routeSourceSchema = z.object({
 
 export type RouteSource = z.infer<typeof routeSourceSchema>;
 
-export const requiredSuburbanRouteNames = [
-  '七星山主峰東峰',
-  '大屯山主峰',
-  '面天山向天山',
-  '劍潭山',
-  '金面山',
-  '皇帝殿東西峰',
-  '五寮尖',
-  '筆架連峰',
-  '南插天山',
-  '北插天山',
-  '姜子寮山',
-  '無耳茶壺山半屏山',
-  '桃源谷',
-  '東眼山',
-  '拉拉山',
-  '飛鳳山',
-  '鵝公髻山',
-  '加里山',
-  '火炎山',
-  '八仙山',
-  '馬崙山',
-  '屋我尾山',
-  '波津加山',
-  '東卯山',
-  '唐麻丹山',
-  '白毛山',
-  '大塔山',
-  '尾寮山',
-  '里龍山',
-  '都蘭山',
-] as const;
+export const requiredSuburbanRouteNames = z
+  .array(z.string().min(1))
+  .length(100)
+  .parse(suburbanRouteNamesJson);
 
 export type RouteCatalogReport = {
   valid: boolean;
@@ -137,6 +110,26 @@ export type RouteCatalogReport = {
   missingSources: number;
   duplicateSlugs: number;
   errors: string[];
+};
+
+const countCatalogDesignations = (catalogInput: unknown) => {
+  const designationCounts = new Map<string, number>();
+  if (!Array.isArray(catalogInput)) return designationCounts;
+
+  for (const route of catalogInput) {
+    if (typeof route !== 'object' || route === null) continue;
+    const { designations } = route as { designations?: unknown };
+    if (!Array.isArray(designations)) continue;
+    for (const designation of designations) {
+      if (typeof designation !== 'string') continue;
+      designationCounts.set(
+        designation,
+        (designationCounts.get(designation) ?? 0) + 1,
+      );
+    }
+  }
+
+  return designationCounts;
 };
 
 export const analyzeRouteCatalog = (
@@ -151,19 +144,11 @@ export const analyzeRouteCatalog = (
 
   const catalog = catalogResult.success ? catalogResult.data : [];
   const sources = sourcesResult.success ? sourcesResult.data : [];
+  const designationCounts = countCatalogDesignations(catalogInput);
   const hundredPeaks = catalog.filter(
     ({ kind }) => kind === 'hundred_peak',
   ).length;
   const suburbanRoutes = catalog.filter(({ kind }) => kind === 'suburban').length;
-  const designationCounts = new Map<string, number>();
-  for (const { designations } of catalog) {
-    for (const designation of designations) {
-      designationCounts.set(
-        designation,
-        (designationCounts.get(designation) ?? 0) + 1,
-      );
-    }
-  }
   const smallHundredPeaks = [...designationCounts.values()].reduce(
     (total, count) => total + count,
     0,
@@ -190,8 +175,8 @@ export const analyzeRouteCatalog = (
       `Unexpected hundred peak names: ${unexpectedHundredPeaks.join(', ')}`,
     );
   }
-  if (suburbanRoutes < 30) {
-    errors.push(`Expected at least 30 suburban routes, found ${suburbanRoutes}`);
+  if (suburbanRoutes < 100) {
+    errors.push(`Expected at least 100 suburban routes, found ${suburbanRoutes}`);
   }
 
   const missingSmallHundredPeakDesignations =
