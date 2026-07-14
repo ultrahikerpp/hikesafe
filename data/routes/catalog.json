@@ -3400,5 +3400,1253 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xueshan-east-peak",
+    "mountainName": "雪山東峰",
+    "routeName": "雪山東峰線（雪山東峰步道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 8.9,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1066,
+    "durationMinutes": 425,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "雪山登山口",
+        "order": 1
+      },
+      {
+        "name": "七卡山莊",
+        "order": 2
+      },
+      {
+        "name": "哭坡觀景台",
+        "order": 3
+      },
+      {
+        "name": "雪山東峰",
+        "order": 4
+      },
+      {
+        "name": "雪山登山口",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/30",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xueshan-main-peak",
+    "mountainName": "雪山",
+    "routeName": "雪山東峰線（雪山主東峰步道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 20,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1751,
+    "durationMinutes": 880,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "雪山登山口",
+        "order": 1
+      },
+      {
+        "name": "七卡山莊",
+        "order": 2
+      },
+      {
+        "name": "雪山東峰",
+        "order": 3
+      },
+      {
+        "name": "三六九山莊",
+        "order": 4
+      },
+      {
+        "name": "圈谷底部",
+        "order": 5
+      },
+      {
+        "name": "雪山主峰",
+        "order": 6
+      },
+      {
+        "name": "雪山登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/29",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xueshan-north-peak",
+    "mountainName": "雪山北峰",
+    "routeName": "雪山主北峰線（雪山主北下翠池）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 23.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1568,
+    "durationMinutes": 1125,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "雪山登山口",
+        "order": 1
+      },
+      {
+        "name": "七卡山莊",
+        "order": 2
+      },
+      {
+        "name": "雪山東峰",
+        "order": 3
+      },
+      {
+        "name": "三六九山莊",
+        "order": 4
+      },
+      {
+        "name": "鞍部岔路",
+        "order": 5
+      },
+      {
+        "name": "雪北山屋",
+        "order": 6
+      },
+      {
+        "name": "雪山北峰",
+        "order": 7
+      },
+      {
+        "name": "雪山登山口",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）；北稜角崩壁地形",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/31",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "zhijiayang-dashan",
+    "mountainName": "志佳陽大山",
+    "routeName": "志佳陽線（志佳陽大山登山步道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 16.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1795,
+    "durationMinutes": 845,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "環山部落",
+        "order": 1
+      },
+      {
+        "name": "志佳陽大山登山口",
+        "order": 2
+      },
+      {
+        "name": "4.3K苗圃工寮舊址",
+        "order": 3
+      },
+      {
+        "name": "7.2K瓢簞山屋",
+        "order": 4
+      },
+      {
+        "name": "志佳陽大山",
+        "order": 5
+      },
+      {
+        "name": "環山部落",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：否；夏季需注意司界蘭溪溪水是否有暴漲",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/130",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "jiali-mountain-shei-pa",
+    "mountainName": "加利山",
+    "routeName": "大霸線",
+    "region": "新竹縣五峰鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 60,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1291,
+    "durationMinutes": 1690,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "觀霧",
+        "order": 1
+      },
+      {
+        "name": "馬達拉溪登山口",
+        "order": 2
+      },
+      {
+        "name": "九九山莊",
+        "order": 3
+      },
+      {
+        "name": "加利山登山口",
+        "order": 4
+      },
+      {
+        "name": "加利山",
+        "order": 5
+      },
+      {
+        "name": "觀霧",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/69",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yize-mountain",
+    "mountainName": "伊澤山",
+    "routeName": "大霸線",
+    "region": "新竹縣五峰鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 60,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1478,
+    "durationMinutes": 1690,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "觀霧",
+        "order": 1
+      },
+      {
+        "name": "馬達拉溪登山口",
+        "order": 2
+      },
+      {
+        "name": "九九山莊",
+        "order": 3
+      },
+      {
+        "name": "加利山登山口",
+        "order": 4
+      },
+      {
+        "name": "伊澤山第二登山口",
+        "order": 5
+      },
+      {
+        "name": "伊澤山",
+        "order": 6
+      },
+      {
+        "name": "觀霧",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/69",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "dabajian-mountain",
+    "mountainName": "大霸尖山",
+    "routeName": "大霸線",
+    "region": "新竹縣五峰鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 57.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1673,
+    "durationMinutes": 1595,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "觀霧",
+        "order": 1
+      },
+      {
+        "name": "馬達拉溪登山口",
+        "order": 2
+      },
+      {
+        "name": "九九山莊",
+        "order": 3
+      },
+      {
+        "name": "中霸山屋",
+        "order": 4
+      },
+      {
+        "name": "大霸尖山",
+        "order": 5
+      },
+      {
+        "name": "觀霧",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）；雪季霸基路段",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/67",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xiaobajian-mountain",
+    "mountainName": "小霸尖山",
+    "routeName": "大霸線",
+    "region": "新竹縣五峰鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 57.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1599,
+    "durationMinutes": 1595,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "觀霧",
+        "order": 1
+      },
+      {
+        "name": "馬達拉溪登山口",
+        "order": 2
+      },
+      {
+        "name": "九九山莊",
+        "order": 3
+      },
+      {
+        "name": "大霸尖山",
+        "order": 4
+      },
+      {
+        "name": "小霸尖山",
+        "order": 5
+      },
+      {
+        "name": "觀霧",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）；小霸尖山、雪季霸基路段",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/67",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "taoshan-mountain",
+    "mountainName": "桃山",
+    "routeName": "武陵四秀線（武陵二秀）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 16.3,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1419,
+    "durationMinutes": 995,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "武陵山莊停車場",
+        "order": 1
+      },
+      {
+        "name": "桃山登山口",
+        "order": 2
+      },
+      {
+        "name": "黑水塘",
+        "order": 3
+      },
+      {
+        "name": "桃山",
+        "order": 4
+      },
+      {
+        "name": "武陵山莊停車場",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/142",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "kalaye-mountain",
+    "mountainName": "喀拉業山",
+    "routeName": "武陵四秀線（武陵二秀）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 16.3,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1229,
+    "durationMinutes": 995,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "武陵山莊停車場",
+        "order": 1
+      },
+      {
+        "name": "桃山登山口",
+        "order": 2
+      },
+      {
+        "name": "桃山",
+        "order": 3
+      },
+      {
+        "name": "詩崙山",
+        "order": 4
+      },
+      {
+        "name": "喀拉業山",
+        "order": 5
+      },
+      {
+        "name": "武陵山莊停車場",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/142",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "dajian-mountain",
+    "mountainName": "大劍山",
+    "routeName": "大劍山線",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 30.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 2135,
+    "durationMinutes": 1375,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "仁壽橋旁停車位",
+        "order": 1
+      },
+      {
+        "name": "防火巷登山口",
+        "order": 2
+      },
+      {
+        "name": "推論山",
+        "order": 3
+      },
+      {
+        "name": "油婆蘭山屋／營地",
+        "order": 4
+      },
+      {
+        "name": "大劍山",
+        "order": 5
+      },
+      {
+        "name": "仁壽橋旁停車位",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：否；松茂林道3.5K處有崩塌必須高遶",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/131",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "chiyou-mountain",
+    "mountainName": "池有山",
+    "routeName": "武陵四秀線（武陵二秀）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 19.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1398,
+    "durationMinutes": 950,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "武陵山莊停車場",
+        "order": 1
+      },
+      {
+        "name": "池有山登山口",
+        "order": 2
+      },
+      {
+        "name": "三叉營地",
+        "order": 3
+      },
+      {
+        "name": "池有山",
+        "order": 4
+      },
+      {
+        "name": "武陵山莊停車場",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/144",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "pintian-mountain",
+    "mountainName": "品田山",
+    "routeName": "武陵四秀線（武陵二秀）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 19.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1619,
+    "durationMinutes": 950,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "武陵山莊停車場",
+        "order": 1
+      },
+      {
+        "name": "池有山登山口",
+        "order": 2
+      },
+      {
+        "name": "三叉營地",
+        "order": 3
+      },
+      {
+        "name": "池有山",
+        "order": 4
+      },
+      {
+        "name": "新達山屋",
+        "order": 5
+      },
+      {
+        "name": "品田山",
+        "order": 6
+      },
+      {
+        "name": "武陵山莊停車場",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）；品田斷崖、雪季品田山前V型鞍",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/144",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "zhongxue-mountain",
+    "mountainName": "中雪山",
+    "routeName": "雪山西稜線",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 52,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 598,
+    "durationMinutes": 1745,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "小雪山遊客中心",
+        "order": 1
+      },
+      {
+        "name": "230林道登山口",
+        "order": 2
+      },
+      {
+        "name": "21K合流山登山口營地岔路",
+        "order": 3
+      },
+      {
+        "name": "26K中雪山登山口營地",
+        "order": 4
+      },
+      {
+        "name": "中雪山",
+        "order": 5
+      },
+      {
+        "name": "小雪山遊客中心",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：否；230林道上有大小不一的崩塌地形",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/136",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "daxue-mountain",
+    "mountainName": "大雪山",
+    "routeName": "雪山西稜線",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 61.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 955,
+    "durationMinutes": 2365,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "小雪山遊客中心",
+        "order": 1
+      },
+      {
+        "name": "230林道登山口",
+        "order": 2
+      },
+      {
+        "name": "26K中雪山登山口營地",
+        "order": 3
+      },
+      {
+        "name": "三叉路口營地",
+        "order": 4
+      },
+      {
+        "name": "匹匹達山",
+        "order": 5
+      },
+      {
+        "name": "大雪山",
+        "order": 6
+      },
+      {
+        "name": "小雪山遊客中心",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：否；230林道上有大小不一的崩塌地形",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/137",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "touying-mountain",
+    "mountainName": "頭鷹山",
+    "routeName": "雪山西稜線",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 51.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1375,
+    "durationMinutes": 2615,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "雪山登山口",
+        "order": 1
+      },
+      {
+        "name": "三六九山莊",
+        "order": 2
+      },
+      {
+        "name": "雪山主峰",
+        "order": 3
+      },
+      {
+        "name": "翠池山屋",
+        "order": 4
+      },
+      {
+        "name": "博可爾草原",
+        "order": 5
+      },
+      {
+        "name": "大南山登山口",
+        "order": 6
+      },
+      {
+        "name": "頭鷹山",
+        "order": 7
+      },
+      {
+        "name": "雪山登山口",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）；翠池碎石坡",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/135",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "huoshi-mountain",
+    "mountainName": "火石山",
+    "routeName": "雪山西稜線",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 38.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1175,
+    "durationMinutes": 1820,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "雪山登山口",
+        "order": 1
+      },
+      {
+        "name": "三六九山莊",
+        "order": 2
+      },
+      {
+        "name": "雪山主峰",
+        "order": 3
+      },
+      {
+        "name": "翠池山屋",
+        "order": 4
+      },
+      {
+        "name": "博可爾草原",
+        "order": 5
+      },
+      {
+        "name": "火石山",
+        "order": 6
+      },
+      {
+        "name": "雪山登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園入園證）；翠池碎石坡",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/134",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "jiayang-mountain",
+    "mountainName": "佳陽山",
+    "routeName": "大小劍線（大劍山、小劍山）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 31.8,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1855,
+    "durationMinutes": 1575,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "仁壽橋旁停車位",
+        "order": 1
+      },
+      {
+        "name": "防火巷登山口",
+        "order": 2
+      },
+      {
+        "name": "推論山",
+        "order": 3
+      },
+      {
+        "name": "油婆蘭山屋／營地",
+        "order": 4
+      },
+      {
+        "name": "佳陽山",
+        "order": 5
+      },
+      {
+        "name": "仁壽橋旁停車位",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：否；松茂林道3.5K處有崩塌必須高遶",
+    "sourceOrganization": "內政部國家公園署雪霸國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E9%9B%AA%E9%9C%B8%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/132",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
