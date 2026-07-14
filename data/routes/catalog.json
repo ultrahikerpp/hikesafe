@@ -1,1 +1,59 @@
-[]
+[
+  {
+    "slug": "dulan-mountain",
+    "mountainName": "都蘭山",
+    "routeName": "都蘭山步道",
+    "region": "臺東縣東河鄉",
+    "kind": "suburban",
+    "startLat": 22.87264,
+    "startLng": 121.17931,
+    "distanceKm": 7.6,
+    "designations": ["taiwan_small_hundred_peak:093"],
+    "elevationGainM": null,
+    "elevationDifferenceM": 600,
+    "durationMinutes": 330,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "都蘭山步道觀景平台停車場", "order": 1 },
+      { "name": "觀景台", "order": 2 },
+      { "name": "普悠瑪祭台", "order": 3 },
+      { "name": "大石壁", "order": 4 },
+      { "name": "都蘭山三角點", "order": 5 },
+      { "name": "都蘭山步道觀景平台停車場", "order": 6 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=140",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=140",
+        "fields": [
+          "routeName",
+          "region",
+          "distanceKm",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=92",
+        "fields": ["slug", "mountainName", "kind", "designations"]
+      },
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://www.forest.gov.tw/UserFiles/001/Images/web/communication_11502.pdf",
+        "fields": ["startLat", "startLng"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  }
+]
