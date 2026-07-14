@@ -515,5 +515,117 @@
     ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "jiuzhize-natural-trail",
+    "mountainName": "鳩之澤自然步道",
+    "routeName": "鳩之澤自然步道",
+    "region": "宜蘭縣大同鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 180,
+    "durationMinutes": 60,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "多望吊橋", "order": 1 },
+      { "name": "休憩平臺", "order": 2 },
+      { "name": "接回步道0.4K處", "order": 3 },
+      { "name": "多望吊橋", "order": 4 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=020",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=020",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "chaoyang-trail",
+    "mountainName": "朝陽步道",
+    "routeName": "朝陽步道",
+    "region": "宜蘭縣蘇澳鎮",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 2.22,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 182,
+    "durationMinutes": 80,
+    "difficulty": 1,
+    "checkpoints": [
+      { "name": "南澳漁港步道登山口", "order": 1 },
+      { "name": "第一觀景臺", "order": 2 },
+      { "name": "第二觀景臺", "order": 3 },
+      { "name": "第三觀景臺", "order": 4 },
+      { "name": "龜山三角點、森林教室", "order": 5 },
+      { "name": "大頭茶純林", "order": 6 },
+      { "name": "桂竹林", "order": 7 },
+      { "name": "風衝林", "order": 8 },
+      { "name": "第四觀景臺", "order": 9 },
+      { "name": "建國路登山口", "order": 10 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=022",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=022",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "fuba-crossing-national-trail",
+    "mountainName": "福巴越嶺國家步道",
+    "routeName": "福巴越嶺國家步道",
+    "region": "新北市烏來區；桃園市復興區華陵里",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 18,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1236,
+    "durationMinutes": 510,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "大羅蘭吊橋", "order": 1 },
+      { "name": "茶墾山、模故山岔路", "order": 2 },
+      { "name": "札孔（茶墾）駐在所", "order": 3 },
+      { "name": "檜山駐在所", "order": 4 },
+      { "name": "拉拉山駐在所", "order": 5 },
+      { "name": "塔曼山岔路", "order": 6 },
+      { "name": "古道入口柵欄", "order": 7 },
+      { "name": "拉拉山遊客中心", "order": 8 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "自然保留區進入申請：是（每日承載量上限150人）",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=024",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=024",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-14",
+    "reviewedAt": "2026-07-14"
   }
 ]
