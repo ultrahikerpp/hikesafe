@@ -8,18 +8,38 @@
     "startLat": 22.87264,
     "startLng": 121.17931,
     "distanceKm": 7.6,
-    "designations": ["taiwan_small_hundred_peak:093"],
+    "designations": [
+      "taiwan_small_hundred_peak:093"
+    ],
     "elevationGainM": null,
     "elevationDifferenceM": 600,
     "durationMinutes": 330,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "都蘭山步道觀景平台停車場", "order": 1 },
-      { "name": "觀景台", "order": 2 },
-      { "name": "普悠瑪祭台", "order": 3 },
-      { "name": "大石壁", "order": 4 },
-      { "name": "都蘭山三角點", "order": 5 },
-      { "name": "都蘭山步道觀景平台停車場", "order": 6 }
+      {
+        "name": "都蘭山步道觀景平台停車場",
+        "order": 1
+      },
+      {
+        "name": "觀景台",
+        "order": 2
+      },
+      {
+        "name": "普悠瑪祭台",
+        "order": 3
+      },
+      {
+        "name": "大石壁",
+        "order": 4
+      },
+      {
+        "name": "都蘭山三角點",
+        "order": 5
+      },
+      {
+        "name": "都蘭山步道觀景平台停車場",
+        "order": 6
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -45,12 +65,20 @@
       {
         "organization": "教育部體育署",
         "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=92",
-        "fields": ["slug", "mountainName", "kind", "designations"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "kind",
+          "designations"
+        ]
       },
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://www.forest.gov.tw/UserFiles/001/Images/web/communication_11502.pdf",
-        "fields": ["startLat", "startLng"]
+        "fields": [
+          "startLat",
+          "startLng"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -71,9 +99,18 @@
     "durationMinutes": 35,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "金瓜寮魚蕨步道北口", "order": 1 },
-      { "name": "觀魚、鳥平臺叉路", "order": 2 },
-      { "name": "金瓜寮魚蕨步道南口", "order": 3 }
+      {
+        "name": "金瓜寮魚蕨步道北口",
+        "order": 1
+      },
+      {
+        "name": "觀魚、鳥平臺叉路",
+        "order": 2
+      },
+      {
+        "name": "金瓜寮魚蕨步道南口",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -83,7 +120,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=004",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -104,11 +158,26 @@
     "durationMinutes": 135,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "南出入口", "order": 1 },
-      { "name": "山神廟", "order": 2 },
-      { "name": "跑馬勒石", "order": 3 },
-      { "name": "上新花園", "order": 4 },
-      { "name": "北出入口", "order": 5 }
+      {
+        "name": "南出入口",
+        "order": 1
+      },
+      {
+        "name": "山神廟",
+        "order": 2
+      },
+      {
+        "name": "跑馬勒石",
+        "order": 3
+      },
+      {
+        "name": "上新花園",
+        "order": 4
+      },
+      {
+        "name": "北出入口",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -118,7 +187,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=007",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -139,14 +225,38 @@
     "durationMinutes": 60,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "林美石磐步道入口", "order": 1 },
-      { "name": "木馬道", "order": 2 },
-      { "name": "水圳遺跡", "order": 3 },
-      { "name": "木橋", "order": 4 },
-      { "name": "觀瀑亭", "order": 5 },
-      { "name": "石磐瀑布", "order": 6 },
-      { "name": "竹林區", "order": 7 },
-      { "name": "林美石磐步道入口", "order": 8 }
+      {
+        "name": "林美石磐步道入口",
+        "order": 1
+      },
+      {
+        "name": "木馬道",
+        "order": 2
+      },
+      {
+        "name": "水圳遺跡",
+        "order": 3
+      },
+      {
+        "name": "木橋",
+        "order": 4
+      },
+      {
+        "name": "觀瀑亭",
+        "order": 5
+      },
+      {
+        "name": "石磐瀑布",
+        "order": 6
+      },
+      {
+        "name": "竹林區",
+        "order": 7
+      },
+      {
+        "name": "林美石磐步道入口",
+        "order": 8
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -156,7 +266,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=008",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -177,13 +304,34 @@
     "durationMinutes": 135,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "步道西口/翠峰景觀道路15.5K處", "order": 1 },
-      { "name": "解說展示站", "order": 2 },
-      { "name": "景觀平臺", "order": 3 },
-      { "name": "觀湖平臺", "order": 4 },
-      { "name": "觀日臺", "order": 5 },
-      { "name": "觀湖平臺", "order": 6 },
-      { "name": "步道東口/翠峰景觀道路16.5K處", "order": 7 }
+      {
+        "name": "步道西口/翠峰景觀道路15.5K處",
+        "order": 1
+      },
+      {
+        "name": "解說展示站",
+        "order": 2
+      },
+      {
+        "name": "景觀平臺",
+        "order": 3
+      },
+      {
+        "name": "觀湖平臺",
+        "order": 4
+      },
+      {
+        "name": "觀日臺",
+        "order": 5
+      },
+      {
+        "name": "觀湖平臺",
+        "order": 6
+      },
+      {
+        "name": "步道東口/翠峰景觀道路16.5K處",
+        "order": 7
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -193,7 +341,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=014",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -214,14 +379,38 @@
     "durationMinutes": 180,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "桶後吊橋登山口", "order": 1 },
-      { "name": "雙溪口過桶後溪", "order": 2 },
-      { "name": "廢棄吊橋", "order": 3 },
-      { "name": "烘爐地山岔路", "order": 4 },
-      { "name": "越嶺鞍部", "order": 5 },
-      { "name": "鞍部溪谷", "order": 6 },
-      { "name": "烘爐地山、小礁溪山岔路", "order": 7 },
-      { "name": "7K登山口", "order": 8 }
+      {
+        "name": "桶後吊橋登山口",
+        "order": 1
+      },
+      {
+        "name": "雙溪口過桶後溪",
+        "order": 2
+      },
+      {
+        "name": "廢棄吊橋",
+        "order": 3
+      },
+      {
+        "name": "烘爐地山岔路",
+        "order": 4
+      },
+      {
+        "name": "越嶺鞍部",
+        "order": 5
+      },
+      {
+        "name": "鞍部溪谷",
+        "order": 6
+      },
+      {
+        "name": "烘爐地山、小礁溪山岔路",
+        "order": 7
+      },
+      {
+        "name": "7K登山口",
+        "order": 8
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -231,7 +420,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=028",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -252,11 +458,26 @@
     "durationMinutes": 210,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "橫嶺山隧道口", "order": 1 },
-      { "name": "0.9K橫嶺山主峰岔路", "order": 2 },
-      { "name": "2.5K指標（工寮遺跡岔路）", "order": 3 },
-      { "name": "3.5K指標", "order": 4 },
-      { "name": "大雪山生態教室", "order": 5 }
+      {
+        "name": "橫嶺山隧道口",
+        "order": 1
+      },
+      {
+        "name": "0.9K橫嶺山主峰岔路",
+        "order": 2
+      },
+      {
+        "name": "2.5K指標（工寮遺跡岔路）",
+        "order": 3
+      },
+      {
+        "name": "3.5K指標",
+        "order": 4
+      },
+      {
+        "name": "大雪山生態教室",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -266,7 +487,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=048",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -287,14 +525,38 @@
     "durationMinutes": 540,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "鳶嘴山登山口/大雪山林道27K", "order": 1 },
-      { "name": "鳶嘴山", "order": 2 },
-      { "name": "稍來山", "order": 3 },
-      { "name": "大雪山林道35.1K收費站", "order": 4 },
-      { "name": "船型山", "order": 5 },
-      { "name": "瞭望台", "order": 6 },
-      { "name": "鞍馬山", "order": 7 },
-      { "name": "小雪山旅遊資訊站停車場/大雪山林道49K", "order": 8 }
+      {
+        "name": "鳶嘴山登山口/大雪山林道27K",
+        "order": 1
+      },
+      {
+        "name": "鳶嘴山",
+        "order": 2
+      },
+      {
+        "name": "稍來山",
+        "order": 3
+      },
+      {
+        "name": "大雪山林道35.1K收費站",
+        "order": 4
+      },
+      {
+        "name": "船型山",
+        "order": 5
+      },
+      {
+        "name": "瞭望台",
+        "order": 6
+      },
+      {
+        "name": "鞍馬山",
+        "order": 7
+      },
+      {
+        "name": "小雪山旅遊資訊站停車場/大雪山林道49K",
+        "order": 8
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -304,7 +566,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=060",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -325,9 +604,18 @@
     "durationMinutes": 30,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "合歡山莊旁登山口", "order": 1 },
-      { "name": "合歡尖山山頂", "order": 2 },
-      { "name": "台14甲線33.4K停車場", "order": 3 }
+      {
+        "name": "合歡山莊旁登山口",
+        "order": 1
+      },
+      {
+        "name": "合歡尖山山頂",
+        "order": 2
+      },
+      {
+        "name": "台14甲線33.4K停車場",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -337,7 +625,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=061",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -358,11 +663,26 @@
     "durationMinutes": 150,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "自忠登山口", "order": 1 },
-      { "name": "東水山登山口岔路", "order": 2 },
-      { "name": "鐵道中止處", "order": 3 },
-      { "name": "岔路口", "order": 4 },
-      { "name": "特富野登山口", "order": 5 }
+      {
+        "name": "自忠登山口",
+        "order": 1
+      },
+      {
+        "name": "東水山登山口岔路",
+        "order": 2
+      },
+      {
+        "name": "鐵道中止處",
+        "order": 3
+      },
+      {
+        "name": "岔路口",
+        "order": 4
+      },
+      {
+        "name": "特富野登山口",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -372,7 +692,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=081",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -393,8 +730,14 @@
     "durationMinutes": 15,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "二萬坪步道起點", "order": 1 },
-      { "name": "二萬坪步道終點", "order": 2 }
+      {
+        "name": "二萬坪步道起點",
+        "order": 1
+      },
+      {
+        "name": "二萬坪步道終點",
+        "order": 2
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -404,7 +747,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=095",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -425,11 +785,26 @@
     "durationMinutes": 110,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "松羅步道登山口", "order": 1 },
-      { "name": "吊橋", "order": 2 },
-      { "name": "環狀路段岔路", "order": 3 },
-      { "name": "步道終點", "order": 4 },
-      { "name": "松羅步道登山口", "order": 5 }
+      {
+        "name": "松羅步道登山口",
+        "order": 1
+      },
+      {
+        "name": "吊橋",
+        "order": 2
+      },
+      {
+        "name": "環狀路段岔路",
+        "order": 3
+      },
+      {
+        "name": "步道終點",
+        "order": 4
+      },
+      {
+        "name": "松羅步道登山口",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -439,7 +814,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=006",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -460,12 +852,30 @@
     "durationMinutes": 150,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "通天橋", "order": 1 },
-      { "name": "500公尺路標", "order": 2 },
-      { "name": "箭竹林", "order": 3 },
-      { "name": "聖母山莊", "order": 4 },
-      { "name": "觀景平臺", "order": 5 },
-      { "name": "通天橋", "order": 6 }
+      {
+        "name": "通天橋",
+        "order": 1
+      },
+      {
+        "name": "500公尺路標",
+        "order": 2
+      },
+      {
+        "name": "箭竹林",
+        "order": 3
+      },
+      {
+        "name": "聖母山莊",
+        "order": 4
+      },
+      {
+        "name": "觀景平臺",
+        "order": 5
+      },
+      {
+        "name": "通天橋",
+        "order": 6
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -475,7 +885,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=009",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -496,11 +923,26 @@
     "durationMinutes": 50,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "宜專一線23.1K", "order": 1 },
-      { "name": "轉轍器（岔道）", "order": 2 },
-      { "name": "1號吊橋、2號吊橋", "order": 3 },
-      { "name": "步道終點", "order": 4 },
-      { "name": "宜專一線23.1K", "order": 5 }
+      {
+        "name": "宜專一線23.1K",
+        "order": 1
+      },
+      {
+        "name": "轉轍器（岔道）",
+        "order": 2
+      },
+      {
+        "name": "1號吊橋、2號吊橋",
+        "order": 3
+      },
+      {
+        "name": "步道終點",
+        "order": 4
+      },
+      {
+        "name": "宜專一線23.1K",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -510,7 +952,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=019",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -531,10 +990,22 @@
     "durationMinutes": 60,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "多望吊橋", "order": 1 },
-      { "name": "休憩平臺", "order": 2 },
-      { "name": "接回步道0.4K處", "order": 3 },
-      { "name": "多望吊橋", "order": 4 }
+      {
+        "name": "多望吊橋",
+        "order": 1
+      },
+      {
+        "name": "休憩平臺",
+        "order": 2
+      },
+      {
+        "name": "接回步道0.4K處",
+        "order": 3
+      },
+      {
+        "name": "多望吊橋",
+        "order": 4
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -544,7 +1015,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=020",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -565,16 +1053,46 @@
     "durationMinutes": 80,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "南澳漁港步道登山口", "order": 1 },
-      { "name": "第一觀景臺", "order": 2 },
-      { "name": "第二觀景臺", "order": 3 },
-      { "name": "第三觀景臺", "order": 4 },
-      { "name": "龜山三角點、森林教室", "order": 5 },
-      { "name": "大頭茶純林", "order": 6 },
-      { "name": "桂竹林", "order": 7 },
-      { "name": "風衝林", "order": 8 },
-      { "name": "第四觀景臺", "order": 9 },
-      { "name": "建國路登山口", "order": 10 }
+      {
+        "name": "南澳漁港步道登山口",
+        "order": 1
+      },
+      {
+        "name": "第一觀景臺",
+        "order": 2
+      },
+      {
+        "name": "第二觀景臺",
+        "order": 3
+      },
+      {
+        "name": "第三觀景臺",
+        "order": 4
+      },
+      {
+        "name": "龜山三角點、森林教室",
+        "order": 5
+      },
+      {
+        "name": "大頭茶純林",
+        "order": 6
+      },
+      {
+        "name": "桂竹林",
+        "order": 7
+      },
+      {
+        "name": "風衝林",
+        "order": 8
+      },
+      {
+        "name": "第四觀景臺",
+        "order": 9
+      },
+      {
+        "name": "建國路登山口",
+        "order": 10
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -584,7 +1102,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=022",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -605,14 +1140,38 @@
     "durationMinutes": 510,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "大羅蘭吊橋", "order": 1 },
-      { "name": "茶墾山、模故山岔路", "order": 2 },
-      { "name": "札孔（茶墾）駐在所", "order": 3 },
-      { "name": "檜山駐在所", "order": 4 },
-      { "name": "拉拉山駐在所", "order": 5 },
-      { "name": "塔曼山岔路", "order": 6 },
-      { "name": "古道入口柵欄", "order": 7 },
-      { "name": "拉拉山遊客中心", "order": 8 }
+      {
+        "name": "大羅蘭吊橋",
+        "order": 1
+      },
+      {
+        "name": "茶墾山、模故山岔路",
+        "order": 2
+      },
+      {
+        "name": "札孔（茶墾）駐在所",
+        "order": 3
+      },
+      {
+        "name": "檜山駐在所",
+        "order": 4
+      },
+      {
+        "name": "拉拉山駐在所",
+        "order": 5
+      },
+      {
+        "name": "塔曼山岔路",
+        "order": 6
+      },
+      {
+        "name": "古道入口柵欄",
+        "order": 7
+      },
+      {
+        "name": "拉拉山遊客中心",
+        "order": 8
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "自然保留區進入申請：是（每日承載量上限150人）",
@@ -622,7 +1181,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=024",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -643,24 +1219,78 @@
     "durationMinutes": 2040,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "觀霧山莊", "order": 1 },
-      { "name": "馬達拉溪登山口", "order": 2 },
-      { "name": "九九山莊", "order": 3 },
-      { "name": "白橋（加利山岔路口）", "order": 4 },
-      { "name": "3050高地（加利山岔路口）", "order": 5 },
-      { "name": "伊澤山捷徑岔", "order": 6 },
-      { "name": "伊澤山登山口", "order": 7 },
-      { "name": "中霸山屋", "order": 8 },
-      { "name": "中霸坪", "order": 9 },
-      { "name": "大霸尖山霸基", "order": 10 },
-      { "name": "中霸坪", "order": 11 },
-      { "name": "中霸山屋", "order": 12 },
-      { "name": "伊澤山登山口", "order": 13 },
-      { "name": "伊澤山捷徑岔", "order": 14 },
-      { "name": "3050高地（加利山岔路口）", "order": 15 },
-      { "name": "九九山莊", "order": 16 },
-      { "name": "馬達拉溪登山口", "order": 17 },
-      { "name": "觀霧山莊", "order": 18 }
+      {
+        "name": "觀霧山莊",
+        "order": 1
+      },
+      {
+        "name": "馬達拉溪登山口",
+        "order": 2
+      },
+      {
+        "name": "九九山莊",
+        "order": 3
+      },
+      {
+        "name": "白橋（加利山岔路口）",
+        "order": 4
+      },
+      {
+        "name": "3050高地（加利山岔路口）",
+        "order": 5
+      },
+      {
+        "name": "伊澤山捷徑岔",
+        "order": 6
+      },
+      {
+        "name": "伊澤山登山口",
+        "order": 7
+      },
+      {
+        "name": "中霸山屋",
+        "order": 8
+      },
+      {
+        "name": "中霸坪",
+        "order": 9
+      },
+      {
+        "name": "大霸尖山霸基",
+        "order": 10
+      },
+      {
+        "name": "中霸坪",
+        "order": 11
+      },
+      {
+        "name": "中霸山屋",
+        "order": 12
+      },
+      {
+        "name": "伊澤山登山口",
+        "order": 13
+      },
+      {
+        "name": "伊澤山捷徑岔",
+        "order": 14
+      },
+      {
+        "name": "3050高地（加利山岔路口）",
+        "order": 15
+      },
+      {
+        "name": "九九山莊",
+        "order": 16
+      },
+      {
+        "name": "馬達拉溪登山口",
+        "order": 17
+      },
+      {
+        "name": "觀霧山莊",
+        "order": 18
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否；進入前須投遞入園證；過夜宿營或攀登生態保護區山岳須先申請入園許可證",
@@ -670,7 +1300,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=027",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -691,9 +1338,18 @@
     "durationMinutes": 25,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "馬里光瀑布步道登山口", "order": 1 },
-      { "name": "瀑布觀景平台", "order": 2 },
-      { "name": "馬里光國家自然步道登山口", "order": 3 }
+      {
+        "name": "馬里光瀑布步道登山口",
+        "order": 1
+      },
+      {
+        "name": "瀑布觀景平台",
+        "order": 2
+      },
+      {
+        "name": "馬里光國家自然步道登山口",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -703,7 +1359,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=036",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -724,15 +1397,42 @@
     "durationMinutes": 220,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "鎮西堡巨木群登山口", "order": 1 },
-      { "name": "AB區叉路口", "order": 2 },
-      { "name": "2.5K環狀岔路口", "order": 3 },
-      { "name": "亞當、夏娃巨木", "order": 4 },
-      { "name": "國王神木", "order": 5 },
-      { "name": "至高點", "order": 6 },
-      { "name": "2.5K環狀岔路口", "order": 7 },
-      { "name": "AB區岔路口", "order": 8 },
-      { "name": "鎮西堡巨木群登山口", "order": 9 }
+      {
+        "name": "鎮西堡巨木群登山口",
+        "order": 1
+      },
+      {
+        "name": "AB區叉路口",
+        "order": 2
+      },
+      {
+        "name": "2.5K環狀岔路口",
+        "order": 3
+      },
+      {
+        "name": "亞當、夏娃巨木",
+        "order": 4
+      },
+      {
+        "name": "國王神木",
+        "order": 5
+      },
+      {
+        "name": "至高點",
+        "order": 6
+      },
+      {
+        "name": "2.5K環狀岔路口",
+        "order": 7
+      },
+      {
+        "name": "AB區岔路口",
+        "order": 8
+      },
+      {
+        "name": "鎮西堡巨木群登山口",
+        "order": 9
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -742,7 +1442,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=038",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -763,11 +1480,26 @@
     "durationMinutes": 330,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "上島山登山口", "order": 1 },
-      { "name": "向東橫切山腰路", "order": 2 },
-      { "name": "向西南橫切山腰路", "order": 3 },
-      { "name": "上島山三角點", "order": 4 },
-      { "name": "上島山登山口", "order": 5 }
+      {
+        "name": "上島山登山口",
+        "order": 1
+      },
+      {
+        "name": "向東橫切山腰路",
+        "order": 2
+      },
+      {
+        "name": "向西南橫切山腰路",
+        "order": 3
+      },
+      {
+        "name": "上島山三角點",
+        "order": 4
+      },
+      {
+        "name": "上島山登山口",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -777,7 +1509,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=042",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-14",
@@ -797,12 +1546,68 @@
     "elevationDifferenceM": 261,
     "durationMinutes": 240,
     "difficulty": 2,
-    "checkpoints": [{"name":"竹林禪院登山口","order":1},{"name":"拇指峰","order":2},{"name":"食指峰","order":3},{"name":"往盤古寺叉路口（鞍部）","order":4},{"name":"中指峰","order":5},{"name":"往盤古寺叉路口（鞍部）","order":6},{"name":"灶君堂","order":7},{"name":"竹林禪院登山口","order":8}],
+    "checkpoints": [
+      {
+        "name": "竹林禪院登山口",
+        "order": 1
+      },
+      {
+        "name": "拇指峰",
+        "order": 2
+      },
+      {
+        "name": "食指峰",
+        "order": 3
+      },
+      {
+        "name": "往盤古寺叉路口（鞍部）",
+        "order": 4
+      },
+      {
+        "name": "中指峰",
+        "order": 5
+      },
+      {
+        "name": "往盤古寺叉路口（鞍部）",
+        "order": 6
+      },
+      {
+        "name": "灶君堂",
+        "order": 7
+      },
+      {
+        "name": "竹林禪院登山口",
+        "order": 8
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=044",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=044","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=044",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
   },
@@ -820,12 +1625,56 @@
     "elevationDifferenceM": 600,
     "durationMinutes": 190,
     "difficulty": 2,
-    "checkpoints": [{"name":"冬瓜山步道登山口","order":1},{"name":"大石壁","order":2},{"name":"騰龍山莊叉路","order":3},{"name":"千年櫸木","order":4},{"name":"冬瓜山步道登山口","order":5}],
+    "checkpoints": [
+      {
+        "name": "冬瓜山步道登山口",
+        "order": 1
+      },
+      {
+        "name": "大石壁",
+        "order": 2
+      },
+      {
+        "name": "騰龍山莊叉路",
+        "order": 3
+      },
+      {
+        "name": "千年櫸木",
+        "order": 4
+      },
+      {
+        "name": "冬瓜山步道登山口",
+        "order": 5
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=046",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=046","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=046",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
   },
@@ -843,12 +1692,72 @@
     "elevationDifferenceM": 606,
     "durationMinutes": 155,
     "difficulty": 2,
-    "checkpoints": [{"name":"天然湖登山口（南線）","order":1},{"name":"馬那邦山岔路口","order":2},{"name":"馬那邦山三角點、徐慶榮紀念碑","order":3},{"name":"馬那邦山岔路口","order":4},{"name":"石門遺址","order":5},{"name":"日軍軍營遺址","order":6},{"name":"古戰場紀念碑","order":7},{"name":"上湖／珠湖岔路口","order":8},{"name":"上湖登山口","order":9}],
+    "checkpoints": [
+      {
+        "name": "天然湖登山口（南線）",
+        "order": 1
+      },
+      {
+        "name": "馬那邦山岔路口",
+        "order": 2
+      },
+      {
+        "name": "馬那邦山三角點、徐慶榮紀念碑",
+        "order": 3
+      },
+      {
+        "name": "馬那邦山岔路口",
+        "order": 4
+      },
+      {
+        "name": "石門遺址",
+        "order": 5
+      },
+      {
+        "name": "日軍軍營遺址",
+        "order": 6
+      },
+      {
+        "name": "古戰場紀念碑",
+        "order": 7
+      },
+      {
+        "name": "上湖／珠湖岔路口",
+        "order": 8
+      },
+      {
+        "name": "上湖登山口",
+        "order": 9
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=047",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=047","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=047",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
   },
@@ -866,12 +1775,80 @@
     "elevationDifferenceM": 300,
     "durationMinutes": 86,
     "difficulty": 2,
-    "checkpoints": [{"name":"登山口","order":1},{"name":"第一吊橋","order":2},{"name":"第二吊橋","order":3},{"name":"標示1K處","order":4},{"name":"高壓電鐵塔（最高點）","order":5},{"name":"三岔路口","order":6},{"name":"標示2K處","order":7},{"name":"小池塘旁岔路口","order":8},{"name":"高壓電鐵塔","order":9},{"name":"標示3K處","order":10},{"name":"停車場","order":11}],
+    "checkpoints": [
+      {
+        "name": "登山口",
+        "order": 1
+      },
+      {
+        "name": "第一吊橋",
+        "order": 2
+      },
+      {
+        "name": "第二吊橋",
+        "order": 3
+      },
+      {
+        "name": "標示1K處",
+        "order": 4
+      },
+      {
+        "name": "高壓電鐵塔（最高點）",
+        "order": 5
+      },
+      {
+        "name": "三岔路口",
+        "order": 6
+      },
+      {
+        "name": "標示2K處",
+        "order": 7
+      },
+      {
+        "name": "小池塘旁岔路口",
+        "order": 8
+      },
+      {
+        "name": "高壓電鐵塔",
+        "order": 9
+      },
+      {
+        "name": "標示3K處",
+        "order": 10
+      },
+      {
+        "name": "停車場",
+        "order": 11
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=051",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=051","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=051",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
   },
@@ -889,12 +1866,84 @@
     "elevationDifferenceM": 899,
     "durationMinutes": 300,
     "difficulty": 2,
-    "checkpoints": [{"name":"東卯山大道院登山口","order":1},{"name":"德芙蘭步道岔路","order":2},{"name":"涼亭","order":3},{"name":"2.5K木樁左側有展望點","order":4},{"name":"3.5K木樁","order":5},{"name":"4.5K木樁","order":6},{"name":"5.5K木樁","order":7},{"name":"6K木樁","order":8},{"name":"木梯","order":9},{"name":"6.5K木樁","order":10},{"name":"東卯山三角點","order":11},{"name":"東卯山大道院登山口","order":12}],
+    "checkpoints": [
+      {
+        "name": "東卯山大道院登山口",
+        "order": 1
+      },
+      {
+        "name": "德芙蘭步道岔路",
+        "order": 2
+      },
+      {
+        "name": "涼亭",
+        "order": 3
+      },
+      {
+        "name": "2.5K木樁左側有展望點",
+        "order": 4
+      },
+      {
+        "name": "3.5K木樁",
+        "order": 5
+      },
+      {
+        "name": "4.5K木樁",
+        "order": 6
+      },
+      {
+        "name": "5.5K木樁",
+        "order": 7
+      },
+      {
+        "name": "6K木樁",
+        "order": 8
+      },
+      {
+        "name": "木梯",
+        "order": 9
+      },
+      {
+        "name": "6.5K木樁",
+        "order": 10
+      },
+      {
+        "name": "東卯山三角點",
+        "order": 11
+      },
+      {
+        "name": "東卯山大道院登山口",
+        "order": 12
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=053",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=053","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=053",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
   },
@@ -912,12 +1961,68 @@
     "elevationDifferenceM": 655,
     "durationMinutes": 240,
     "difficulty": 3,
-    "checkpoints": [{"name":"裡冷登山口","order":1},{"name":"0.9K涼亭","order":2},{"name":"1.5K木樁","order":3},{"name":"唐麻丹山三角點","order":4},{"name":"蝴蝶谷岔路口","order":5},{"name":"松鶴岔路口","order":6},{"name":"0.9K涼亭","order":7},{"name":"裡冷登山口","order":8}],
+    "checkpoints": [
+      {
+        "name": "裡冷登山口",
+        "order": 1
+      },
+      {
+        "name": "0.9K涼亭",
+        "order": 2
+      },
+      {
+        "name": "1.5K木樁",
+        "order": 3
+      },
+      {
+        "name": "唐麻丹山三角點",
+        "order": 4
+      },
+      {
+        "name": "蝴蝶谷岔路口",
+        "order": 5
+      },
+      {
+        "name": "松鶴岔路口",
+        "order": 6
+      },
+      {
+        "name": "0.9K涼亭",
+        "order": 7
+      },
+      {
+        "name": "裡冷登山口",
+        "order": 8
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=054",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=054","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=054",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
   },
@@ -935,13 +2040,1365 @@
     "elevationDifferenceM": 958,
     "durationMinutes": 345,
     "difficulty": 3,
-    "checkpoints": [{"name":"波津加步道捎來端起點","order":1},{"name":"0.5K休息處（波津加步道起點）","order":2},{"name":"石瀑區","order":3},{"name":"木造涼亭","order":4},{"name":"波津加山三角點","order":5},{"name":"木造涼亭","order":6},{"name":"石瀑區","order":7},{"name":"0.5K休息處","order":8},{"name":"波津加步道捎來端","order":9}],
+    "checkpoints": [
+      {
+        "name": "波津加步道捎來端起點",
+        "order": 1
+      },
+      {
+        "name": "0.5K休息處（波津加步道起點）",
+        "order": 2
+      },
+      {
+        "name": "石瀑區",
+        "order": 3
+      },
+      {
+        "name": "木造涼亭",
+        "order": 4
+      },
+      {
+        "name": "波津加山三角點",
+        "order": 5
+      },
+      {
+        "name": "木造涼亭",
+        "order": 6
+      },
+      {
+        "name": "石瀑區",
+        "order": 7
+      },
+      {
+        "name": "0.5K休息處",
+        "order": 8
+      },
+      {
+        "name": "波津加步道捎來端",
+        "order": 9
+      }
+    ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
     "sourceOrganization": "農業部林業及自然保育署",
     "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=055",
-    "sourceReferences": [{"organization":"農業部林業及自然保育署","url":"https://recreation.forest.gov.tw/Trail/RT?tr_id=055","fields":["slug","mountainName","routeName","region","kind","startLat","startLng","distanceKm","designations","elevationGainM","elevationDifferenceM","durationMinutes","difficulty","checkpoints","evacuationPoints","permitNotes"]}],
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=055",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
     "sourceVersion": "2026-07-14",
     "reviewedAt": "2026-07-14"
+  },
+  {
+    "slug": "yushan-main-peak",
+    "mountainName": "玉山",
+    "routeName": "玉山主峰步道",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 25.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1342,
+    "durationMinutes": 840,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "孟祿亭",
+        "order": 2
+      },
+      {
+        "name": "前峰登山口",
+        "order": 3
+      },
+      {
+        "name": "西峰下觀景台",
+        "order": 4
+      },
+      {
+        "name": "大峭壁",
+        "order": 5
+      },
+      {
+        "name": "排雲山莊",
+        "order": 6
+      },
+      {
+        "name": "主北岔路",
+        "order": 7
+      },
+      {
+        "name": "玉山主峰",
+        "order": 8
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；排雲山莊床位須另行抽籤",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/21",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yushan-east-peak",
+    "mountainName": "玉山東峰",
+    "routeName": "玉山主東北峰線",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 37,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1259,
+    "durationMinutes": 1435,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "主北岔路",
+        "order": 3
+      },
+      {
+        "name": "玉山主峰",
+        "order": 4
+      },
+      {
+        "name": "玉山東峰",
+        "order": 5
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；玉山東峰多裸岩斷崖地勢陡峭",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/76",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yushan-west-peak",
+    "mountainName": "玉山西峰",
+    "routeName": "玉山主東北峰線（西峰線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 37,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 918,
+    "durationMinutes": 1435,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "玉山西峰",
+        "order": 3
+      },
+      {
+        "name": "排雲山莊",
+        "order": 4
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/76",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yushan-north-peak",
+    "mountainName": "玉山北峰",
+    "routeName": "玉山主東北峰線（北峰線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 37,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1248,
+    "durationMinutes": 1435,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "主北岔路",
+        "order": 3
+      },
+      {
+        "name": "八通關岔路／風口",
+        "order": 4
+      },
+      {
+        "name": "玉山北峰",
+        "order": 5
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；主峰至北峰間陡碎石坡地形且風口風勢強勁",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/76",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yushan-front-peak",
+    "mountainName": "玉山前峰",
+    "routeName": "玉山前峰步道",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 623,
+    "durationMinutes": 300,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "前峰登山口",
+        "order": 2
+      },
+      {
+        "name": "玉山前峰",
+        "order": 3
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 4
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；連續爬升500公尺石瀑區",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/76",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yushan-south-peak",
+    "mountainName": "玉山南峰",
+    "routeName": "玉山後四峰線（南峰線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 48.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1234,
+    "durationMinutes": 2065,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "圓峰山屋",
+        "order": 3
+      },
+      {
+        "name": "三叉峰",
+        "order": 4
+      },
+      {
+        "name": "玉山南峰",
+        "order": 5
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；圓峰至南峰、鹿山間路段多裸岩斷崖地形",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/141",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "nan-yushan",
+    "mountainName": "南玉山",
+    "routeName": "玉山後四峰線（南玉山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 48.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 773,
+    "durationMinutes": 2065,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "圓峰山屋",
+        "order": 3
+      },
+      {
+        "name": "2K三岔路口（小南山第二登山口）",
+        "order": 4
+      },
+      {
+        "name": "南玉山",
+        "order": 5
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；後四峰多碎石坡路徑不穩定",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/141",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "lu-mountain",
+    "mountainName": "鹿山",
+    "routeName": "玉山後四峰線（鹿山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 48.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 371,
+    "durationMinutes": 2065,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "圓峰山屋",
+        "order": 3
+      },
+      {
+        "name": "玉山南峰",
+        "order": 4
+      },
+      {
+        "name": "鹿山",
+        "order": 5
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；後四峰多碎石坡路徑不穩定夜間易迷失",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/141",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "dongxiaonan-mountain",
+    "mountainName": "東小南山",
+    "routeName": "玉山後四峰線（東小南山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 48.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1101,
+    "durationMinutes": 2065,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "塔塔加登山口",
+        "order": 1
+      },
+      {
+        "name": "排雲山莊",
+        "order": 2
+      },
+      {
+        "name": "圓峰山屋",
+        "order": 3
+      },
+      {
+        "name": "玉山南峰",
+        "order": 4
+      },
+      {
+        "name": "鹿山",
+        "order": 5
+      },
+      {
+        "name": "東小南山",
+        "order": 6
+      },
+      {
+        "name": "塔塔加登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；圓峰至南峰、鹿山間路段多裸岩斷崖地形",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/141",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xiuguluan-mountain",
+    "mountainName": "秀姑巒山",
+    "routeName": "八大秀線（秀姑巒山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 68,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1225,
+    "durationMinutes": 3275,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "八通關",
+        "order": 3
+      },
+      {
+        "name": "中央金礦山屋",
+        "order": 4
+      },
+      {
+        "name": "白洋金礦山屋",
+        "order": 5
+      },
+      {
+        "name": "秀姑巒山",
+        "order": 6
+      },
+      {
+        "name": "東埔登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；秀姑坪至秀姑巒山間多裸岩、崩壁",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/188",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "dashuiku-mountain",
+    "mountainName": "大水窟山",
+    "routeName": "南二段（大水窟山線）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 78.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 2005,
+    "durationMinutes": 4785,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "八通關",
+        "order": 3
+      },
+      {
+        "name": "中央金礦",
+        "order": 4
+      },
+      {
+        "name": "達芬尖山登山口",
+        "order": 5
+      },
+      {
+        "name": "南大水窟山",
+        "order": 6
+      },
+      {
+        "name": "大水窟山",
+        "order": 7
+      },
+      {
+        "name": "向陽登山口",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；大水窟至白洋金礦間碎石坡路徑不穩定",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/146",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "batongguan-mountain",
+    "mountainName": "八通關山",
+    "routeName": "馬博橫斷（八通關山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 68,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 2225,
+    "durationMinutes": 3275,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "八通關山登山口",
+        "order": 3
+      },
+      {
+        "name": "八通關山",
+        "order": 4
+      },
+      {
+        "name": "東埔登山口",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/188",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yunfeng-mountain",
+    "mountainName": "雲峰",
+    "routeName": "南二段（雲峰線）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 46.1,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1451,
+    "durationMinutes": 2925,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "嘉明湖避難山屋",
+        "order": 2
+      },
+      {
+        "name": "新康山岔路口",
+        "order": 3
+      },
+      {
+        "name": "拉庫音溪山屋",
+        "order": 4
+      },
+      {
+        "name": "南雙頭山",
+        "order": 5
+      },
+      {
+        "name": "雲峰",
+        "order": 6
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；南雙頭山至雲峰間路段多處崩壁、裸岩、斷崖",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/112",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "mabolasi-mountain",
+    "mountainName": "馬博拉斯山",
+    "routeName": "馬博橫斷（馬博拉斯山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 78.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 2723,
+    "durationMinutes": 3885,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "八通關",
+        "order": 3
+      },
+      {
+        "name": "中央金礦山屋",
+        "order": 4
+      },
+      {
+        "name": "秀姑巒山",
+        "order": 5
+      },
+      {
+        "name": "馬博拉斯山屋",
+        "order": 6
+      },
+      {
+        "name": "馬博拉斯山",
+        "order": 7
+      },
+      {
+        "name": "中平林道登山口",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；馬博拉斯至馬布谷中多處大型斷崖、崩壁",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/186",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xinkang-mountain",
+    "mountainName": "新康山",
+    "routeName": "新康橫斷（新康山線）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 61.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1512,
+    "durationMinutes": 3700,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "向陽登山口",
+        "order": 1
+      },
+      {
+        "name": "嘉明湖叉路口",
+        "order": 2
+      },
+      {
+        "name": "布新岔路口",
+        "order": 3
+      },
+      {
+        "name": "連理山",
+        "order": 4
+      },
+      {
+        "name": "新仙山",
+        "order": 5
+      },
+      {
+        "name": "新康山",
+        "order": 6
+      },
+      {
+        "name": "山風登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；新仙山至新康山間高落差裸岩地型",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/182",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "kuhanuoxin-mountain",
+    "mountainName": "庫哈諾辛山",
+    "routeName": "南橫三山（庫哈諾辛山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 14.8,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 822,
+    "durationMinutes": 1180,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "進涇橋登山口",
+        "order": 1
+      },
+      {
+        "name": "庫哈諾辛山屋",
+        "order": 2
+      },
+      {
+        "name": "庫哈諾辛山",
+        "order": 3
+      },
+      {
+        "name": "進涇橋登山口",
+        "order": 4
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；如縮短行程為1日請詳加評估自身體能及風險",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/433",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "guanshan-mountain",
+    "mountainName": "關山",
+    "routeName": "南一段（關山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 46.1,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1375,
+    "durationMinutes": 2925,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "石山林道登山口",
+        "order": 1
+      },
+      {
+        "name": "卑南主山",
+        "order": 2
+      },
+      {
+        "name": "小關山",
+        "order": 3
+      },
+      {
+        "name": "海諾南山",
+        "order": 4
+      },
+      {
+        "name": "關山",
+        "order": 5
+      },
+      {
+        "name": "庫哈諾辛山屋",
+        "order": 6
+      },
+      {
+        "name": "進涇橋登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/433",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "guanshanling-mountain",
+    "mountainName": "關山嶺山",
+    "routeName": "南橫三山（關山嶺山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 2.3,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 438,
+    "durationMinutes": 150,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "關山嶺山登山口",
+        "order": 1
+      },
+      {
+        "name": "關山嶺山",
+        "order": 2
+      },
+      {
+        "name": "關山嶺山登山口",
+        "order": 3
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；路徑狹窄雪季如遇冰雪岩混合地形登頂易有滑落危險",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/199",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "taguan-mountain",
+    "mountainName": "塔關山",
+    "routeName": "南橫三山（塔關山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 640,
+    "durationMinutes": 190,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "塔關山登山口",
+        "order": 1
+      },
+      {
+        "name": "塔關山",
+        "order": 2
+      },
+      {
+        "name": "塔關山登山口",
+        "order": 3
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證）；路徑狹窄雪季如遇冰雪岩混合地形登頂易有滑落危險",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/198",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
