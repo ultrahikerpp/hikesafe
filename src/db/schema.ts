@@ -95,12 +95,12 @@ export const routeVersions = pgTable(
       precision: 9,
       scale: 6,
       mode: 'number',
-    }).notNull(),
+    }),
     startLongitude: numeric('start_longitude', {
       precision: 9,
       scale: 6,
       mode: 'number',
-    }).notNull(),
+    }),
     distanceKm: numeric('distance_km', {
       precision: 7,
       scale: 2,
@@ -113,7 +113,7 @@ export const routeVersions = pgTable(
     difficulty: integer('difficulty').notNull(),
     checkpoints: jsonb('checkpoints').notNull(),
     evacuationPoints: jsonb('evacuation_points').notNull(),
-    permitNotes: text('permit_notes').notNull(),
+    permitNotes: text('permit_notes'),
     sourceOrganization: text('source_organization').notNull(),
     sourceUrl: text('source_url').notNull(),
     sourceVersion: text('source_version').notNull(),

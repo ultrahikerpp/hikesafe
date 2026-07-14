@@ -54,12 +54,18 @@ export const routeInputSchema = z.object({
   routeName: z.string().min(1),
   region: z.string().min(1),
   kind: z.enum(['hundred_peak', 'suburban']),
-  startLat: z.number().min(21).max(26).transform((value) => roundTo(value, 6)),
+  startLat: z
+    .number()
+    .min(21)
+    .max(26)
+    .transform((value) => roundTo(value, 6))
+    .nullable(),
   startLng: z
     .number()
     .min(119)
     .max(123)
-    .transform((value) => roundTo(value, 6)),
+    .transform((value) => roundTo(value, 6))
+    .nullable(),
   distanceKm: z
     .number()
     .positive()
@@ -75,15 +81,18 @@ export const routeInputSchema = z.object({
   elevationGainM: z.number().int().nonnegative().nullable(),
   elevationDifferenceM: z.number().int().nonnegative().nullable(),
   durationMinutes: z.number().int().positive(),
-  difficulty: z.number().int().min(1).max(5),
+  difficulty: z.number().int().min(0).max(6),
   checkpoints: z.array(orderedPlaceSchema).min(1),
   evacuationPoints: z.array(orderedPlaceSchema),
-  permitNotes: z.string(),
+  permitNotes: z.string().nullable(),
   sourceOrganization: z.string().min(1),
   sourceUrl: z.string().url(),
   sourceVersion: z.string().min(1),
   reviewedAt: z.iso.date(),
-});
+}).refine(
+  ({ startLat, startLng }) => (startLat === null) === (startLng === null),
+  { message: 'Start coordinates must both be present or both be null' },
+);
 
 export type RouteInput = z.infer<typeof routeInputSchema>;
 

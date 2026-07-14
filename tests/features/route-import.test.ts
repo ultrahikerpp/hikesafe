@@ -10,6 +10,7 @@ import {
   requiredSuburbanRouteNames,
   type RouteCatalogDatabase,
   type RouteCatalogTransaction,
+  type RouteInput,
   type StoredRouteVersion,
   validateRouteInput,
 } from '@/src/features/routes/import';
@@ -91,14 +92,16 @@ class MemoryRouteTransaction implements RouteCatalogTransaction {
       }));
   }
 
-  async createVersion(routeId: string, input: typeof validRoute) {
+  async createVersion(routeId: string, input: RouteInput) {
     this.versions.push({
       id: `version-${this.versions.length + 1}`,
       routeId,
       input: validateRouteInput({
         ...input,
-        startLat: Number(input.startLat.toFixed(6)),
-        startLng: Number(input.startLng.toFixed(6)),
+        startLat:
+          input.startLat === null ? null : Number(input.startLat.toFixed(6)),
+        startLng:
+          input.startLng === null ? null : Number(input.startLng.toFixed(6)),
         distanceKm: Number(input.distanceKm.toFixed(2)),
       }),
       isActive: true,
@@ -107,6 +110,41 @@ class MemoryRouteTransaction implements RouteCatalogTransaction {
 }
 
 describe('route catalog import', () => {
+  it('preserves official source gaps through validation and import', async () => {
+    const routeWithOfficialGaps = validateRouteInput({
+      ...validRoute,
+      startLat: null,
+      startLng: null,
+      permitNotes: null,
+      difficulty: 0,
+    });
+    const tx = new MemoryRouteTransaction();
+    const database: RouteCatalogDatabase = {
+      transaction: async (callback) => callback(tx),
+    };
+
+    await importRouteCatalog([routeWithOfficialGaps], database);
+
+    expect(tx.versions[0]?.input).toMatchObject({
+      startLat: null,
+      startLng: null,
+      permitNotes: null,
+      difficulty: 0,
+    });
+  });
+
+  it('rejects inferred coordinates and out-of-range official difficulty', () => {
+    expect(() =>
+      validateRouteInput({ ...validRoute, difficulty: 7 }),
+    ).toThrow();
+    expect(() =>
+      validateRouteInput({ ...validRoute, startLat: null }),
+    ).toThrow();
+    expect(() =>
+      validateRouteInput({ ...validRoute, startLng: null }),
+    ).toThrow();
+  });
+
   it('deactivates routes withdrawn from the full catalog', async () => {
     const tx = new MemoryRouteTransaction();
     const database: RouteCatalogDatabase = {

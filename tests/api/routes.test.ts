@@ -85,4 +85,26 @@ describe('GET /api/routes', () => {
       }),
     ]);
   });
+
+  it('returns official source gaps without inferred replacements', async () => {
+    vi.mocked(searchRoutes).mockResolvedValue([
+      {
+        ...activeRoute,
+        startLat: null,
+        startLng: null,
+        permitNotes: null,
+        difficulty: 0,
+      },
+    ]);
+
+    const response = await GET(new Request('http://localhost/api/routes'));
+    const body = await response.json();
+
+    expect(body.routes[0]).toMatchObject({
+      startLat: null,
+      startLng: null,
+      permitNotes: null,
+      difficulty: 0,
+    });
+  });
 });

@@ -34,8 +34,8 @@
       "routeName": { "type": "string", "minLength": 1 },
       "region": { "type": "string", "minLength": 1 },
       "kind": { "enum": ["hundred_peak", "suburban"] },
-      "startLat": { "type": "number", "minimum": 21, "maximum": 26 },
-      "startLng": { "type": "number", "minimum": 119, "maximum": 123 },
+      "startLat": { "type": ["number", "null"], "minimum": 21, "maximum": 26 },
+      "startLng": { "type": ["number", "null"], "minimum": 119, "maximum": 123 },
       "distanceKm": { "type": "number", "exclusiveMinimum": 0 },
       "designations": {
         "type": "array",
@@ -47,15 +47,33 @@
       "elevationGainM": { "type": ["integer", "null"], "minimum": 0 },
       "elevationDifferenceM": { "type": ["integer", "null"], "minimum": 0 },
       "durationMinutes": { "type": "integer", "exclusiveMinimum": 0 },
-      "difficulty": { "type": "integer", "minimum": 1, "maximum": 5 },
+      "difficulty": { "type": "integer", "minimum": 0, "maximum": 6 },
       "checkpoints": { "$ref": "#/$defs/orderedPlaces" },
       "evacuationPoints": { "$ref": "#/$defs/optionalPlaces" },
-      "permitNotes": { "type": "string" },
+      "permitNotes": { "type": ["string", "null"] },
       "sourceOrganization": { "type": "string", "minLength": 1 },
       "sourceUrl": { "type": "string", "format": "uri" },
       "sourceVersion": { "type": "string", "minLength": 1 },
       "reviewedAt": { "type": "string", "format": "date" }
-    }
+    },
+    "allOf": [
+      {
+        "anyOf": [
+          {
+            "properties": {
+              "startLat": { "type": "null" },
+              "startLng": { "type": "null" }
+            }
+          },
+          {
+            "properties": {
+              "startLat": { "type": "number", "minimum": 21, "maximum": 26 },
+              "startLng": { "type": "number", "minimum": 119, "maximum": 123 }
+            }
+          }
+        ]
+      }
+    ]
   },
   "$defs": {
     "orderedPlaces": {
