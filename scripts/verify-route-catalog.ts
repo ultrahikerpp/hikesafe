@@ -15,6 +15,7 @@ const main = async () => {
   console.log(report.valid ? 'Catalog valid' : 'Catalog invalid');
   console.log(`Hundred peaks: ${report.hundredPeaks}`);
   console.log(`Suburban routes: ${report.suburbanRoutes}`);
+  console.log('Small hundred peaks: ' + report.smallHundredPeaks);
   console.log(`Missing sources: ${report.missingSources}`);
   console.log(`Duplicate slugs: ${report.duplicateSlugs}`);
   for (const error of report.errors) console.error(`- ${error}`);

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -199,6 +201,26 @@ describe('route catalog import', () => {
 });
 
 describe('launch catalog verification', () => {
+  it('loads each official Small Hundred Peak number exactly once', () => {
+    const canonicalSmallHundredPeakNumbers =
+      requiredSmallHundredPeakDesignations.map((designation) =>
+        Number(designation.slice(-3)),
+      );
+
+    expect(canonicalSmallHundredPeakNumbers).toEqual(
+      Array.from({ length: 100 }, (_, index) => index + 1),
+    );
+    expect(new Set(canonicalSmallHundredPeakNumbers).size).toBe(100);
+  });
+
+  it('prints the Small Hundred Peak report count in the CLI', () => {
+    const cli = readFileSync('scripts/verify-route-catalog.ts', 'utf8');
+
+    expect(cli).toContain(
+      "console.log('Small hundred peaks: ' + report.smallHundredPeaks);",
+    );
+  });
+
   it('loads the reviewed canonical hundred peak baseline', () => {
     expect(canonicalHundredPeakNames).toEqual(canonicalHundredPeakNamesFixture);
     expect(new Set(canonicalHundredPeakNames).size).toBe(100);
