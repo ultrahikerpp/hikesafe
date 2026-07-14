@@ -20,6 +20,7 @@ const activeRoute: RouteCatalogRecord = {
   routeId: 'route-1',
   isActive: true,
   ...validRoute,
+  designations: ['taiwan_small_hundred_peak:001'],
 };
 
 describe('route catalog search', () => {
@@ -75,6 +76,9 @@ describe('GET /api/routes', () => {
     expect(body.routes).toEqual([
       expect.objectContaining({
         id: 'version-active',
+        designations: ['taiwan_small_hundred_peak:001'],
+        elevationGainM: null,
+        elevationDifferenceM: 597,
         sourceUrl: 'https://www.taroko.gov.tw/',
         sourceVersion: '2026-07-12',
         reviewedAt: '2026-07-12',

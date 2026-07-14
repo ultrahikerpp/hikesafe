@@ -36,9 +36,12 @@ export interface EmergencyReport {
   data: EmergencyReportData;
 }
 
-const list = (items: Array<string | { name: string }>) => items.length
+const list = (
+  items: Array<string | { name: string }>,
+  emptyLabel = '未提供',
+) => items.length
   ? items.map((item) => typeof item === 'string' ? item : item.name).join('、')
-  : '未提供';
+  : emptyLabel;
 
 const taipeiTime = (value: string) => {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -92,7 +95,7 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     `車輛：${data.vehicle || '未提供'}`,
     `裝備：${list(data.equipment)}`,
     `檢查點：${list(data.checkpoints)}`,
-    `撤離點：${list(data.evacuationPoints)}`,
+    `撤離點：${list(data.evacuationPoints, '官方資料未載明')}`,
     'HikeSafe 尚未代為通報 119',
   );
   return { text: lines.join('\n'), data };

@@ -75,4 +75,14 @@ describe('buildEmergencyReport', () => {
     expect(report.text).toContain('撤離點：塔塔加登山口');
     expect(report.text).not.toContain('[object Object]');
   });
+
+  it('identifies an empty official evacuation list without inventing a point', () => {
+    const report = buildEmergencyReport({
+      ...trip,
+      evacuationPoints: [],
+      lastCheckIn: null,
+    });
+
+    expect(report.text).toContain('撤離點：官方資料未載明');
+  });
 });
