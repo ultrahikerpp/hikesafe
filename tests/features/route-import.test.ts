@@ -4,6 +4,7 @@ import {
   analyzeRouteCatalog,
   canonicalHundredPeakNames,
   importRouteCatalog,
+  requiredSmallHundredPeakDesignations,
   requiredSuburbanRouteNames,
   type RouteCatalogDatabase,
   type RouteCatalogTransaction,
@@ -37,15 +38,19 @@ const launchCatalog = [
   ...canonicalHundredPeakNamesFixture.map((name, index) =>
     routeFor(name, 'hundred_peak', index),
   ),
-  ...requiredSuburbanRouteNames.map((name, index) =>
-    routeFor(name, 'suburban', index),
-  ),
+  ...requiredSuburbanRouteNames.map((name, index) => ({
+    ...routeFor(name, 'suburban', index),
+    designations: [requiredSmallHundredPeakDesignations[index]],
+  })),
 ];
 
 it('requires traceable source and review metadata', () => {
   expect(validateRouteInput(validRoute).sourceUrl).toMatch(/^https:/);
   expect(() => validateRouteInput({ ...validRoute, sourceUrl: '' })).toThrow();
   expect(() => validateRouteInput({ ...validRoute, checkpoints: [] })).toThrow();
+  expect(
+    () => validateRouteInput({ ...validRoute, elevationDifferenceM: -1 }),
+  ).toThrow();
 });
 
 class MemoryRouteTransaction implements RouteCatalogTransaction {
@@ -197,6 +202,30 @@ describe('launch catalog verification', () => {
   it('loads the reviewed canonical hundred peak baseline', () => {
     expect(canonicalHundredPeakNames).toEqual(canonicalHundredPeakNamesFixture);
     expect(new Set(canonicalHundredPeakNames).size).toBe(100);
+    expect(requiredSmallHundredPeakDesignations).toHaveLength(100);
+  });
+
+  it('counts Small Hundred Peak designations independently of route kind', () => {
+    const report = analyzeRouteCatalog(launchCatalog, sourceRegistry);
+
+    expect(report.valid).toBe(true);
+    expect(report.suburbanRoutes).toBe(100);
+    expect(report.smallHundredPeaks).toBe(100);
+  });
+
+  it('rejects missing or duplicate Small Hundred Peak designations', () => {
+    const missing = launchCatalog.map((route, index) =>
+      index === 100 ? { ...route, designations: [] } : route,
+    );
+    const duplicated = launchCatalog.map((route, index) =>
+      index === 101
+        ? { ...route, designations: [requiredSmallHundredPeakDesignations[0]] }
+        : route,
+    );
+
+    for (const catalog of [missing, duplicated]) {
+      expect(analyzeRouteCatalog(catalog, sourceRegistry).valid).toBe(false);
+    }
   });
 
   it('requires the exact canonical hundred peak set, not any 100 names', () => {

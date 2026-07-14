@@ -1,16 +1,51 @@
 import { z } from 'zod';
 
 import canonicalHundredPeakNamesJson from '@/data/routes/hundred-peaks.json';
+import smallHundredPeaksJson from '@/data/routes/small-hundred-peaks.json';
 
 export const canonicalHundredPeakNames = z
   .array(z.string().min(1))
   .length(100)
   .parse(canonicalHundredPeakNamesJson);
 
+const smallHundredPeakSchema = z.object({
+  number: z.number().int().positive(),
+});
+
+const smallHundredPeakNumbers = z
+  .array(smallHundredPeakSchema)
+  .length(100)
+  .parse(smallHundredPeaksJson)
+  .map(({ number }) => number);
+
+const requiredSmallHundredPeakNumbers = Array.from(
+  { length: 100 },
+  (_, index) => index + 1,
+);
+const smallHundredPeakNumberSet = new Set(smallHundredPeakNumbers);
+if (
+  smallHundredPeakNumberSet.size !== 100 ||
+  requiredSmallHundredPeakNumbers.some(
+    (number) => !smallHundredPeakNumberSet.has(number),
+  )
+) {
+  throw new Error('Small Hundred Peak official numbers must be 1 through 100 exactly once');
+}
+
+export const requiredSmallHundredPeakDesignations =
+  requiredSmallHundredPeakNumbers.map(
+    (number) => `taiwan_small_hundred_peak:${String(number).padStart(3, '0')}`,
+  );
+
 const roundTo = (value: number, decimalPlaces: number) => {
   const factor = 10 ** decimalPlaces;
   return Math.round((value + Number.EPSILON) * factor) / factor;
 };
+
+const orderedPlaceSchema = z.object({
+  name: z.string().min(1),
+  order: z.number().int().positive(),
+});
 
 export const routeInputSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/),
@@ -29,25 +64,19 @@ export const routeInputSchema = z.object({
     .positive()
     .transform((value) => roundTo(value, 2))
     .pipe(z.number().positive()),
-  elevationGainM: z.number().int().nonnegative(),
+  designations: z
+    .array(
+      z
+        .string()
+        .regex(/^taiwan_small_hundred_peak:(?:0(?:0[1-9]|[1-9][0-9])|100)$/),
+    )
+    .default([]),
+  elevationGainM: z.number().int().nonnegative().nullable(),
+  elevationDifferenceM: z.number().int().nonnegative().nullable(),
   durationMinutes: z.number().int().positive(),
   difficulty: z.number().int().min(1).max(5),
-  checkpoints: z
-    .array(
-      z.object({
-        name: z.string().min(1),
-        order: z.number().int().positive(),
-      }),
-    )
-    .min(1),
-  evacuationPoints: z
-    .array(
-      z.object({
-        name: z.string().min(1),
-        order: z.number().int().positive(),
-      }),
-    )
-    .min(1),
+  checkpoints: z.array(orderedPlaceSchema).min(1),
+  evacuationPoints: z.array(orderedPlaceSchema),
   permitNotes: z.string(),
   sourceOrganization: z.string().min(1),
   sourceUrl: z.string().url(),
@@ -104,6 +133,7 @@ export type RouteCatalogReport = {
   valid: boolean;
   hundredPeaks: number;
   suburbanRoutes: number;
+  smallHundredPeaks: number;
   missingSources: number;
   duplicateSlugs: number;
   errors: string[];
@@ -125,6 +155,19 @@ export const analyzeRouteCatalog = (
     ({ kind }) => kind === 'hundred_peak',
   ).length;
   const suburbanRoutes = catalog.filter(({ kind }) => kind === 'suburban').length;
+  const designationCounts = new Map<string, number>();
+  for (const { designations } of catalog) {
+    for (const designation of designations) {
+      designationCounts.set(
+        designation,
+        (designationCounts.get(designation) ?? 0) + 1,
+      );
+    }
+  }
+  const smallHundredPeaks = [...designationCounts.values()].reduce(
+    (total, count) => total + count,
+    0,
+  );
   if (hundredPeaks !== 100) {
     errors.push(`Expected exactly 100 hundred peaks, found ${hundredPeaks}`);
   }
@@ -149,6 +192,35 @@ export const analyzeRouteCatalog = (
   }
   if (suburbanRoutes < 30) {
     errors.push(`Expected at least 30 suburban routes, found ${suburbanRoutes}`);
+  }
+
+  const missingSmallHundredPeakDesignations =
+    requiredSmallHundredPeakDesignations.filter(
+      (designation) => !designationCounts.has(designation),
+    );
+  const duplicateSmallHundredPeakDesignations = [...designationCounts]
+    .filter(([, count]) => count > 1)
+    .map(([designation]) => designation);
+  const unexpectedSmallHundredPeakDesignations = [...designationCounts]
+    .filter(
+      ([designation]) =>
+        !requiredSmallHundredPeakDesignations.includes(designation),
+    )
+    .map(([designation]) => designation);
+  if (missingSmallHundredPeakDesignations.length > 0) {
+    errors.push(
+      `Missing official Small Hundred Peak designations: ${missingSmallHundredPeakDesignations.join(', ')}`,
+    );
+  }
+  if (duplicateSmallHundredPeakDesignations.length > 0) {
+    errors.push(
+      `Duplicate Small Hundred Peak designations: ${duplicateSmallHundredPeakDesignations.join(', ')}`,
+    );
+  }
+  if (unexpectedSmallHundredPeakDesignations.length > 0) {
+    errors.push(
+      `Unexpected Small Hundred Peak designations: ${unexpectedSmallHundredPeakDesignations.join(', ')}`,
+    );
   }
 
   const slugCounts = new Map<string, number>();
@@ -191,6 +263,7 @@ export const analyzeRouteCatalog = (
     valid: errors.length === 0,
     hundredPeaks,
     suburbanRoutes,
+    smallHundredPeaks,
     missingSources,
     duplicateSlugs: duplicateSlugNames.length,
     errors,
@@ -277,7 +350,11 @@ const createDatabase = async (): Promise<RouteCatalogDatabase> => {
                 startLat: version.startLatitude,
                 startLng: version.startLongitude,
                 distanceKm: version.distanceKm,
+                designations: routeInputSchema.shape.designations.parse(
+                  version.designations,
+                ),
                 elevationGainM: version.elevationGainMeters,
+                elevationDifferenceM: version.elevationDifferenceMeters,
                 durationMinutes: version.durationMinutes,
                 difficulty: version.difficulty,
                 checkpoints: routeInputSchema.shape.checkpoints.parse(
@@ -317,7 +394,9 @@ const createDatabase = async (): Promise<RouteCatalogDatabase> => {
               startLatitude: input.startLat,
               startLongitude: input.startLng,
               distanceKm: input.distanceKm,
+              designations: input.designations,
               elevationGainMeters: input.elevationGainM,
+              elevationDifferenceMeters: input.elevationDifferenceM,
               durationMinutes: input.durationMinutes,
               difficulty: input.difficulty,
               checkpoints: input.checkpoints,
