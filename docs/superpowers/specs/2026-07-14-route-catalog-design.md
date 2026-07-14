@@ -21,9 +21,9 @@
 ## Classification model
 
 - `kind` 維持 `hundred_peak` 或 `suburban`，維持既有 API、匯入與查詢的相容性。
-- `designations` 是零到多個官方指定；本次新增的指定值為 `taiwan_small_hundred_peak`。
-- `data/routes/small-hundred-peaks.json` 收錄教育部體育署官方編號、名稱、所屬縣市與來源版本。
-- 驗證器以 `designations` 計算小百岳數量，要求官方清單的每個名稱恰好出現一次；一筆重疊路線可同時計入郊山與小百岳。
+- `designations` 是零到多個官方指定；本次值為 `taiwan_small_hundred_peak:001` 至 `taiwan_small_hundred_peak:100`。
+- `data/routes/small-hundred-peaks.json` 收錄教育部體育署官方編號、原始名稱、所屬縣市與來源版本；官方同名山以編號區分，不自行加入別名。
+- 驗證器以 `designations` 計算小百岳數量，要求官方編號 001–100 各出現一次；一筆重疊路線可同時計入郊山與小百岳。
 - 不新增重複 slug、重複 route version，或僅因分類不同而重複的路線記錄。
 
 ## Safety behavior
