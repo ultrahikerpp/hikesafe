@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-import { routeInputSchema, type RouteInput } from './import';
+import {
+  normalizeStoredRouteSourceReferences,
+  routeInputSchema,
+  type RouteInput,
+} from './import';
 
 export const routeSearchQuerySchema = z.object({
   q: z.string().optional(),
@@ -77,7 +81,11 @@ const loadActiveRoutes = async (): Promise<RouteCatalogRecord[]> => {
       permitNotes: version.permitNotes,
       sourceOrganization: version.sourceOrganization,
       sourceUrl: version.sourceUrl,
-      sourceReferences: version.sourceReferences,
+      sourceReferences: normalizeStoredRouteSourceReferences(
+        version.sourceOrganization,
+        version.sourceUrl,
+        version.sourceReferences,
+      ),
       sourceVersion: version.sourceVersion,
       reviewedAt: version.reviewedAt.toISOString().slice(0, 10),
     }),

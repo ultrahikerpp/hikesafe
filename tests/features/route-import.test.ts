@@ -6,6 +6,7 @@ import {
   analyzeRouteCatalog,
   canonicalHundredPeakNames,
   importRouteCatalog,
+  normalizeStoredRouteSourceReferences,
   requiredSmallHundredPeakDesignations,
   requiredSuburbanRouteNames,
   type RouteCatalogDatabase,
@@ -95,6 +96,12 @@ it('requires ordered field-level official source references', () => {
   expect(() =>
     validateRouteInput({
       ...routeWithSourceReferences,
+      sourceReferences: [],
+    }),
+  ).toThrow();
+  expect(() =>
+    validateRouteInput({
+      ...routeWithSourceReferences,
       sourceReferences: [
         {
           ...routeWithSourceReferences.sourceReferences[0],
@@ -120,9 +127,21 @@ class MemoryRouteTransaction implements RouteCatalogTransaction {
   }
 
   async findActiveVersion(routeId: string, _slug: string) {
-    return this.versions.find(
+    const version = this.versions.find(
       (version) => version.routeId === routeId && version.isActive,
     );
+    if (!version) return undefined;
+    return {
+      ...version,
+      input: validateRouteInput({
+        ...version.input,
+        sourceReferences: normalizeStoredRouteSourceReferences(
+          version.input.sourceOrganization,
+          version.input.sourceUrl,
+          version.input.sourceReferences,
+        ),
+      }),
+    };
   }
 
   async deactivateVersion(id: string) {
@@ -156,9 +175,71 @@ class MemoryRouteTransaction implements RouteCatalogTransaction {
       isActive: true,
     });
   }
+
+  addLegacyVersion(routeId: string) {
+    this.versions.push({
+      id: `version-${this.versions.length + 1}`,
+      routeId,
+      input: {
+        ...routeWithSourceReferences,
+        sourceReferences: [],
+      } as unknown as RouteInput,
+      isActive: true,
+    });
+  }
 }
 
 describe('route catalog import', () => {
+  it('derives a primary-source reference when loading a legacy persisted row', () => {
+    expect(
+      normalizeStoredRouteSourceReferences(
+        routeWithSourceReferences.sourceOrganization,
+        routeWithSourceReferences.sourceUrl,
+        [],
+      ),
+    ).toEqual([
+      {
+        organization: routeWithSourceReferences.sourceOrganization,
+        url: routeWithSourceReferences.sourceUrl,
+        fields: [
+          'slug',
+          'mountainName',
+          'routeName',
+          'region',
+          'kind',
+          'startLat',
+          'startLng',
+          'distanceKm',
+          'designations',
+          'elevationGainM',
+          'elevationDifferenceM',
+          'durationMinutes',
+          'difficulty',
+          'checkpoints',
+          'evacuationPoints',
+          'permitNotes',
+        ],
+      },
+    ]);
+  });
+
+  it('reimports a legacy active version with empty persisted references', async () => {
+    const tx = new MemoryRouteTransaction();
+    const routeId = await tx.createRoute(routeWithSourceReferences.slug);
+    tx.addLegacyVersion(routeId);
+    const database: RouteCatalogDatabase = {
+      transaction: async (callback) => callback(tx),
+    };
+
+    await importRouteCatalog([routeWithSourceReferences], database);
+
+    expect(tx.versions).toHaveLength(2);
+    expect(tx.versions.map(({ isActive }) => isActive)).toEqual([false, true]);
+    expect(tx.versions[1]?.input.sourceReferences).toEqual(
+      routeWithSourceReferences.sourceReferences,
+    );
+  });
+
   it('preserves official source gaps through validation and import', async () => {
     const routeWithOfficialGaps = validateRouteInput({
       ...routeWithSourceReferences,

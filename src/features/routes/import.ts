@@ -75,6 +75,19 @@ export const routeSourceReferenceSchema = z.object({
   fields: z.array(routeSourceFieldSchema).min(1),
 });
 
+export const normalizeStoredRouteSourceReferences = (
+  sourceOrganization: string,
+  sourceUrl: string,
+  sourceReferences: unknown,
+) =>
+  Array.isArray(sourceReferences) && sourceReferences.length === 0
+    ? [{
+        organization: sourceOrganization,
+        url: sourceUrl,
+        fields: routeSourceFieldSchema.options,
+      }]
+    : z.array(routeSourceReferenceSchema).min(1).parse(sourceReferences);
+
 export const routeInputSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/),
   mountainName: z.string().min(1),
@@ -392,7 +405,9 @@ const createDatabase = async (): Promise<RouteCatalogDatabase> => {
                 permitNotes: version.permitNotes,
                 sourceOrganization: version.sourceOrganization,
                 sourceUrl: version.sourceUrl,
-                sourceReferences: routeInputSchema.shape.sourceReferences.parse(
+                sourceReferences: normalizeStoredRouteSourceReferences(
+                  version.sourceOrganization,
+                  version.sourceUrl,
                   version.sourceReferences,
                 ),
                 sourceVersion: version.sourceVersion,

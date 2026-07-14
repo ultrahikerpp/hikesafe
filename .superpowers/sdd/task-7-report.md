@@ -20,3 +20,10 @@
 ## Scope
 
 Pre-existing changes to catalog/source data, earlier reports, docs, plans, and `.DS_Store` files were not staged or committed.
+
+## P1 compatibility fix
+
+- Normalized persisted empty `sourceReferences` arrays to one primary-source reference covering all route fields during active-catalog loading and importer comparison.
+- Kept new `RouteInput` validation strict: catalog entries still require at least one explicit field-level reference.
+- Added regressions for legacy-row loading and reimport replacement.
+- Verification: `npm test -- tests/features/route-import.test.ts tests/features/route-catalog.test.ts tests/api/routes.test.ts` (28 passed); `npm run build` (passed).
