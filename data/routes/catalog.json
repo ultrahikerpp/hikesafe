@@ -4648,5 +4648,220 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "wuwoei-mountain-trail",
+    "mountainName": "屋我尾山",
+    "routeName": "屋我尾山步道",
+    "region": "臺中市和平區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 6.1,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 119,
+    "durationMinutes": 300,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "北側登山口／大雪山林道31.2公里", "order": 1 },
+      { "name": "屋我尾山三角點", "order": 2 },
+      { "name": "南登山口／台8線31.2K", "order": 3 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=056",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=056",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "malun-mountain-trail",
+    "mountainName": "馬崙山",
+    "routeName": "馬崙山步道",
+    "region": "臺中市和平區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 14,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1254,
+    "durationMinutes": 495,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "馬崙山步道口", "order": 1 },
+      { "name": "支線岔路", "order": 2 },
+      { "name": "2.3K觀景台", "order": 3 },
+      { "name": "第一涼亭", "order": 4 },
+      { "name": "第二涼亭", "order": 5 },
+      { "name": "第三涼亭", "order": 6 },
+      { "name": "馬崙山", "order": 7 },
+      { "name": "馬崙山步道口", "order": 8 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=057",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=057",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "baimao-mountain-trail",
+    "mountainName": "白毛山",
+    "routeName": "白毛山步道",
+    "region": "臺中市和平區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 609,
+    "durationMinutes": 250,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "白毛山登山口", "order": 1 },
+      { "name": "白毛山三角點", "order": 2 },
+      { "name": "白毛山登山口", "order": 3 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=059",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=059",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "hehuan-east-peak-trail",
+    "mountainName": "合歡東峰步道",
+    "routeName": "合歡東峰步道",
+    "region": "花蓮縣秀林鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.9,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 321,
+    "durationMinutes": 120,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "松雪樓登山口", "order": 1 },
+      { "name": "合歡東峰頂", "order": 2 },
+      { "name": "松雪樓登山口", "order": 3 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=062",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=062",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "taoshan-waterfall-trail",
+    "mountainName": "桃山瀑布步道",
+    "routeName": "桃山瀑布步道",
+    "region": "臺中市和平區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 8.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 400,
+    "durationMinutes": 240,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "武陵山莊", "order": 1 },
+      { "name": "武陵吊橋", "order": 2 },
+      { "name": "桃山登山步道岔", "order": 3 },
+      { "name": "松濤亭", "order": 4 },
+      { "name": "池有登山步道岔", "order": 5 },
+      { "name": "涼亭", "order": 6 },
+      { "name": "桃山瀑布", "order": 7 },
+      { "name": "涼亭", "order": 8 },
+      { "name": "池有登山步道岔", "order": 9 },
+      { "name": "松濤亭", "order": 10 },
+      { "name": "桃山登山步道岔", "order": 11 },
+      { "name": "武陵吊橋", "order": 12 },
+      { "name": "武陵山莊", "order": 13 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=063",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=063",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "qilin-mountain-forest-trail",
+    "mountainName": "麒麟山森林步道",
+    "routeName": "麒麟山森林步道",
+    "region": "彰化縣田中鎮；南投縣名間鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.1,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 56,
+    "durationMinutes": 60,
+    "difficulty": 1,
+    "checkpoints": [
+      { "name": "贊天宮／普興寺", "order": 1 },
+      { "name": "觀景涼亭", "order": 2 },
+      { "name": "休憩野餐區", "order": 3 },
+      { "name": "體健設施區", "order": 4 },
+      { "name": "贊天宮／普興寺", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=070",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=070",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
