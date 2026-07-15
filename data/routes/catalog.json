@@ -5156,5 +5156,40 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "fenrui-ancient-trail",
+    "mountainName": "奮瑞古道",
+    "routeName": "奮瑞古道",
+    "region": "嘉義縣竹崎鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 6.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 500,
+    "durationMinutes": 180,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "南登山口", "order": 1 },
+      { "name": "涼亭", "order": 2 },
+      { "name": "七步回音谷", "order": 3 },
+      { "name": "瑞太古道登山口", "order": 4 },
+      { "name": "北登山口（奮瑞、瑞太古道登山口）", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=099",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=099",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
