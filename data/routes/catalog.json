@@ -8205,5 +8205,125 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "qixing-main-east-trail",
+    "mountainName": "七星山主峰東峰",
+    "routeName": "七星主峰－東峰步道（小油坑至冷水坑）",
+    "region": "陽明山國家公園",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 380,
+    "durationMinutes": 150,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "小油坑登山口", "order": 1 },
+      { "name": "七星主峰", "order": 2 },
+      { "name": "七星東峰", "order": 3 },
+      { "name": "冷水坑登山口", "order": 4 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "陽明山國家公園管理處",
+    "sourceUrl": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
+    "sourceReferences": [
+      {
+        "organization": "陽明山國家公園管理處",
+        "url": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
+        "fields": [
+          "slug", "mountainName", "routeName", "region", "kind",
+          "startLat", "startLng", "distanceKm", "designations",
+          "elevationGainM", "elevationDifferenceM", "durationMinutes",
+          "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "datun-main-peak-trail",
+    "mountainName": "大屯山主峰",
+    "routeName": "大屯主峰連峰步道",
+    "region": "陽明山國家公園",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5.8,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 640,
+    "durationMinutes": 270,
+    "difficulty": 3,
+    "checkpoints": [
+      { "name": "大屯鞍部登山口", "order": 1 },
+      { "name": "大屯主峰", "order": 2 },
+      { "name": "大屯南峰", "order": 3 },
+      { "name": "大屯西峰", "order": 4 },
+      { "name": "面天坪", "order": 5 },
+      { "name": "清天宮登山口", "order": 6 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "陽明山國家公園管理處",
+    "sourceUrl": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
+    "sourceReferences": [
+      {
+        "organization": "陽明山國家公園管理處",
+        "url": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
+        "fields": [
+          "slug", "mountainName", "routeName", "region", "kind",
+          "startLat", "startLng", "distanceKm", "designations",
+          "elevationGainM", "elevationDifferenceM", "durationMinutes",
+          "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "miantian-xiangtian-trail",
+    "mountainName": "面天山向天山",
+    "routeName": "面天山向天山步道",
+    "region": "陽明山國家公園",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.0,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 577,
+    "durationMinutes": 180,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "二子坪遊憩區", "order": 1 },
+      { "name": "面天山", "order": 2 },
+      { "name": "向天山", "order": 3 },
+      { "name": "向天池", "order": 4 },
+      { "name": "興福寮登山口", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "陽明山國家公園管理處",
+    "sourceUrl": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
+    "sourceReferences": [
+      {
+        "organization": "陽明山國家公園管理處",
+        "url": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
+        "fields": [
+          "slug", "mountainName", "routeName", "region", "kind",
+          "startLat", "startLng", "distanceKm", "designations",
+          "elevationGainM", "elevationDifferenceM", "durationMinutes",
+          "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
