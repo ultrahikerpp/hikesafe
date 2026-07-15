@@ -4940,5 +4940,84 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "jianan-yunfeng-trail",
+    "mountainName": "嘉南雲峰步道",
+    "routeName": "嘉南雲峰步道",
+    "region": "雲林縣古坑鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 495,
+    "durationMinutes": 250,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "南側登山口", "order": 1 },
+      { "name": "石壁山三角點", "order": 2 },
+      { "name": "好望角峭壁雄風", "order": 3 },
+      { "name": "牛樟巨樹", "order": 4 },
+      { "name": "休息平台", "order": 5 },
+      { "name": "登嘉南雲峰叉路口", "order": 6 },
+      { "name": "嘉南雲峰峰頂", "order": 7 },
+      { "name": "登嘉南雲峰叉路口", "order": 8 },
+      { "name": "大石壁", "order": 9 },
+      { "name": "北側登山口", "order": 10 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=082",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=082",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "ruitai-ancient-trail",
+    "mountainName": "瑞太古道",
+    "routeName": "瑞太古道",
+    "region": "嘉義縣梅山鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 500,
+    "durationMinutes": 180,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "瑞里登山口（西登山口）", "order": 1 },
+      { "name": "忘憂林", "order": 2 },
+      { "name": "牛樟巨木／七步迴音谷", "order": 3 },
+      { "name": "抹油坑", "order": 4 },
+      { "name": "魔窟石洞", "order": 5 },
+      { "name": "回頭嶺", "order": 6 },
+      { "name": "望天崖", "order": 7 },
+      { "name": "抹油坑", "order": 8 },
+      { "name": "瑞里登山口（西登山口）", "order": 9 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=083",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=083",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
