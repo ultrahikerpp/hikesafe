@@ -9221,5 +9221,976 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "ganzhuowan-mountain",
+    "mountainName": "干卓萬山",
+    "routeName": "干卓萬群峰縱走（萬大林道原路來回）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 47.4,
+    "designations": [],
+    "elevationGainM": 2345,
+    "elevationDifferenceM": 1804,
+    "durationMinutes": 3110,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "7.8K停車處",
+        "order": 1
+      },
+      {
+        "name": "登山口",
+        "order": 2
+      },
+      {
+        "name": "環形營地",
+        "order": 3
+      },
+      {
+        "name": "獵寮營地",
+        "order": 4
+      },
+      {
+        "name": "十粒溪源營地",
+        "order": 5
+      },
+      {
+        "name": "乳型峰東鞍營地",
+        "order": 6
+      },
+      {
+        "name": "干卓萬山",
+        "order": 7
+      },
+      {
+        "name": "7.8K停車處",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：干卓萬山位於南投縣仁愛鄉轄區，部分紀錄稱免申請；惟同行程之卓社大山、牧山位於信義鄉須申請入山證，建議全程辦理入山證以策安全（臺灣登山申請一站式服務網 hike.taiwan.gov.tw）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/110",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/110",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "南投分署－林業及自然保育署",
+        "url": "https://nantou.forest.gov.tw/ForestRoad/10003321",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "自由時報",
+        "url": "https://news.ltn.com.tw/news/society/breakingnews/4268318",
+        "fields": [
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=881",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "mu-mountain",
+    "mountainName": "牧山",
+    "routeName": "干卓萬群峰縱走（萬大林道原路來回）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 47.4,
+    "designations": [],
+    "elevationGainM": 2345,
+    "elevationDifferenceM": 1761,
+    "durationMinutes": 3110,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "7.8K停車處",
+        "order": 1
+      },
+      {
+        "name": "登山口",
+        "order": 2
+      },
+      {
+        "name": "環形營地",
+        "order": 3
+      },
+      {
+        "name": "獵寮營地",
+        "order": 4
+      },
+      {
+        "name": "十粒溪源營地",
+        "order": 5
+      },
+      {
+        "name": "乳型峰東鞍營地",
+        "order": 6
+      },
+      {
+        "name": "干卓萬山",
+        "order": 7
+      },
+      {
+        "name": "三叉峰營地",
+        "order": 8
+      },
+      {
+        "name": "牧山",
+        "order": 9
+      },
+      {
+        "name": "7.8K停車處",
+        "order": 10
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（牧山位於南投縣信義鄉，需向南投縣政府警察局信義分局申請入山證）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/110",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/110",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "南投分署－林業及自然保育署",
+        "url": "https://nantou.forest.gov.tw/ForestRoad/10003321",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "自由時報",
+        "url": "https://news.ltn.com.tw/news/society/breakingnews/4268318",
+        "fields": [
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=881",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "zhuoshe-dashan",
+    "mountainName": "卓社大山",
+    "routeName": "干卓萬群峰縱走（萬大林道原路來回）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 47.4,
+    "designations": [],
+    "elevationGainM": 2345,
+    "elevationDifferenceM": 1889,
+    "durationMinutes": 3110,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "7.8K停車處",
+        "order": 1
+      },
+      {
+        "name": "登山口",
+        "order": 2
+      },
+      {
+        "name": "環形營地",
+        "order": 3
+      },
+      {
+        "name": "獵寮營地",
+        "order": 4
+      },
+      {
+        "name": "十粒溪源營地",
+        "order": 5
+      },
+      {
+        "name": "乳型峰東鞍營地",
+        "order": 6
+      },
+      {
+        "name": "干卓萬山",
+        "order": 7
+      },
+      {
+        "name": "三叉峰營地",
+        "order": 8
+      },
+      {
+        "name": "牧山",
+        "order": 9
+      },
+      {
+        "name": "東北鞍營地",
+        "order": 10
+      },
+      {
+        "name": "卓社大山東峰",
+        "order": 11
+      },
+      {
+        "name": "3199峰",
+        "order": 12
+      },
+      {
+        "name": "卓社大山",
+        "order": 13
+      },
+      {
+        "name": "7.8K停車處",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（卓社大山位於南投縣信義鄉，需向南投縣政府警察局信義分局申請入山證）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/110",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/110",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "南投分署－林業及自然保育署",
+        "url": "https://nantou.forest.gov.tw/ForestRoad/10003321",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "自由時報",
+        "url": "https://news.ltn.com.tw/news/society/breakingnews/4268318",
+        "fields": [
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=881",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "dongluan-dashan",
+    "mountainName": "東巒大山",
+    "routeName": "郡大林道東巒大山線（無雙山·本鄉山縱走）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 67.8,
+    "designations": [],
+    "elevationGainM": 4623,
+    "elevationDifferenceM": 611,
+    "durationMinutes": 3895,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "33K郡大林道",
+        "order": 1
+      },
+      {
+        "name": "36K支線岔路",
+        "order": 2
+      },
+      {
+        "name": "43K工寮",
+        "order": 3
+      },
+      {
+        "name": "45.3K無雙山登山口",
+        "order": 4
+      },
+      {
+        "name": "屋瓦拉鼻西營地",
+        "order": 5
+      },
+      {
+        "name": "無雙吊橋",
+        "order": 6
+      },
+      {
+        "name": "無雙社",
+        "order": 7
+      },
+      {
+        "name": "亞力士營地",
+        "order": 8
+      },
+      {
+        "name": "水源",
+        "order": 9
+      },
+      {
+        "name": "無雙山",
+        "order": 10
+      },
+      {
+        "name": "無雙最高峰",
+        "order": 11
+      },
+      {
+        "name": "無雙東峰",
+        "order": 12
+      },
+      {
+        "name": "櫧山",
+        "order": 13
+      },
+      {
+        "name": "櫧山前營地",
+        "order": 14
+      },
+      {
+        "name": "櫧山北鞍營地",
+        "order": 15
+      },
+      {
+        "name": "本鄉山",
+        "order": 16
+      },
+      {
+        "name": "北鞍營地",
+        "order": 17
+      },
+      {
+        "name": "取水岔路",
+        "order": 18
+      },
+      {
+        "name": "烏達佩山岔路",
+        "order": 19
+      },
+      {
+        "name": "東巒大山",
+        "order": 20
+      },
+      {
+        "name": "33K郡大林道",
+        "order": 21
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（東巒大山經郡大林道進出，屬南投縣信義鄉轄區，需申請入山證；郡大林道沿線及無雙聚落遺址周邊有崩塌地形與腐朽吊橋，應避免雨天或摸黑通過）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/128",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/128",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "南投分署－林業及自然保育署",
+        "url": "https://nantou.forest.gov.tw/ForestRoad/10003316",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=news&act=info&id=12804",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "dandashan",
+    "mountainName": "丹大山",
+    "routeName": "丹大山線（瑞穗林道進出）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 62.7,
+    "designations": [],
+    "elevationGainM": 3286,
+    "elevationDifferenceM": 1904,
+    "durationMinutes": 3240,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "14.5K瑞穗林道",
+        "order": 1
+      },
+      {
+        "name": "19K水泥橋",
+        "order": 2
+      },
+      {
+        "name": "28K工寮",
+        "order": 3
+      },
+      {
+        "name": "32K彈藥庫工寮",
+        "order": 4
+      },
+      {
+        "name": "34K登山口",
+        "order": 5
+      },
+      {
+        "name": "沙武巒草原",
+        "order": 6
+      },
+      {
+        "name": "水點",
+        "order": 7
+      },
+      {
+        "name": "三岔路口",
+        "order": 8
+      },
+      {
+        "name": "東源營地",
+        "order": 9
+      },
+      {
+        "name": "2907峰",
+        "order": 10
+      },
+      {
+        "name": "杜鵑營地",
+        "order": 11
+      },
+      {
+        "name": "太平溪源",
+        "order": 12
+      },
+      {
+        "name": "太平溪源營地",
+        "order": 13
+      },
+      {
+        "name": "盧利拉駱山",
+        "order": 14
+      },
+      {
+        "name": "丹大山",
+        "order": 15
+      },
+      {
+        "name": "14.5K瑞穗林道",
+        "order": 16
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（經花蓮縣卓溪鄉瑞穗林道進出，屬南三段/丹大山系管制範圍，需於內政部警政署入山案件申辦系統申請入山證）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/122",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/122",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "花蓮分署－林業及自然保育署",
+        "url": "https://hualien.forest.gov.tw/ForestRoad/10003354",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "臺灣登山申請一站式服務網",
+        "url": "https://hike.taiwan.gov.tw/open.aspx",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "neilingerh-mountain",
+    "mountainName": "內嶺爾山",
+    "routeName": "內嶺爾山線（瑞穗林道進出）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 60.6,
+    "designations": [],
+    "elevationGainM": 3236,
+    "elevationDifferenceM": 1854,
+    "durationMinutes": 3210,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "14.5K瑞穗林道",
+        "order": 1
+      },
+      {
+        "name": "19K水泥橋",
+        "order": 2
+      },
+      {
+        "name": "28K工寮",
+        "order": 3
+      },
+      {
+        "name": "32K彈藥庫工寮",
+        "order": 4
+      },
+      {
+        "name": "34K登山口",
+        "order": 5
+      },
+      {
+        "name": "沙武巒草原",
+        "order": 6
+      },
+      {
+        "name": "水點",
+        "order": 7
+      },
+      {
+        "name": "三岔路口",
+        "order": 8
+      },
+      {
+        "name": "東源營地",
+        "order": 9
+      },
+      {
+        "name": "2907峰",
+        "order": 10
+      },
+      {
+        "name": "杜鵑營地",
+        "order": 11
+      },
+      {
+        "name": "太平溪源",
+        "order": 12
+      },
+      {
+        "name": "太平溪源營地",
+        "order": 13
+      },
+      {
+        "name": "三岔路營地",
+        "order": 14
+      },
+      {
+        "name": "內嶺爾山",
+        "order": 15
+      },
+      {
+        "name": "14.5K瑞穗林道",
+        "order": 16
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（經花蓮縣卓溪鄉瑞穗林道進出，屬南三段/丹大山系管制範圍，需於內政部警政署入山案件申辦系統申請入山證）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/123",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/123",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "花蓮分署－林業及自然保育署",
+        "url": "https://hualien.forest.gov.tw/ForestRoad/10003354",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "臺灣登山申請一站式服務網",
+        "url": "https://hike.taiwan.gov.tw/open.aspx",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "jyun-dashan",
+    "mountainName": "郡大山",
+    "routeName": "郡大山步道（含望鄉山）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7.2,
+    "designations": [],
+    "elevationGainM": 433,
+    "elevationDifferenceM": 433,
+    "durationMinutes": 350,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "32K登山口",
+        "order": 1
+      },
+      {
+        "name": "望鄉山",
+        "order": 2
+      },
+      {
+        "name": "郡大山北峰",
+        "order": 3
+      },
+      {
+        "name": "郡大山",
+        "order": 4
+      },
+      {
+        "name": "32K登山口",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（郡大山位於南投縣信義鄉，可於臺灣登山申請一站式服務網事先申請，亦可登山當日至信義分局信義派出所臨時申請；郡大林道23K檢查哨開放時間8:00-12:00、13:00-17:00）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/99",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/99",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "南投分署－林業及自然保育署",
+        "url": "https://nantou.forest.gov.tw/ForestRoad/10003316",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "南投旅遊網",
+        "url": "https://travel.nantou.gov.tw/news-press/%E5%8D%97%E6%8A%95%E9%83%A1%E5%A4%A7%E5%B1%B1/",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "yixiqingmazhi-mountain",
+    "mountainName": "義西請馬至山",
+    "routeName": "義西請馬至山線（瑞穗林道·丹大山系）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 68.5,
+    "designations": [],
+    "elevationGainM": 3626,
+    "elevationDifferenceM": 1824,
+    "durationMinutes": 3790,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "14.5K瑞穗林道",
+        "order": 1
+      },
+      {
+        "name": "19K水泥橋",
+        "order": 2
+      },
+      {
+        "name": "28K工寮",
+        "order": 3
+      },
+      {
+        "name": "32K彈藥庫工寮",
+        "order": 4
+      },
+      {
+        "name": "34K登山口",
+        "order": 5
+      },
+      {
+        "name": "沙武巒草原",
+        "order": 6
+      },
+      {
+        "name": "水點",
+        "order": 7
+      },
+      {
+        "name": "三岔路口",
+        "order": 8
+      },
+      {
+        "name": "東源營地",
+        "order": 9
+      },
+      {
+        "name": "2907峰",
+        "order": 10
+      },
+      {
+        "name": "杜鵑營地",
+        "order": 11
+      },
+      {
+        "name": "太平溪源",
+        "order": 12
+      },
+      {
+        "name": "太平溪源營地",
+        "order": 13
+      },
+      {
+        "name": "三岔路營地",
+        "order": 14
+      },
+      {
+        "name": "馬路巴拉讓山",
+        "order": 15
+      },
+      {
+        "name": "崖邊營地",
+        "order": 16
+      },
+      {
+        "name": "義西請馬至山",
+        "order": 17
+      },
+      {
+        "name": "14.5K瑞穗林道",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（經花蓮縣卓溪鄉瑞穗林道進出，屬南三段/丹大山系管制範圍，需於內政部警政署入山案件申辦系統申請入山證）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/124",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/124",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "花蓮分署－林業及自然保育署",
+        "url": "https://hualien.forest.gov.tw/ForestRoad/10003354",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=news&act=info&id=12804",
+        "fields": [
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "臺灣登山申請一站式服務網",
+        "url": "https://hike.taiwan.gov.tw/open.aspx",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "xiluan-dashan",
+    "mountainName": "西巒大山",
+    "routeName": "西巒大山·巒安堂線（雙龍林道進出）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 30.4,
+    "designations": [],
+    "elevationGainM": 1414,
+    "elevationDifferenceM": 1384,
+    "durationMinutes": 1320,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "雙龍林道16K行車終點",
+        "order": 1
+      },
+      {
+        "name": "崩壁",
+        "order": 2
+      },
+      {
+        "name": "木梯",
+        "order": 3
+      },
+      {
+        "name": "第一水源處",
+        "order": 4
+      },
+      {
+        "name": "第二水源處",
+        "order": 5
+      },
+      {
+        "name": "第三水源處",
+        "order": 6
+      },
+      {
+        "name": "最後水源處",
+        "order": 7
+      },
+      {
+        "name": "停機坪營地",
+        "order": 8
+      },
+      {
+        "name": "牡丹園",
+        "order": 9
+      },
+      {
+        "name": "廢棄房舍",
+        "order": 10
+      },
+      {
+        "name": "巒安堂",
+        "order": 11
+      },
+      {
+        "name": "西巒大山登山口",
+        "order": 12
+      },
+      {
+        "name": "西巒大山",
+        "order": 13
+      },
+      {
+        "name": "雙龍林道16K行車終點",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：是（西巒大山位於南投縣信義鄉，需於內政部警政署入山案件申辦系統申請；經雙龍林道進出者，申請地點應選擇「郡大山、西巒大山（南投縣-信義鄉）」選項而非單一西巒大山選項）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/156",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/156",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=review&act=info&review_id=28588",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
