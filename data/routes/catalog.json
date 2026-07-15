@@ -10991,5 +10991,439 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "dongjun-dashan",
+    "mountainName": "東郡大山",
+    "routeName": "南三段（東郡大山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 61.8,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 751,
+    "durationMinutes": 3680,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "33K郡大林道",
+        "order": 1
+      },
+      {
+        "name": "45.3K無雙山登山口",
+        "order": 2
+      },
+      {
+        "name": "無雙社",
+        "order": 3
+      },
+      {
+        "name": "無雙山",
+        "order": 4
+      },
+      {
+        "name": "本鄉山",
+        "order": 5
+      },
+      {
+        "name": "東郡大山",
+        "order": 6
+      },
+      {
+        "name": "33K郡大林道",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，經郡大林道23K望鄉工作站管制通行時間08:00–17:00）；路線不屬國家公園轄管，無公家單位維護",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/127",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/127",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "維基百科",
+        "url": "https://zh.wikipedia.org/zh-tw/%E9%83%A1%E5%A4%A7%E6%9E%97%E9%81%93",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "輝哥的天空",
+        "url": "https://xn--kwr22her7a6qdvs6a.tw/mountain/aaasouththree.htm",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "wushuang-mountain",
+    "mountainName": "無雙山",
+    "routeName": "南三段（無雙山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 44.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 363,
+    "durationMinutes": 2400,
+    "difficulty": 6,
+    "checkpoints": [
+      {
+        "name": "33K郡大林道",
+        "order": 1
+      },
+      {
+        "name": "45.3K無雙山登山口",
+        "order": 2
+      },
+      {
+        "name": "無雙社",
+        "order": 3
+      },
+      {
+        "name": "無雙山",
+        "order": 4
+      },
+      {
+        "name": "33K郡大林道",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，經郡大林道23K望鄉工作站管制通行時間08:00–17:00）；無雙吊橋木踏板損壞已禁止通行，需改繞替代路徑",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/125",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/125",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "維基百科",
+        "url": "https://zh.wikipedia.org/zh-tw/%E9%83%A1%E5%A4%A7%E6%9E%97%E9%81%93",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "輝哥的天空",
+        "url": "https://xn--kwr22her7a6qdvs6a.tw/mountain/aaasouththree.htm",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "wandong-west-peak",
+    "mountainName": "萬東山西峰",
+    "routeName": "干卓萬群峰縱走（萬東山西峰線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 35.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1778,
+    "durationMinutes": 2135,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "7.8K停車處",
+        "order": 1
+      },
+      {
+        "name": "登山口",
+        "order": 2
+      },
+      {
+        "name": "十粒溪源營地",
+        "order": 3
+      },
+      {
+        "name": "干卓萬山",
+        "order": 4
+      },
+      {
+        "name": "萬東山西峰 (火山)",
+        "order": 5
+      },
+      {
+        "name": "7.8K停車處",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證）；登山口至十粒溪間近年出現螞蝗，需加強防護",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/109",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/109",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "輝哥的天空",
+        "url": "https://xn--kwr22her7a6qdvs6a.tw/mountain/aaakgainjouoan.htm",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "xiaoguan-mountain",
+    "mountainName": "小關山",
+    "routeName": "南一段（小關山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 10.7,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1089,
+    "durationMinutes": 715,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "小關山林道27K",
+        "order": 1
+      },
+      {
+        "name": "神池營地",
+        "order": 2
+      },
+      {
+        "name": "黑水塘營地",
+        "order": 3
+      },
+      {
+        "name": "小關山",
+        "order": 4
+      },
+      {
+        "name": "小關山林道27K",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，甲種管制山區，小關山林道7K設有檢查哨查驗）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/197",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/197",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=1677",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "輝哥的天空",
+        "url": "https://xn--kwr22her7a6qdvs6a.tw/mountain/aaasouthone.htm",
+        "fields": [
+          "difficulty"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "hainuonan-mountain",
+    "mountainName": "海諾南山",
+    "routeName": "南一段（海諾南山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 23.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1015,
+    "durationMinutes": 1355,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "小關山林道27K",
+        "order": 1
+      },
+      {
+        "name": "神池營地",
+        "order": 2
+      },
+      {
+        "name": "小關山",
+        "order": 3
+      },
+      {
+        "name": "海諾南山下營地",
+        "order": 4
+      },
+      {
+        "name": "海諾南山",
+        "order": 5
+      },
+      {
+        "name": "小關山林道27K",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，甲種管制山區，小關山林道7K設有檢查哨查驗）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/202",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/202",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=1677",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "輝哥的天空",
+        "url": "https://xn--kwr22her7a6qdvs6a.tw/mountain/aaasouthone.htm",
+        "fields": [
+          "difficulty"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "beinan-main-peak",
+    "mountainName": "卑南主山",
+    "routeName": "南一段（卑南主山線）",
+    "region": "高雄市桃源區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 42.3,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 1820,
+    "durationMinutes": 2045,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "藤枝林道停車場",
+        "order": 1
+      },
+      {
+        "name": "出雲山檢查哨",
+        "order": 2
+      },
+      {
+        "name": "溪南山",
+        "order": 3
+      },
+      {
+        "name": "石山",
+        "order": 4
+      },
+      {
+        "name": "卑南主山",
+        "order": 5
+      },
+      {
+        "name": "藤枝林道停車場",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證；路線行經出雲山自然保留區，另須申請保留區許可）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/192",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/192",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=mountain&act=detail&id=53",
+        "fields": [
+          "region"
+        ]
+      },
+      {
+        "organization": "輝哥的天空",
+        "url": "https://xn--kwr22her7a6qdvs6a.tw/mountain/aaasouthone.htm",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
