@@ -4664,9 +4664,18 @@
     "durationMinutes": 300,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "北側登山口／大雪山林道31.2公里", "order": 1 },
-      { "name": "屋我尾山三角點", "order": 2 },
-      { "name": "南登山口／台8線31.2K", "order": 3 }
+      {
+        "name": "北側登山口／大雪山林道31.2公里",
+        "order": 1
+      },
+      {
+        "name": "屋我尾山三角點",
+        "order": 2
+      },
+      {
+        "name": "南登山口／台8線31.2K",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4676,7 +4685,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=056",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4697,14 +4723,38 @@
     "durationMinutes": 495,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "馬崙山步道口", "order": 1 },
-      { "name": "支線岔路", "order": 2 },
-      { "name": "2.3K觀景台", "order": 3 },
-      { "name": "第一涼亭", "order": 4 },
-      { "name": "第二涼亭", "order": 5 },
-      { "name": "第三涼亭", "order": 6 },
-      { "name": "馬崙山", "order": 7 },
-      { "name": "馬崙山步道口", "order": 8 }
+      {
+        "name": "馬崙山步道口",
+        "order": 1
+      },
+      {
+        "name": "支線岔路",
+        "order": 2
+      },
+      {
+        "name": "2.3K觀景台",
+        "order": 3
+      },
+      {
+        "name": "第一涼亭",
+        "order": 4
+      },
+      {
+        "name": "第二涼亭",
+        "order": 5
+      },
+      {
+        "name": "第三涼亭",
+        "order": 6
+      },
+      {
+        "name": "馬崙山",
+        "order": 7
+      },
+      {
+        "name": "馬崙山步道口",
+        "order": 8
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4714,7 +4764,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=057",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4735,9 +4802,18 @@
     "durationMinutes": 250,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "白毛山登山口", "order": 1 },
-      { "name": "白毛山三角點", "order": 2 },
-      { "name": "白毛山登山口", "order": 3 }
+      {
+        "name": "白毛山登山口",
+        "order": 1
+      },
+      {
+        "name": "白毛山三角點",
+        "order": 2
+      },
+      {
+        "name": "白毛山登山口",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4747,7 +4823,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=059",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4768,9 +4861,18 @@
     "durationMinutes": 120,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "松雪樓登山口", "order": 1 },
-      { "name": "合歡東峰頂", "order": 2 },
-      { "name": "松雪樓登山口", "order": 3 }
+      {
+        "name": "松雪樓登山口",
+        "order": 1
+      },
+      {
+        "name": "合歡東峰頂",
+        "order": 2
+      },
+      {
+        "name": "松雪樓登山口",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4780,7 +4882,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=062",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4801,19 +4920,58 @@
     "durationMinutes": 240,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "武陵山莊", "order": 1 },
-      { "name": "武陵吊橋", "order": 2 },
-      { "name": "桃山登山步道岔", "order": 3 },
-      { "name": "松濤亭", "order": 4 },
-      { "name": "池有登山步道岔", "order": 5 },
-      { "name": "涼亭", "order": 6 },
-      { "name": "桃山瀑布", "order": 7 },
-      { "name": "涼亭", "order": 8 },
-      { "name": "池有登山步道岔", "order": 9 },
-      { "name": "松濤亭", "order": 10 },
-      { "name": "桃山登山步道岔", "order": 11 },
-      { "name": "武陵吊橋", "order": 12 },
-      { "name": "武陵山莊", "order": 13 }
+      {
+        "name": "武陵山莊",
+        "order": 1
+      },
+      {
+        "name": "武陵吊橋",
+        "order": 2
+      },
+      {
+        "name": "桃山登山步道岔",
+        "order": 3
+      },
+      {
+        "name": "松濤亭",
+        "order": 4
+      },
+      {
+        "name": "池有登山步道岔",
+        "order": 5
+      },
+      {
+        "name": "涼亭",
+        "order": 6
+      },
+      {
+        "name": "桃山瀑布",
+        "order": 7
+      },
+      {
+        "name": "涼亭",
+        "order": 8
+      },
+      {
+        "name": "池有登山步道岔",
+        "order": 9
+      },
+      {
+        "name": "松濤亭",
+        "order": 10
+      },
+      {
+        "name": "桃山登山步道岔",
+        "order": 11
+      },
+      {
+        "name": "武陵吊橋",
+        "order": 12
+      },
+      {
+        "name": "武陵山莊",
+        "order": 13
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4823,7 +4981,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=063",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4844,11 +5019,26 @@
     "durationMinutes": 60,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "贊天宮／普興寺", "order": 1 },
-      { "name": "觀景涼亭", "order": 2 },
-      { "name": "休憩野餐區", "order": 3 },
-      { "name": "體健設施區", "order": 4 },
-      { "name": "贊天宮／普興寺", "order": 5 }
+      {
+        "name": "贊天宮／普興寺",
+        "order": 1
+      },
+      {
+        "name": "觀景涼亭",
+        "order": 2
+      },
+      {
+        "name": "休憩野餐區",
+        "order": 3
+      },
+      {
+        "name": "體健設施區",
+        "order": 4
+      },
+      {
+        "name": "贊天宮／普興寺",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4858,7 +5048,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=070",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4879,12 +5086,30 @@
     "durationMinutes": 120,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "小蟻獅入口廣場", "order": 1 },
-      { "name": "小鼬鼠迎賓廣場", "order": 2 },
-      { "name": "小蜘蛛解說教室", "order": 3 },
-      { "name": "觀湖平台", "order": 4 },
-      { "name": "小甲蟲活動廣場", "order": 5 },
-      { "name": "小蟻獅入口廣場", "order": 6 }
+      {
+        "name": "小蟻獅入口廣場",
+        "order": 1
+      },
+      {
+        "name": "小鼬鼠迎賓廣場",
+        "order": 2
+      },
+      {
+        "name": "小蜘蛛解說教室",
+        "order": 3
+      },
+      {
+        "name": "觀湖平台",
+        "order": 4
+      },
+      {
+        "name": "小甲蟲活動廣場",
+        "order": 5
+      },
+      {
+        "name": "小蟻獅入口廣場",
+        "order": 6
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4894,7 +5119,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=079",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4915,17 +5157,50 @@
     "durationMinutes": 240,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "塔山步道入口", "order": 1 },
-      { "name": "塔山步道1K", "order": 2 },
-      { "name": "2K木造平台／大塔山登山口", "order": 3 },
-      { "name": "大塔山東南峰", "order": 4 },
-      { "name": "塔山步道3K", "order": 5 },
-      { "name": "大塔山觀景台", "order": 6 },
-      { "name": "塔山步道3K", "order": 7 },
-      { "name": "大塔山東南峰", "order": 8 },
-      { "name": "2K木造平台／大塔山登山口", "order": 9 },
-      { "name": "塔山步道1K", "order": 10 },
-      { "name": "塔山步道入口", "order": 11 }
+      {
+        "name": "塔山步道入口",
+        "order": 1
+      },
+      {
+        "name": "塔山步道1K",
+        "order": 2
+      },
+      {
+        "name": "2K木造平台／大塔山登山口",
+        "order": 3
+      },
+      {
+        "name": "大塔山東南峰",
+        "order": 4
+      },
+      {
+        "name": "塔山步道3K",
+        "order": 5
+      },
+      {
+        "name": "大塔山觀景台",
+        "order": 6
+      },
+      {
+        "name": "塔山步道3K",
+        "order": 7
+      },
+      {
+        "name": "大塔山東南峰",
+        "order": 8
+      },
+      {
+        "name": "2K木造平台／大塔山登山口",
+        "order": 9
+      },
+      {
+        "name": "塔山步道1K",
+        "order": 10
+      },
+      {
+        "name": "塔山步道入口",
+        "order": 11
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4935,7 +5210,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=080",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4956,16 +5248,46 @@
     "durationMinutes": 250,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "南側登山口", "order": 1 },
-      { "name": "石壁山三角點", "order": 2 },
-      { "name": "好望角峭壁雄風", "order": 3 },
-      { "name": "牛樟巨樹", "order": 4 },
-      { "name": "休息平台", "order": 5 },
-      { "name": "登嘉南雲峰叉路口", "order": 6 },
-      { "name": "嘉南雲峰峰頂", "order": 7 },
-      { "name": "登嘉南雲峰叉路口", "order": 8 },
-      { "name": "大石壁", "order": 9 },
-      { "name": "北側登山口", "order": 10 }
+      {
+        "name": "南側登山口",
+        "order": 1
+      },
+      {
+        "name": "石壁山三角點",
+        "order": 2
+      },
+      {
+        "name": "好望角峭壁雄風",
+        "order": 3
+      },
+      {
+        "name": "牛樟巨樹",
+        "order": 4
+      },
+      {
+        "name": "休息平台",
+        "order": 5
+      },
+      {
+        "name": "登嘉南雲峰叉路口",
+        "order": 6
+      },
+      {
+        "name": "嘉南雲峰峰頂",
+        "order": 7
+      },
+      {
+        "name": "登嘉南雲峰叉路口",
+        "order": 8
+      },
+      {
+        "name": "大石壁",
+        "order": 9
+      },
+      {
+        "name": "北側登山口",
+        "order": 10
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -4975,7 +5297,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=082",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -4996,15 +5335,42 @@
     "durationMinutes": 180,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "瑞里登山口（西登山口）", "order": 1 },
-      { "name": "忘憂林", "order": 2 },
-      { "name": "牛樟巨木／七步迴音谷", "order": 3 },
-      { "name": "抹油坑", "order": 4 },
-      { "name": "魔窟石洞", "order": 5 },
-      { "name": "回頭嶺", "order": 6 },
-      { "name": "望天崖", "order": 7 },
-      { "name": "抹油坑", "order": 8 },
-      { "name": "瑞里登山口（西登山口）", "order": 9 }
+      {
+        "name": "瑞里登山口（西登山口）",
+        "order": 1
+      },
+      {
+        "name": "忘憂林",
+        "order": 2
+      },
+      {
+        "name": "牛樟巨木／七步迴音谷",
+        "order": 3
+      },
+      {
+        "name": "抹油坑",
+        "order": 4
+      },
+      {
+        "name": "魔窟石洞",
+        "order": 5
+      },
+      {
+        "name": "回頭嶺",
+        "order": 6
+      },
+      {
+        "name": "望天崖",
+        "order": 7
+      },
+      {
+        "name": "抹油坑",
+        "order": 8
+      },
+      {
+        "name": "瑞里登山口（西登山口）",
+        "order": 9
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -5014,7 +5380,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=083",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -5035,8 +5418,14 @@
     "durationMinutes": 60,
     "difficulty": 1,
     "checkpoints": [
-      { "name": "奉天岩", "order": 1 },
-      { "name": "大巃頂休閒民宿附近", "order": 2 }
+      {
+        "name": "奉天岩",
+        "order": 1
+      },
+      {
+        "name": "大巃頂休閒民宿附近",
+        "order": 2
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -5046,7 +5435,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=086",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -5067,15 +5473,42 @@
     "durationMinutes": 180,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "對高岳森林步道入口（祝山林道與祝山線鐵路交會處）", "order": 1 },
-      { "name": "對高岳車站／觀日坪", "order": 2 },
-      { "name": "對高坡", "order": 3 },
-      { "name": "鞍部岔路", "order": 4 },
-      { "name": "對高岳、對高亭", "order": 5 },
-      { "name": "鞍部岔路", "order": 6 },
-      { "name": "對高坡", "order": 7 },
-      { "name": "對高岳車站／觀日坪", "order": 8 },
-      { "name": "對高岳森林步道入口（祝山林道與祝山線鐵路交會處）", "order": 9 }
+      {
+        "name": "對高岳森林步道入口（祝山林道與祝山線鐵路交會處）",
+        "order": 1
+      },
+      {
+        "name": "對高岳車站／觀日坪",
+        "order": 2
+      },
+      {
+        "name": "對高坡",
+        "order": 3
+      },
+      {
+        "name": "鞍部岔路",
+        "order": 4
+      },
+      {
+        "name": "對高岳、對高亭",
+        "order": 5
+      },
+      {
+        "name": "鞍部岔路",
+        "order": 6
+      },
+      {
+        "name": "對高坡",
+        "order": 7
+      },
+      {
+        "name": "對高岳車站／觀日坪",
+        "order": 8
+      },
+      {
+        "name": "對高岳森林步道入口（祝山林道與祝山線鐵路交會處）",
+        "order": 9
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -5085,7 +5518,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=093",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -5106,9 +5556,18 @@
     "durationMinutes": 60,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "十字路來吉古道登山口", "order": 1 },
-      { "name": "步道終點", "order": 2 },
-      { "name": "十字路來吉古道登山口", "order": 3 }
+      {
+        "name": "十字路來吉古道登山口",
+        "order": 1
+      },
+      {
+        "name": "步道終點",
+        "order": 2
+      },
+      {
+        "name": "十字路來吉古道登山口",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：是",
@@ -5118,7 +5577,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=096",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -5139,9 +5615,18 @@
     "durationMinutes": 60,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "里美步道入口", "order": 1 },
-      { "name": "觀瀑亭", "order": 2 },
-      { "name": "里美步道入口", "order": 3 }
+      {
+        "name": "里美步道入口",
+        "order": 1
+      },
+      {
+        "name": "觀瀑亭",
+        "order": 2
+      },
+      {
+        "name": "里美步道入口",
+        "order": 3
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：是",
@@ -5151,7 +5636,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=098",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-15",
@@ -5172,11 +5674,26 @@
     "durationMinutes": 180,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "南登山口", "order": 1 },
-      { "name": "涼亭", "order": 2 },
-      { "name": "七步回音谷", "order": 3 },
-      { "name": "瑞太古道登山口", "order": 4 },
-      { "name": "北登山口（奮瑞、瑞太古道登山口）", "order": 5 }
+      {
+        "name": "南登山口",
+        "order": 1
+      },
+      {
+        "name": "涼亭",
+        "order": 2
+      },
+      {
+        "name": "七步回音谷",
+        "order": 3
+      },
+      {
+        "name": "瑞太古道登山口",
+        "order": 4
+      },
+      {
+        "name": "北登山口（奮瑞、瑞太古道登山口）",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -5186,7 +5703,24 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=099",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-16",
@@ -5207,11 +5741,26 @@
     "durationMinutes": 120,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "大凍山步道入口", "order": 1 },
-      { "name": "橫石亭", "order": 2 },
-      { "name": "曉風亭", "order": 3 },
-      { "name": "大棟山三角點", "order": 4 },
-      { "name": "大凍山步道入口", "order": 5 }
+      {
+        "name": "大凍山步道入口",
+        "order": 1
+      },
+      {
+        "name": "橫石亭",
+        "order": 2
+      },
+      {
+        "name": "曉風亭",
+        "order": 3
+      },
+      {
+        "name": "大棟山三角點",
+        "order": 4
+      },
+      {
+        "name": "大凍山步道入口",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": "入山申請：否",
@@ -5221,10 +5770,999 @@
       {
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=105",
-        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
       }
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "nanhu-dashan",
+    "mountainName": "南湖大山",
+    "routeName": "南湖大山線",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 36.1,
+    "designations": [],
+    "elevationGainM": 3021,
+    "elevationDifferenceM": 1894,
+    "durationMinutes": 1735,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山",
+        "order": 5
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 6
+      },
+      {
+        "name": "南湖北山",
+        "order": 7
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 8
+      },
+      {
+        "name": "南湖山屋",
+        "order": 9
+      },
+      {
+        "name": "南湖主峰",
+        "order": 10
+      },
+      {
+        "name": "南湖大山東峰",
+        "order": 11
+      },
+      {
+        "name": "南湖山屋",
+        "order": 12
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 13
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 14
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 15
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 16
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 17
+      },
+      {
+        "name": "勝光登山口",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/150",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "nanhu-dashan-east-peak",
+    "mountainName": "南湖大山東峰",
+    "routeName": "南湖群峰縱走（東峰）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 36.1,
+    "designations": [],
+    "elevationGainM": 3021,
+    "elevationDifferenceM": 1784,
+    "durationMinutes": 1735,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山",
+        "order": 5
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 6
+      },
+      {
+        "name": "南湖北山",
+        "order": 7
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 8
+      },
+      {
+        "name": "南湖山屋",
+        "order": 9
+      },
+      {
+        "name": "南湖主峰",
+        "order": 10
+      },
+      {
+        "name": "南湖大山東峰",
+        "order": 11
+      },
+      {
+        "name": "南湖山屋",
+        "order": 12
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 13
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 14
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 15
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 16
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 17
+      },
+      {
+        "name": "勝光登山口",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/150",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "nanhu-north-peak",
+    "mountainName": "南湖北山",
+    "routeName": "南湖群峰縱走（北山）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 36.1,
+    "designations": [],
+    "elevationGainM": 3021,
+    "elevationDifferenceM": 1688,
+    "durationMinutes": 1735,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山",
+        "order": 5
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 6
+      },
+      {
+        "name": "南湖北山",
+        "order": 7
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 8
+      },
+      {
+        "name": "南湖山屋",
+        "order": 9
+      },
+      {
+        "name": "南湖主峰",
+        "order": 10
+      },
+      {
+        "name": "南湖大山東峰",
+        "order": 11
+      },
+      {
+        "name": "南湖山屋",
+        "order": 12
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 13
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 14
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 15
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 16
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 17
+      },
+      {
+        "name": "勝光登山口",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/150",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "shenmazhen-mountain",
+    "mountainName": "審馬陣山",
+    "routeName": "南湖群峰縱走（審馬陣山）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 36.1,
+    "designations": [],
+    "elevationGainM": 3021,
+    "elevationDifferenceM": 1293,
+    "durationMinutes": 1735,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山",
+        "order": 5
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 6
+      },
+      {
+        "name": "南湖北山",
+        "order": 7
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 8
+      },
+      {
+        "name": "南湖山屋",
+        "order": 9
+      },
+      {
+        "name": "南湖主峰",
+        "order": 10
+      },
+      {
+        "name": "南湖大山東峰",
+        "order": 11
+      },
+      {
+        "name": "南湖山屋",
+        "order": 12
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 13
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 14
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 15
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 16
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 17
+      },
+      {
+        "name": "勝光登山口",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/150",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "nanhu-dashan-south-peak",
+    "mountainName": "南湖大山南峰",
+    "routeName": "南湖大山南峰步道",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 36.7,
+    "designations": [],
+    "elevationGainM": 3055,
+    "elevationDifferenceM": 1657,
+    "durationMinutes": 1850,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 5
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 6
+      },
+      {
+        "name": "南湖山屋",
+        "order": 7
+      },
+      {
+        "name": "主峰、南峰三岔路口",
+        "order": 8
+      },
+      {
+        "name": "南湖池山屋（廢棄）",
+        "order": 9
+      },
+      {
+        "name": "南湖大山南峰",
+        "order": 10
+      },
+      {
+        "name": "南湖池山屋（廢棄）",
+        "order": 11
+      },
+      {
+        "name": "主峰、南峰三岔路口",
+        "order": 12
+      },
+      {
+        "name": "南湖山屋",
+        "order": 13
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 14
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 15
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 16
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 17
+      },
+      {
+        "name": "勝光登山口",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/94",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "baba-mountain",
+    "mountainName": "巴巴山",
+    "routeName": "北一段（南湖群峰＋中央尖山）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 61.2,
+    "designations": [],
+    "elevationGainM": 5161,
+    "elevationDifferenceM": 1601,
+    "durationMinutes": 3315,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山",
+        "order": 5
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 6
+      },
+      {
+        "name": "南湖北山",
+        "order": 7
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 8
+      },
+      {
+        "name": "南湖山屋",
+        "order": 9
+      },
+      {
+        "name": "南湖大山東峰",
+        "order": 10
+      },
+      {
+        "name": "陶塞峰",
+        "order": 11
+      },
+      {
+        "name": "南湖東南峰",
+        "order": 12
+      },
+      {
+        "name": "馬比杉山",
+        "order": 13
+      },
+      {
+        "name": "陶塞山屋遺址",
+        "order": 14
+      },
+      {
+        "name": "南湖山屋",
+        "order": 15
+      },
+      {
+        "name": "南湖主峰",
+        "order": 16
+      },
+      {
+        "name": "南湖池山屋（廢棄）",
+        "order": 17
+      },
+      {
+        "name": "南湖大山南峰",
+        "order": 18
+      },
+      {
+        "name": "巴巴山",
+        "order": 19
+      },
+      {
+        "name": "南湖大山南峰",
+        "order": 20
+      },
+      {
+        "name": "中央尖溪山屋",
+        "order": 21
+      },
+      {
+        "name": "中央尖山",
+        "order": 22
+      },
+      {
+        "name": "中央尖溪山屋",
+        "order": 23
+      },
+      {
+        "name": "香菇寮營地",
+        "order": 24
+      },
+      {
+        "name": "南湖溪山屋",
+        "order": 25
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 26
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 27
+      },
+      {
+        "name": "勝光登山口",
+        "order": 28
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/152",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "zhongyangjian-mountain",
+    "mountainName": "中央尖山",
+    "routeName": "中央尖山步道",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 39.6,
+    "designations": [],
+    "elevationGainM": 3025,
+    "elevationDifferenceM": 1857,
+    "durationMinutes": 1995,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "南湖溪山屋",
+        "order": 4
+      },
+      {
+        "name": "香菇寮營地",
+        "order": 5
+      },
+      {
+        "name": "中央尖溪山屋",
+        "order": 6
+      },
+      {
+        "name": "中央尖鞍部",
+        "order": 7
+      },
+      {
+        "name": "中央尖山",
+        "order": 8
+      },
+      {
+        "name": "中央尖鞍部",
+        "order": 9
+      },
+      {
+        "name": "中央尖溪山屋",
+        "order": 10
+      },
+      {
+        "name": "香菇寮營地",
+        "order": 11
+      },
+      {
+        "name": "南湖溪山屋",
+        "order": 12
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 13
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 14
+      },
+      {
+        "name": "勝光登山口",
+        "order": 15
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/96",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "mabishan-mountain",
+    "mountainName": "馬比杉山",
+    "routeName": "北一段（馬比杉山線）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 42.4,
+    "designations": [],
+    "elevationGainM": 3167,
+    "elevationDifferenceM": 1363,
+    "durationMinutes": 2070,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "勝光登山口",
+        "order": 1
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 2
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 3
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 4
+      },
+      {
+        "name": "審馬陣山屋",
+        "order": 5
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 6
+      },
+      {
+        "name": "南湖山屋",
+        "order": 7
+      },
+      {
+        "name": "南湖大山東峰",
+        "order": 8
+      },
+      {
+        "name": "陶塞峰",
+        "order": 9
+      },
+      {
+        "name": "南湖東南峰",
+        "order": 10
+      },
+      {
+        "name": "馬比杉山",
+        "order": 11
+      },
+      {
+        "name": "陶塞山屋遺址",
+        "order": 12
+      },
+      {
+        "name": "南湖山屋",
+        "order": 13
+      },
+      {
+        "name": "南湖大山北峰",
+        "order": 14
+      },
+      {
+        "name": "新雲稜山屋",
+        "order": 15
+      },
+      {
+        "name": "木杆鞍部",
+        "order": 16
+      },
+      {
+        "name": "多加屯山水利三角點",
+        "order": 17
+      },
+      {
+        "name": "勝光登山口",
+        "order": 18
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，須於入園日前5日至前2個月申請）；入山申請：是（另須向警政署或轄區警察單位申請入山許可證）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "kind",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/97",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "difficulty"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
