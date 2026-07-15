@@ -4863,5 +4863,82 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "erlun-nature-trail",
+    "mountainName": "二崙自然步道",
+    "routeName": "二崙自然步道",
+    "region": "雲林縣二崙鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 30,
+    "durationMinutes": 120,
+    "difficulty": 1,
+    "checkpoints": [
+      { "name": "小蟻獅入口廣場", "order": 1 },
+      { "name": "小鼬鼠迎賓廣場", "order": 2 },
+      { "name": "小蜘蛛解說教室", "order": 3 },
+      { "name": "觀湖平台", "order": 4 },
+      { "name": "小甲蟲活動廣場", "order": 5 },
+      { "name": "小蟻獅入口廣場", "order": 6 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=079",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=079",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "tashan-trail",
+    "mountainName": "塔山步道",
+    "routeName": "塔山步道",
+    "region": "嘉義縣阿里山鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3.5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 563,
+    "durationMinutes": 240,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "塔山步道入口", "order": 1 },
+      { "name": "塔山步道1K", "order": 2 },
+      { "name": "2K木造平台／大塔山登山口", "order": 3 },
+      { "name": "大塔山東南峰", "order": 4 },
+      { "name": "塔山步道3K", "order": 5 },
+      { "name": "大塔山觀景台", "order": 6 },
+      { "name": "塔山步道3K", "order": 7 },
+      { "name": "大塔山東南峰", "order": 8 },
+      { "name": "2K木造平台／大塔山登山口", "order": 9 },
+      { "name": "塔山步道1K", "order": 10 },
+      { "name": "塔山步道入口", "order": 11 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=080",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=080",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
