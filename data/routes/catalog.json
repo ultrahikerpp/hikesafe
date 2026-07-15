@@ -6764,5 +6764,1446 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "qilai-north-peak",
+    "mountainName": "奇萊北峰",
+    "routeName": "奇萊主北線",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 15,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 627,
+    "durationMinutes": 820,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "合歡山滑雪山莊",
+        "order": 1
+      },
+      {
+        "name": "小奇萊",
+        "order": 2
+      },
+      {
+        "name": "黑水塘山屋",
+        "order": 3
+      },
+      {
+        "name": "成功山屋",
+        "order": 4
+      },
+      {
+        "name": "成功一號堡",
+        "order": 5
+      },
+      {
+        "name": "主北叉路",
+        "order": 6
+      },
+      {
+        "name": "主北三叉路",
+        "order": 7
+      },
+      {
+        "name": "奇萊北峰岔路",
+        "order": 8
+      },
+      {
+        "name": "奇萊北峰",
+        "order": 9
+      },
+      {
+        "name": "合歡山滑雪山莊",
+        "order": 10
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證）；入山證：是（另向保七總隊申請）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/171",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "qilai-main-peak",
+    "mountainName": "奇萊主山",
+    "routeName": "奇萊主北線",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 18.8,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 580,
+    "durationMinutes": 880,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "合歡山滑雪山莊",
+        "order": 1
+      },
+      {
+        "name": "小奇萊",
+        "order": 2
+      },
+      {
+        "name": "黑水塘山屋",
+        "order": 3
+      },
+      {
+        "name": "成功山屋",
+        "order": 4
+      },
+      {
+        "name": "成功一號堡",
+        "order": 5
+      },
+      {
+        "name": "主北叉路",
+        "order": 6
+      },
+      {
+        "name": "主北三叉路",
+        "order": 7
+      },
+      {
+        "name": "奇萊山屋",
+        "order": 8
+      },
+      {
+        "name": "主山登山口",
+        "order": 9
+      },
+      {
+        "name": "奇萊主山",
+        "order": 10
+      },
+      {
+        "name": "合歡山滑雪山莊",
+        "order": 11
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證）；入山證：是（另向保七總隊申請）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/171",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "qilai-south-peak",
+    "mountainName": "奇萊南峰",
+    "routeName": "屯原奇萊南峰線",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 32.9,
+    "designations": [],
+    "elevationGainM": 1404,
+    "elevationDifferenceM": 1404,
+    "durationMinutes": 870,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "福雲宮",
+        "order": 2
+      },
+      {
+        "name": "雲海保線所",
+        "order": 3
+      },
+      {
+        "name": "大崩壁",
+        "order": 4
+      },
+      {
+        "name": "天池山莊",
+        "order": 5
+      },
+      {
+        "name": "天池岔路口",
+        "order": 6
+      },
+      {
+        "name": "南峰登山口",
+        "order": 7
+      },
+      {
+        "name": "奇萊南峰",
+        "order": 8
+      },
+      {
+        "name": "屯原登山口",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，含天池山莊床位申請）；入山證：是（另向保七總隊申請）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/50",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "bei-hehuan-mountain",
+    "mountainName": "北合歡山",
+    "routeName": "合歡北峰步道",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.9,
+    "designations": [],
+    "elevationGainM": 638,
+    "elevationDifferenceM": 420,
+    "durationMinutes": 190,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "小風口第二停車場",
+        "order": 1
+      },
+      {
+        "name": "合歡北登山口",
+        "order": 2
+      },
+      {
+        "name": "反射板",
+        "order": 3
+      },
+      {
+        "name": "合歡北峰",
+        "order": 4
+      },
+      {
+        "name": "小風口第二停車場",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "免申請入園證及入山證（非生態保護區，太魯閣國家公園2020年2月27日公告）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/46",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記（社群整理太魯閣國家公園2020/02/27公告）",
+        "url": "https://hiking.biji.co/index.php?q=discuss&act=detail&id=602",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "hehuan-east-peak",
+    "mountainName": "合歡山東峰",
+    "routeName": "合歡東峰步道",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 2.4,
+    "designations": [],
+    "elevationGainM": 421,
+    "elevationDifferenceM": 421,
+    "durationMinutes": 160,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "合歡山遊客中心",
+        "order": 1
+      },
+      {
+        "name": "合歡山東峰登山口",
+        "order": 2
+      },
+      {
+        "name": "合歡東峰",
+        "order": 3
+      },
+      {
+        "name": "合歡山遊客中心",
+        "order": 4
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "免申請入園證及入山證（非生態保護區，太魯閣國家公園2020年2月27日公告）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/48",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記（社群整理太魯閣國家公園2020/02/27公告）",
+        "url": "https://hiking.biji.co/index.php?q=discuss&act=detail&id=602",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "hehuan-main-peak",
+    "mountainName": "合歡山",
+    "routeName": "合歡主峰步道",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.7,
+    "designations": [],
+    "elevationGainM": 267,
+    "elevationDifferenceM": 267,
+    "durationMinutes": 130,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "武嶺停車場",
+        "order": 1
+      },
+      {
+        "name": "合歡山主峰登山口",
+        "order": 2
+      },
+      {
+        "name": "合歡主峰",
+        "order": 3
+      },
+      {
+        "name": "武嶺停車場",
+        "order": 4
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "免申請入園證及入山證（非生態保護區，太魯閣國家公園2020年2月27日公告）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/49",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記（社群整理太魯閣國家公園2020/02/27公告）",
+        "url": "https://hiking.biji.co/index.php?q=discuss&act=detail&id=602",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "xi-hehuan-mountain",
+    "mountainName": "西合歡山",
+    "routeName": "合歡西峰步道（經合歡北峰）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 14,
+    "designations": [],
+    "elevationGainM": 1217,
+    "elevationDifferenceM": 143,
+    "durationMinutes": 575,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "小風口第二停車場",
+        "order": 1
+      },
+      {
+        "name": "合歡北登山口",
+        "order": 2
+      },
+      {
+        "name": "反射板",
+        "order": 3
+      },
+      {
+        "name": "合歡北峰",
+        "order": 4
+      },
+      {
+        "name": "最低鞍部",
+        "order": 5
+      },
+      {
+        "name": "水池營地",
+        "order": 6
+      },
+      {
+        "name": "華岡岔路口",
+        "order": 7
+      },
+      {
+        "name": "合歡山西峰",
+        "order": 8
+      },
+      {
+        "name": "小風口第二停車場",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "免申請入園證及入山證（非生態保護區，太魯閣國家公園2020年2月27日公告，明文包含合歡西峰）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/47",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記（社群整理太魯閣國家公園2020/02/27公告）",
+        "url": "https://hiking.biji.co/index.php?q=discuss&act=detail&id=602",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "bilu-mountain",
+    "mountainName": "畢祿山",
+    "routeName": "畢祿山步道（820林道）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 20.5,
+    "designations": [],
+    "elevationGainM": 853,
+    "elevationDifferenceM": 807,
+    "durationMinutes": 780,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "820林道",
+        "order": 1
+      },
+      {
+        "name": "工寮營地",
+        "order": 2
+      },
+      {
+        "name": "畢祿山登山口營地",
+        "order": 3
+      },
+      {
+        "name": "拉繩垂直岩壁",
+        "order": 4
+      },
+      {
+        "name": "主稜三叉路口",
+        "order": 5
+      },
+      {
+        "name": "畢祿山",
+        "order": 6
+      },
+      {
+        "name": "820林道",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園生態保護區入園證，單一山頭路線無總量管制）；入山證：是（另向保七總隊申請）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/78",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "shimen-mountain-hehuan",
+    "mountainName": "石門山",
+    "routeName": "石門山步道",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.5,
+    "designations": [],
+    "elevationGainM": 115,
+    "elevationDifferenceM": 115,
+    "durationMinutes": 70,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "台14甲線33公里",
+        "order": 1
+      },
+      {
+        "name": "石門山登山口",
+        "order": 2
+      },
+      {
+        "name": "石門山",
+        "order": 3
+      },
+      {
+        "name": "台14甲線33公里",
+        "order": 4
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "免申請入園證及入山證（非生態保護區，太魯閣國家公園2020年2月27日公告）",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/155",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "健行筆記（社群整理太魯閣國家公園2020/02/27公告）",
+        "url": "https://hiking.biji.co/index.php?q=discuss&act=detail&id=602",
+        "fields": [
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "shuan-mountain",
+    "mountainName": "閂山",
+    "routeName": "閂山步道（730林道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 39.84,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 868,
+    "durationMinutes": 4320,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "730林道11.7K",
+        "order": 1
+      },
+      {
+        "name": "730林道17.5K耳無溪營地岔路口",
+        "order": 2
+      },
+      {
+        "name": "730林道18K閂山之門",
+        "order": 3
+      },
+      {
+        "name": "730林道23.2K閂山登山口",
+        "order": 4
+      },
+      {
+        "name": "閂山",
+        "order": 5
+      },
+      {
+        "name": "730林道11.7K",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證）；入山證：是（一般管制山區）；730林道已廢棄多處毀損，注意氣候及溫度變化",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/82",
+        "fields": [
+          "checkpoints",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "lingming-mountain",
+    "mountainName": "鈴鳴山",
+    "routeName": "閂山鈴鳴步道（730林道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 37.6,
+    "designations": [],
+    "elevationGainM": 1393,
+    "elevationDifferenceM": 972,
+    "durationMinutes": 1405,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "730林道11.7K",
+        "order": 1
+      },
+      {
+        "name": "730林道17.5K耳無溪營地岔路口",
+        "order": 2
+      },
+      {
+        "name": "730林道18K閂山之門",
+        "order": 3
+      },
+      {
+        "name": "730林道23.2K閂山登山口",
+        "order": 4
+      },
+      {
+        "name": "閂山",
+        "order": 5
+      },
+      {
+        "name": "730林道25K工寮",
+        "order": 6
+      },
+      {
+        "name": "730林道27.5K登山口",
+        "order": 7
+      },
+      {
+        "name": "鈴鳴山",
+        "order": 8
+      },
+      {
+        "name": "730林道11.7K",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證）；入山證：是（一般管制山區）；25K工寮至鈴鳴山路段有嚴重崩塌地形，注意氣候及溫度變化",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/82",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "wuming-mountain",
+    "mountainName": "無明山",
+    "routeName": "北二段縱走（閂山鈴鳴無明甘薯，730林道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 43.9,
+    "designations": [],
+    "elevationGainM": 2408,
+    "elevationDifferenceM": 1151,
+    "durationMinutes": 2525,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "730林道11.7K",
+        "order": 1
+      },
+      {
+        "name": "730林道17.5K耳無溪營地岔路口",
+        "order": 2
+      },
+      {
+        "name": "730林道23.2K閂山登山口",
+        "order": 3
+      },
+      {
+        "name": "閂山",
+        "order": 4
+      },
+      {
+        "name": "730林道27.5K登山口",
+        "order": 5
+      },
+      {
+        "name": "鈴鳴山",
+        "order": 6
+      },
+      {
+        "name": "無明山西峰",
+        "order": 7
+      },
+      {
+        "name": "無明山",
+        "order": 8
+      },
+      {
+        "name": "鬼門關山",
+        "order": 9
+      },
+      {
+        "name": "甘薯峰",
+        "order": 10
+      },
+      {
+        "name": "耳無溪營地",
+        "order": 11
+      },
+      {
+        "name": "730林道11.7K",
+        "order": 12
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證）；入山證：是（一般管制山區）；25K工寮至鈴鳴山、無明西峰至無明山嚴重崩塌地形、鬼門關斷崖、穿越耳無溪路段，大雨過後須留意耳無溪渡溪水量，雪季有滑落風險",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/89",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "ganshu-peak",
+    "mountainName": "甘薯峰",
+    "routeName": "甘薯峰步道（耳無溪線，730林道）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 27.8,
+    "designations": [],
+    "elevationGainM": 2198,
+    "elevationDifferenceM": 858,
+    "durationMinutes": 1550,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "730林道11.7K",
+        "order": 1
+      },
+      {
+        "name": "730林道17.5K耳無溪營地岔路口",
+        "order": 2
+      },
+      {
+        "name": "耳無溪營地",
+        "order": 3
+      },
+      {
+        "name": "遠多志山",
+        "order": 4
+      },
+      {
+        "name": "甘薯南峰營地",
+        "order": 5
+      },
+      {
+        "name": "甘薯峰",
+        "order": 6
+      },
+      {
+        "name": "730林道11.7K",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證）；入山證：是（一般管制山區）；大雨過後須留意耳無溪渡溪水量，雪季有滑落風險",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/98",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "pingfeng-mountain",
+    "mountainName": "屏風山",
+    "routeName": "屏風山步道（新路，台8線111.2K）",
+    "region": "花蓮縣秀林鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 12.7,
+    "designations": [],
+    "elevationGainM": 1851,
+    "elevationDifferenceM": 741,
+    "durationMinutes": 1050,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "台8線111.2新登山口",
+        "order": 1
+      },
+      {
+        "name": "塔次基里溪底",
+        "order": 2
+      },
+      {
+        "name": "鐵線吊橋營地",
+        "order": 3
+      },
+      {
+        "name": "屏風避難山屋",
+        "order": 4
+      },
+      {
+        "name": "兩顆巨大神木所在地",
+        "order": 5
+      },
+      {
+        "name": "屏風山",
+        "order": 6
+      },
+      {
+        "name": "台8線111.2新登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證）；入山證：是（一般管制山區）；登山口下切過溪溝上登危崖路段、二處崩塌高繞路段、鐵線吊橋、過巨木群陡峭岩壁，如縮短行程為1日請詳加評估自身體能及風險",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/72",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "yangtou-mountain",
+    "mountainName": "羊頭山",
+    "routeName": "羊頭山步道（慈恩線）",
+    "region": "花蓮縣秀林鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7.3,
+    "designations": [],
+    "elevationGainM": 1033,
+    "elevationDifferenceM": 1013,
+    "durationMinutes": 645,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "慈恩隧道口",
+        "order": 1
+      },
+      {
+        "name": "羊頭山登山口",
+        "order": 2
+      },
+      {
+        "name": "三岔路口",
+        "order": 3
+      },
+      {
+        "name": "羊頭山",
+        "order": 4
+      },
+      {
+        "name": "慈恩隧道口",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證）；入山證：是（一般管制山區）；爬升度大，如縮短行程為1日請詳加評估自身體能及風險",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/79",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "panshi-mountain",
+    "mountainName": "磐石山",
+    "routeName": "奇萊東稜（磐石山段）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 51.6,
+    "designations": [],
+    "elevationGainM": 2266,
+    "elevationDifferenceM": 126,
+    "durationMinutes": 3110,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "滑雪山莊",
+        "order": 1
+      },
+      {
+        "name": "小奇萊",
+        "order": 2
+      },
+      {
+        "name": "成功山屋",
+        "order": 3
+      },
+      {
+        "name": "奇萊北峰",
+        "order": 4
+      },
+      {
+        "name": "磐石中峰",
+        "order": 5
+      },
+      {
+        "name": "磐石山",
+        "order": 6
+      },
+      {
+        "name": "鐵線斷崖前營地",
+        "order": 7
+      },
+      {
+        "name": "鐵線斷崖後營地",
+        "order": 8
+      },
+      {
+        "name": "北鞍營地",
+        "order": 9
+      },
+      {
+        "name": "太魯閣大山",
+        "order": 10
+      },
+      {
+        "name": "平安池營地",
+        "order": 11
+      },
+      {
+        "name": "立霧主山",
+        "order": 12
+      },
+      {
+        "name": "帕托魯山",
+        "order": 13
+      },
+      {
+        "name": "岳王亭",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證，經奇萊東稜路線）；入山證：是（甲種管制山區）；多段爬升陡降破碎岩層危險斷崖地形，登奇萊北峰前崩裂岩塊區、鐵線斷崖為全程最險峻路段，雪季有滑落風險",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/178",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/178",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "taroko-dashan",
+    "mountainName": "太魯閣大山",
+    "routeName": "奇萊東稜（太魯閣大山段）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 51.6,
+    "designations": [],
+    "elevationGainM": 2266,
+    "elevationDifferenceM": 303,
+    "durationMinutes": 3110,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "滑雪山莊",
+        "order": 1
+      },
+      {
+        "name": "小奇萊",
+        "order": 2
+      },
+      {
+        "name": "成功山屋",
+        "order": 3
+      },
+      {
+        "name": "奇萊北峰",
+        "order": 4
+      },
+      {
+        "name": "磐石中峰",
+        "order": 5
+      },
+      {
+        "name": "磐石山",
+        "order": 6
+      },
+      {
+        "name": "鐵線斷崖前營地",
+        "order": 7
+      },
+      {
+        "name": "鐵線斷崖後營地",
+        "order": 8
+      },
+      {
+        "name": "北鞍營地",
+        "order": 9
+      },
+      {
+        "name": "太魯閣大山",
+        "order": 10
+      },
+      {
+        "name": "平安池營地",
+        "order": 11
+      },
+      {
+        "name": "立霧主山",
+        "order": 12
+      },
+      {
+        "name": "帕托魯山",
+        "order": 13
+      },
+      {
+        "name": "岳王亭",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證，經奇萊東稜路線）；入山證：是（甲種管制山區）；多段爬升陡降破碎岩層危險斷崖地形，鐵線斷崖前後路段為全程最險峻路段，雪季有滑落風險",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/178",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/178",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "lifu-main-peak",
+    "mountainName": "立霧主山",
+    "routeName": "奇萊東稜（立霧主山段）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 51.6,
+    "designations": [],
+    "elevationGainM": 2266,
+    "elevationDifferenceM": 90,
+    "durationMinutes": 3110,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "滑雪山莊",
+        "order": 1
+      },
+      {
+        "name": "小奇萊",
+        "order": 2
+      },
+      {
+        "name": "成功山屋",
+        "order": 3
+      },
+      {
+        "name": "奇萊北峰",
+        "order": 4
+      },
+      {
+        "name": "磐石中峰",
+        "order": 5
+      },
+      {
+        "name": "磐石山",
+        "order": 6
+      },
+      {
+        "name": "鐵線斷崖前營地",
+        "order": 7
+      },
+      {
+        "name": "鐵線斷崖後營地",
+        "order": 8
+      },
+      {
+        "name": "北鞍營地",
+        "order": 9
+      },
+      {
+        "name": "太魯閣大山",
+        "order": 10
+      },
+      {
+        "name": "平安池營地",
+        "order": 11
+      },
+      {
+        "name": "立霧主山",
+        "order": 12
+      },
+      {
+        "name": "帕托魯山",
+        "order": 13
+      },
+      {
+        "name": "岳王亭",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證，經奇萊東稜路線）；入山證：是（甲種管制山區）；多段爬升陡降破碎岩層危險斷崖地形，立霧主山大理石營地前、研海林道江口山高繞路段為困難地形，雪季有滑落風險",
+    "sourceOrganization": "內政部國家公園署太魯閣國家公園管理處",
+    "sourceUrl": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署太魯閣國家公園管理處",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/178",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
