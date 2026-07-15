@@ -5191,5 +5191,40 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "guanziling-dadongshan-trail",
+    "mountainName": "關子嶺大凍山步道",
+    "routeName": "關子嶺大凍山步道",
+    "region": "臺南市白河區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 471,
+    "durationMinutes": 120,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "大凍山步道入口", "order": 1 },
+      { "name": "橫石亭", "order": 2 },
+      { "name": "曉風亭", "order": 3 },
+      { "name": "大棟山三角點", "order": 4 },
+      { "name": "大凍山步道入口", "order": 5 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=105",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=105",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
