@@ -10192,5 +10192,804 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "bei-dawu-mountain",
+    "mountainName": "北大武山",
+    "routeName": "北大武山步道",
+    "region": "屏東縣泰武鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 23.6,
+    "designations": [],
+    "elevationGainM": 1942,
+    "elevationDifferenceM": 1916,
+    "durationMinutes": 1105,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "北大武新登山口",
+        "order": 1
+      },
+      {
+        "name": "舊登山口",
+        "order": 2
+      },
+      {
+        "name": "越嶺鞍部",
+        "order": 3
+      },
+      {
+        "name": "喜多麗斷崖",
+        "order": 4
+      },
+      {
+        "name": "檜谷山莊",
+        "order": 5
+      },
+      {
+        "name": "南大武山展望點",
+        "order": 6
+      },
+      {
+        "name": "大武神木",
+        "order": 7
+      },
+      {
+        "name": "水源",
+        "order": 8
+      },
+      {
+        "name": "主稜嶺線",
+        "order": 9
+      },
+      {
+        "name": "大武祠",
+        "order": 10
+      },
+      {
+        "name": "北大武山",
+        "order": 11
+      },
+      {
+        "name": "北大武新登山口",
+        "order": 12
+      }
+    ],
+    "evacuationPoints": [
+      {
+        "name": "喜多麗斷崖直升機吊掛地點（約3.8K，海拔約2,150公尺）",
+        "order": 1
+      }
+    ],
+    "permitNotes": "入山證：需辦理（山地管制區）；日歸者須於當日上午8時前在舊登山口管理站登記，夜宿檜谷山莊須另申請山屋/營地使用；非國家公園範圍，不需入園證",
+    "sourceOrganization": "林業及自然保育署屏東分署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=119",
+    "sourceReferences": [
+      {
+        "organization": "林業及自然保育署屏東分署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=119",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes",
+          "evacuationPoints"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/105",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "baigu-dashan",
+    "mountainName": "白姑大山",
+    "routeName": "白姑大山登山步道（紅香線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 16,
+    "designations": [],
+    "elevationGainM": 1858,
+    "elevationDifferenceM": 1364,
+    "durationMinutes": 1205,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "白姑大山登山口",
+        "order": 1
+      },
+      {
+        "name": "水管路岔路口",
+        "order": 2
+      },
+      {
+        "name": "三錐山",
+        "order": 3
+      },
+      {
+        "name": "司硯池營地",
+        "order": 4
+      },
+      {
+        "name": "白姑大山東南峰",
+        "order": 5
+      },
+      {
+        "name": "吉他營地",
+        "order": 6
+      },
+      {
+        "name": "一線天岩壁",
+        "order": 7
+      },
+      {
+        "name": "草青池",
+        "order": 8
+      },
+      {
+        "name": "白姑大山",
+        "order": 9
+      },
+      {
+        "name": "白姑大山登山口",
+        "order": 10
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "非國家公園範圍，不需入園證；入山證規定各資料來源不一致，建議行前於內政部警政署入山案件申辦系統（nv2.npa.gov.tw）預先申請或至南投縣仁愛分局現場辦理，實際規定請以最新公告為準",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/77",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/77",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "17jump旅遊攝",
+        "url": "https://17jump.tw/baigu/",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "jian-mountain",
+    "mountainName": "劍山",
+    "routeName": "大小劍稜線縱走（松茂林道線）",
+    "region": "台中市和平區",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 36.7,
+    "designations": [],
+    "elevationGainM": 2454,
+    "elevationDifferenceM": 1794,
+    "durationMinutes": 1915,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "仁壽橋旁停車位",
+        "order": 1
+      },
+      {
+        "name": "仁壽橋",
+        "order": 2
+      },
+      {
+        "name": "松茂水文站",
+        "order": 3
+      },
+      {
+        "name": "樂山橋",
+        "order": 4
+      },
+      {
+        "name": "防火巷登山口",
+        "order": 5
+      },
+      {
+        "name": "獵寮營地",
+        "order": 6
+      },
+      {
+        "name": "推論山",
+        "order": 7
+      },
+      {
+        "name": "油婆蘭山屋",
+        "order": 8
+      },
+      {
+        "name": "油婆蘭山",
+        "order": 9
+      },
+      {
+        "name": "布伕奇寒山",
+        "order": 10
+      },
+      {
+        "name": "老伍營地",
+        "order": 11
+      },
+      {
+        "name": "佳陽山",
+        "order": 12
+      },
+      {
+        "name": "小劍山",
+        "order": 13
+      },
+      {
+        "name": "仁壽橋旁停車位",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（雪霸國家公園「大劍山－佳陽山生態保護區」，須於入園前5-30日提出申請，入園許可證應於入園日前5日內列印）；台中市和平區屬免辦入山證區域，不需另辦入山證",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/133",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/133",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "內政部國家公園署雪霸國家公園管理處",
+        "url": "https://www.spnp.gov.tw/News_Content.aspx?n=14470&s=238501",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "dafenjian-mountain",
+    "mountainName": "達芬尖山",
+    "routeName": "南二段步道（東埔—大水窟—達芬尖山線）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 68.6,
+    "designations": [],
+    "elevationGainM": 3786,
+    "elevationDifferenceM": 2146,
+    "durationMinutes": 2855,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔吊橋停車場",
+        "order": 1
+      },
+      {
+        "name": "樂樂山屋",
+        "order": 2
+      },
+      {
+        "name": "觀高坪",
+        "order": 3
+      },
+      {
+        "name": "中央金礦山屋",
+        "order": 4
+      },
+      {
+        "name": "南營地駐在所",
+        "order": 5
+      },
+      {
+        "name": "大水窟山屋",
+        "order": 6
+      },
+      {
+        "name": "南大水窟山",
+        "order": 7
+      },
+      {
+        "name": "達芬尖山登山口",
+        "order": 8
+      },
+      {
+        "name": "達芬尖山",
+        "order": 9
+      },
+      {
+        "name": "東埔吊橋停車場",
+        "order": 10
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證，須事先申請）；入山證：是（南投縣信義鄉/花蓮縣卓溪鄉山地管制區，須併同辦理）；申請請至臺灣登山申請一站式服務網 hike.taiwan.gov.tw",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/1783c684-3f87-4862-bf4e-e876e639d405",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/Trail/1783c684-3f87-4862-bf4e-e876e639d405",
+        "fields": [
+          "region",
+          "permitNotes",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/118",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "patuolu-mountain",
+    "mountainName": "帕托魯山",
+    "routeName": "研海林道帕托魯山線",
+    "region": "花蓮縣秀林鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 37.3,
+    "designations": [],
+    "elevationGainM": 3055,
+    "elevationDifferenceM": 2693,
+    "durationMinutes": 1910,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "岳王亭",
+        "order": 1
+      },
+      {
+        "name": "1號索道頭",
+        "order": 2
+      },
+      {
+        "name": "流籠頭",
+        "order": 3
+      },
+      {
+        "name": "江口山岔路口",
+        "order": 4
+      },
+      {
+        "name": "研海林道工寮",
+        "order": 5
+      },
+      {
+        "name": "三岔營地",
+        "order": 6
+      },
+      {
+        "name": "帕托魯山",
+        "order": 7
+      },
+      {
+        "name": "岳王亭",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（太魯閣國家公園入園證，須事先申請）；入山證：需辦理（銅門村仍屬山地管制區；研海林道已劃定為生態保護區，須另申請進入生態保護區許可）",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/176",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/176",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "維基百科",
+        "url": "https://zh.wikipedia.org/zh-tw/%E5%B8%95%E6%89%98%E9%AD%AF%E5%B1%B1",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "tafen-mountain",
+    "mountainName": "塔芬山",
+    "routeName": "南一段步道（向陽—嘉明湖—新康—塔芬山線）",
+    "region": "台東縣海端鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 61.4,
+    "designations": [],
+    "elevationGainM": 4282,
+    "elevationDifferenceM": 690,
+    "durationMinutes": 3100,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "向陽山屋",
+        "order": 2
+      },
+      {
+        "name": "嘉明湖避難山屋",
+        "order": 3
+      },
+      {
+        "name": "三叉山登山口",
+        "order": 4
+      },
+      {
+        "name": "拉庫音溪山屋",
+        "order": 5
+      },
+      {
+        "name": "南雙頭山",
+        "order": 6
+      },
+      {
+        "name": "雲峰東峰營地",
+        "order": 7
+      },
+      {
+        "name": "轆轆谷山屋",
+        "order": 8
+      },
+      {
+        "name": "塔芬池",
+        "order": 9
+      },
+      {
+        "name": "塔芬山",
+        "order": 10
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 11
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：需辦理（南橫向陽地區山地管制區）；行經嘉明湖國家步道路段（向陽山屋/嘉明湖避難山屋）須另申請山屋床位及步道通行許可（總量管制，須於入山前60日至5日於嘉明湖國家步道官網申請，抽籤時間為入山前30日）；非國家公園範圍，不需入園證",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/121",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/121",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "林業及自然保育署嘉明湖國家步道",
+        "url": "https://jmlnt.forest.gov.tw/",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "jupun-mountain",
+    "mountainName": "駒盆山",
+    "routeName": "馬博拉斯橫斷—盆駒山線（東埔進出）",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 68,
+    "designations": [],
+    "elevationGainM": 5464,
+    "elevationDifferenceM": 1960,
+    "durationMinutes": 3275,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔吊橋停車場",
+        "order": 1
+      },
+      {
+        "name": "樂樂山屋",
+        "order": 2
+      },
+      {
+        "name": "觀高坪",
+        "order": 3
+      },
+      {
+        "name": "中央金礦山屋",
+        "order": 4
+      },
+      {
+        "name": "白洋金礦山屋",
+        "order": 5
+      },
+      {
+        "name": "秀姑巒山",
+        "order": 6
+      },
+      {
+        "name": "馬博拉斯山屋",
+        "order": 7
+      },
+      {
+        "name": "馬博拉斯山",
+        "order": 8
+      },
+      {
+        "name": "盆駒山南峰",
+        "order": 9
+      },
+      {
+        "name": "盆駒山",
+        "order": 10
+      },
+      {
+        "name": "東埔吊橋停車場",
+        "order": 11
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證，須事先申請）；入山證：是（南投縣信義鄉山地管制區，須併同辦理）；申請請至臺灣登山申請一站式服務網 hike.taiwan.gov.tw",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/8dbb3955-47fc-4311-8077-3518d1ad89b7",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/Trail/8dbb3955-47fc-4311-8077-3518d1ad89b7",
+        "fields": [
+          "region",
+          "permitNotes",
+          "difficulty"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/188",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "bulakesang-mountain",
+    "mountainName": "布拉克桑山",
+    "routeName": "向陽—嘉明湖—布拉克桑山線",
+    "region": "台東縣海端鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 47.8,
+    "designations": [],
+    "elevationGainM": 2176,
+    "elevationDifferenceM": 656,
+    "durationMinutes": 1700,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "向陽山屋",
+        "order": 2
+      },
+      {
+        "name": "嘉明湖避難山屋",
+        "order": 3
+      },
+      {
+        "name": "三叉山登山口",
+        "order": 4
+      },
+      {
+        "name": "新康、嘉明湖岔路口",
+        "order": 5
+      },
+      {
+        "name": "布新營地",
+        "order": 6
+      },
+      {
+        "name": "草原大窪地",
+        "order": 7
+      },
+      {
+        "name": "布拉克桑山",
+        "order": 8
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：需辦理（南橫向陽地區山地管制區）；行經嘉明湖國家步道路段須另申請山屋床位及步道通行許可（總量管制，須於入山前60日至5日於嘉明湖國家步道官網申請，抽籤時間為入山前30日）；非國家公園範圍，不需入園證",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/222",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/222",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "林業及自然保育署嘉明湖國家步道",
+        "url": "https://jmlnt.forest.gov.tw/",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "liushun-mountain",
+    "mountainName": "六順山",
+    "routeName": "丹大林道—七彩湖—六順山線",
+    "region": "南投縣信義鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 104.3,
+    "designations": [],
+    "elevationGainM": 3091,
+    "elevationDifferenceM": 2529,
+    "durationMinutes": 2440,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "孫海橋",
+        "order": 1
+      },
+      {
+        "name": "二分所管制站",
+        "order": 2
+      },
+      {
+        "name": "三分所",
+        "order": 3
+      },
+      {
+        "name": "六分所",
+        "order": 4
+      },
+      {
+        "name": "保線路捷徑入口",
+        "order": 5
+      },
+      {
+        "name": "丹大林道主線",
+        "order": 6
+      },
+      {
+        "name": "台電招待所",
+        "order": 7
+      },
+      {
+        "name": "丹大林道入口",
+        "order": 8
+      },
+      {
+        "name": "七彩湖營地",
+        "order": 9
+      },
+      {
+        "name": "七彩湖",
+        "order": 10
+      },
+      {
+        "name": "六順山基石",
+        "order": 11
+      },
+      {
+        "name": "孫海橋",
+        "order": 12
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山證：需辦理（丹大林道及六順山、七彩湖屬山地管制區），須於入山前5日在內政部警政署入山案件申請系統線上申請，5日內臨時申請可至南投縣政府警察局信義分局青雲派出所現場辦理；非國家公園範圍，不需入園證",
+    "sourceOrganization": "揪山 Joyhike",
+    "sourceUrl": "https://joyhike.com/path/116",
+    "sourceReferences": [
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/116",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM",
+          "elevationDifferenceM"
+        ]
+      },
+      {
+        "organization": "內政部警政署入山案件申辦系統",
+        "url": "https://nv2.npa.gov.tw/NM107-604Client",
+        "fields": [
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "維基百科",
+        "url": "https://zh.wikipedia.org/zh-tw/%E5%AD%AB%E6%B5%B7%E6%A9%8B",
+        "fields": [
+          "region"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
