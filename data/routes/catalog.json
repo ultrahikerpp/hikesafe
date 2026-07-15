@@ -5090,5 +5090,38 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "shizilu-laiji-ancient-trail",
+    "mountainName": "十字路來吉古道",
+    "routeName": "十字路來吉古道",
+    "region": "嘉義縣阿里山鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 100,
+    "durationMinutes": 60,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "十字路來吉古道登山口", "order": 1 },
+      { "name": "步道終點", "order": 2 },
+      { "name": "十字路來吉古道登山口", "order": 3 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=096",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=096",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
