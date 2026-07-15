@@ -11425,5 +11425,286 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "maligalan-mountain",
+    "mountainName": "馬利加南山",
+    "routeName": "馬博橫斷—馬利加南山線（東埔進，中平林道出）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 80.9,
+    "designations": [],
+    "elevationGainM": 8733,
+    "elevationDifferenceM": null,
+    "durationMinutes": 4085,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "中央金礦山屋",
+        "order": 3
+      },
+      {
+        "name": "白洋金礦山屋",
+        "order": 4
+      },
+      {
+        "name": "秀姑巒山",
+        "order": 5
+      },
+      {
+        "name": "馬博拉斯山屋",
+        "order": 6
+      },
+      {
+        "name": "馬博拉斯山",
+        "order": 7
+      },
+      {
+        "name": "烏拉孟斷崖",
+        "order": 8
+      },
+      {
+        "name": "馬利亞文山",
+        "order": 9
+      },
+      {
+        "name": "馬利加南山",
+        "order": 10
+      },
+      {
+        "name": "馬布谷山屋",
+        "order": 11
+      },
+      {
+        "name": "中平林道登山口",
+        "order": 12
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證，須事先申請）；入山證：是（南投縣信義鄉、花蓮縣卓溪鄉山地管制區，須併同辦理）；中平林道自約19K以後路基流失、坍方嚴重僅能徒步通行，沿線螞蟥、毒蛇多，須特別注意",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/8dbb3955-47fc-4311-8077-3518d1ad89b7",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處（步道系統分級表）",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "distanceKm",
+          "difficulty",
+          "checkpoints",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?act=gpx_detail&id=1059526&q=trail",
+        "fields": [
+          "durationMinutes",
+          "elevationGainM",
+          "checkpoints"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=mountain&act=detail&id=21",
+        "fields": [
+          "region"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "maxi-mountain",
+    "mountainName": "馬西山",
+    "routeName": "馬博橫斷—馬西山線（東埔進，中平林道出）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 80.9,
+    "designations": [],
+    "elevationGainM": 8733,
+    "elevationDifferenceM": null,
+    "durationMinutes": 4085,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "秀姑巒山",
+        "order": 3
+      },
+      {
+        "name": "馬博拉斯山",
+        "order": 4
+      },
+      {
+        "name": "烏拉孟斷崖",
+        "order": 5
+      },
+      {
+        "name": "馬利加南山",
+        "order": 6
+      },
+      {
+        "name": "馬布谷山屋",
+        "order": 7
+      },
+      {
+        "name": "馬西山",
+        "order": 8
+      },
+      {
+        "name": "太平谷",
+        "order": 9
+      },
+      {
+        "name": "中平林道登山口",
+        "order": 10
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證，須事先申請）；入山證：是（南投縣信義鄉、花蓮縣卓溪鄉山地管制區，須併同辦理）；中平林道自約19K以後路基流失、坍方嚴重僅能徒步通行，沿線螞蟥、毒蛇多，須特別注意",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/8dbb3955-47fc-4311-8077-3518d1ad89b7",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處（步道系統分級表）",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "distanceKm",
+          "difficulty",
+          "checkpoints",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?act=gpx_detail&id=1059526&q=trail",
+        "fields": [
+          "durationMinutes",
+          "elevationGainM",
+          "checkpoints"
+        ]
+      },
+      {
+        "organization": "維基百科",
+        "url": "https://zh.wikipedia.org/zh-tw/%E9%A6%AC%E8%A5%BF%E5%B1%B1",
+        "fields": [
+          "region"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "kaximapanan-mountain",
+    "mountainName": "喀西帕南山",
+    "routeName": "馬博橫斷—喀西帕南山線（東埔進，中平林道出）",
+    "region": "花蓮縣卓溪鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 80.9,
+    "designations": [],
+    "elevationGainM": 8733,
+    "elevationDifferenceM": null,
+    "durationMinutes": 4085,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "東埔登山口",
+        "order": 1
+      },
+      {
+        "name": "觀高",
+        "order": 2
+      },
+      {
+        "name": "秀姑巒山",
+        "order": 3
+      },
+      {
+        "name": "馬博拉斯山",
+        "order": 4
+      },
+      {
+        "name": "烏拉孟斷崖",
+        "order": 5
+      },
+      {
+        "name": "馬布谷山屋",
+        "order": 6
+      },
+      {
+        "name": "馬西山",
+        "order": 7
+      },
+      {
+        "name": "喀西帕南山",
+        "order": 8
+      },
+      {
+        "name": "太平谷",
+        "order": 9
+      },
+      {
+        "name": "中平林道登山口",
+        "order": 10
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園入園證，須事先申請）；入山證：是（南投縣信義鄉、花蓮縣卓溪鄉山地管制區，須併同辦理）；中平林道自約19K以後路基流失、坍方嚴重僅能徒步通行，沿線螞蟥、毒蛇多，須特別注意",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/8dbb3955-47fc-4311-8077-3518d1ad89b7",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處（步道系統分級表）",
+        "url": "https://recreation.forest.gov.tw/Files/News/File/20211007003_file_%E7%8E%89%E5%B1%B1%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92%E6%AD%A5%E9%81%93%E7%B3%BB%E7%B5%B1%E5%88%86%E7%B4%9A%E7%B5%90%E6%9E%9C.pdf",
+        "fields": [
+          "distanceKm",
+          "difficulty",
+          "checkpoints",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?act=gpx_detail&id=1059526&q=trail",
+        "fields": [
+          "durationMinutes",
+          "elevationGainM",
+          "checkpoints"
+        ]
+      },
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/Trail/8dbb3955-47fc-4311-8077-3518d1ad89b7?Tab=2&ID=a32a805c-036f-4774-bce6-083b4a77a393",
+        "fields": [
+          "region"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
