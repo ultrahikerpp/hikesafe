@@ -5051,5 +5051,44 @@
     ],
     "sourceVersion": "2026-07-15",
     "reviewedAt": "2026-07-15"
+  },
+  {
+    "slug": "duigaoyue-forest-bathing-trail",
+    "mountainName": "對高岳森林浴步道",
+    "routeName": "對高岳森林浴步道",
+    "region": "嘉義縣阿里山鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3.4,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 74,
+    "durationMinutes": 180,
+    "difficulty": 2,
+    "checkpoints": [
+      { "name": "對高岳森林步道入口（祝山林道與祝山線鐵路交會處）", "order": 1 },
+      { "name": "對高岳車站／觀日坪", "order": 2 },
+      { "name": "對高坡", "order": 3 },
+      { "name": "鞍部岔路", "order": 4 },
+      { "name": "對高岳、對高亭", "order": 5 },
+      { "name": "鞍部岔路", "order": 6 },
+      { "name": "對高坡", "order": 7 },
+      { "name": "對高岳車站／觀日坪", "order": 8 },
+      { "name": "對高岳森林步道入口（祝山林道與祝山線鐵路交會處）", "order": 9 }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=093",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=093",
+        "fields": ["slug", "mountainName", "routeName", "region", "kind", "startLat", "startLng", "distanceKm", "designations", "elevationGainM", "elevationDifferenceM", "durationMinutes", "difficulty", "checkpoints", "evacuationPoints", "permitNotes"]
+      }
+    ],
+    "sourceVersion": "2026-07-15",
+    "reviewedAt": "2026-07-15"
   }
 ]
