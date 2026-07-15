@@ -8221,10 +8221,22 @@
     "durationMinutes": 150,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "小油坑登山口", "order": 1 },
-      { "name": "七星主峰", "order": 2 },
-      { "name": "七星東峰", "order": 3 },
-      { "name": "冷水坑登山口", "order": 4 }
+      {
+        "name": "小油坑登山口",
+        "order": 1
+      },
+      {
+        "name": "七星主峰",
+        "order": 2
+      },
+      {
+        "name": "七星東峰",
+        "order": 3
+      },
+      {
+        "name": "冷水坑登山口",
+        "order": 4
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": null,
@@ -8235,10 +8247,22 @@
         "organization": "陽明山國家公園管理處",
         "url": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
         "fields": [
-          "slug", "mountainName", "routeName", "region", "kind",
-          "startLat", "startLng", "distanceKm", "designations",
-          "elevationGainM", "elevationDifferenceM", "durationMinutes",
-          "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
         ]
       }
     ],
@@ -8260,12 +8284,30 @@
     "durationMinutes": 270,
     "difficulty": 3,
     "checkpoints": [
-      { "name": "大屯鞍部登山口", "order": 1 },
-      { "name": "大屯主峰", "order": 2 },
-      { "name": "大屯南峰", "order": 3 },
-      { "name": "大屯西峰", "order": 4 },
-      { "name": "面天坪", "order": 5 },
-      { "name": "清天宮登山口", "order": 6 }
+      {
+        "name": "大屯鞍部登山口",
+        "order": 1
+      },
+      {
+        "name": "大屯主峰",
+        "order": 2
+      },
+      {
+        "name": "大屯南峰",
+        "order": 3
+      },
+      {
+        "name": "大屯西峰",
+        "order": 4
+      },
+      {
+        "name": "面天坪",
+        "order": 5
+      },
+      {
+        "name": "清天宮登山口",
+        "order": 6
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": null,
@@ -8276,10 +8318,22 @@
         "organization": "陽明山國家公園管理處",
         "url": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
         "fields": [
-          "slug", "mountainName", "routeName", "region", "kind",
-          "startLat", "startLng", "distanceKm", "designations",
-          "elevationGainM", "elevationDifferenceM", "durationMinutes",
-          "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
         ]
       }
     ],
@@ -8294,18 +8348,33 @@
     "kind": "suburban",
     "startLat": null,
     "startLng": null,
-    "distanceKm": 4.0,
+    "distanceKm": 4,
     "designations": [],
     "elevationGainM": null,
     "elevationDifferenceM": 577,
     "durationMinutes": 180,
     "difficulty": 2,
     "checkpoints": [
-      { "name": "二子坪遊憩區", "order": 1 },
-      { "name": "面天山", "order": 2 },
-      { "name": "向天山", "order": 3 },
-      { "name": "向天池", "order": 4 },
-      { "name": "興福寮登山口", "order": 5 }
+      {
+        "name": "二子坪遊憩區",
+        "order": 1
+      },
+      {
+        "name": "面天山",
+        "order": 2
+      },
+      {
+        "name": "向天山",
+        "order": 3
+      },
+      {
+        "name": "向天池",
+        "order": 4
+      },
+      {
+        "name": "興福寮登山口",
+        "order": 5
+      }
     ],
     "evacuationPoints": [],
     "permitNotes": null,
@@ -8316,10 +8385,837 @@
         "organization": "陽明山國家公園管理處",
         "url": "https://www.ymsnp.gov.tw/ch/sglarticle/trail-classification",
         "fields": [
-          "slug", "mountainName", "routeName", "region", "kind",
-          "startLat", "startLng", "distanceKm", "designations",
-          "elevationGainM", "elevationDifferenceM", "durationMinutes",
-          "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "nenggao-mountain",
+    "mountainName": "能高山",
+    "routeName": "能高越嶺道－能高安東軍縱走（能高山線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.8,
+    "designations": [],
+    "elevationGainM": 2696,
+    "elevationDifferenceM": 1315,
+    "durationMinutes": 2590,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "天池山莊",
+        "order": 2
+      },
+      {
+        "name": "能高山",
+        "order": 3
+      },
+      {
+        "name": "能高山南峰",
+        "order": 4
+      },
+      {
+        "name": "光頭山",
+        "order": 5
+      },
+      {
+        "name": "白石山",
+        "order": 6
+      },
+      {
+        "name": "安東軍山",
+        "order": 7
+      },
+      {
+        "name": "奧萬大森林遊樂區停車場",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，行前至少7天申請）；入園申請：否（不在國家公園範圍）；天池山莊需另行申請留宿床位（額滿即止，開放行前60天預約）；光頭山崩壁路段需拉繩通過",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/168",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "Alpforest 阿爾發森林",
+        "url": "https://alpforest.com/nenggao-andongjun/",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "nenggao-south-peak",
+    "mountainName": "能高山南峰",
+    "routeName": "能高安東軍縱走（能高山南峰線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.8,
+    "designations": [],
+    "elevationGainM": 2696,
+    "elevationDifferenceM": 1402,
+    "durationMinutes": 2590,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "天池山莊",
+        "order": 2
+      },
+      {
+        "name": "能高山",
+        "order": 3
+      },
+      {
+        "name": "能高山南峰",
+        "order": 4
+      },
+      {
+        "name": "光頭山",
+        "order": 5
+      },
+      {
+        "name": "白石山",
+        "order": 6
+      },
+      {
+        "name": "安東軍山",
+        "order": 7
+      },
+      {
+        "name": "奧萬大森林遊樂區停車場",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，行前至少7天申請）；入園申請：否（不在國家公園範圍）；天池山莊需另行申請留宿床位（額滿即止，開放行前60天預約）；光頭山崩壁路段需拉繩通過",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/168",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "Alpforest 阿爾發森林",
+        "url": "https://alpforest.com/nenggao-andongjun/",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "guangtou-mountain",
+    "mountainName": "光頭山",
+    "routeName": "能高安東軍縱走（光頭山線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.8,
+    "designations": [],
+    "elevationGainM": 2696,
+    "elevationDifferenceM": 1113,
+    "durationMinutes": 2590,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "天池山莊",
+        "order": 2
+      },
+      {
+        "name": "能高山",
+        "order": 3
+      },
+      {
+        "name": "能高山南峰",
+        "order": 4
+      },
+      {
+        "name": "光頭山",
+        "order": 5
+      },
+      {
+        "name": "白石山",
+        "order": 6
+      },
+      {
+        "name": "安東軍山",
+        "order": 7
+      },
+      {
+        "name": "奧萬大森林遊樂區停車場",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，行前至少7天申請）；入園申請：否（不在國家公園範圍）；天池山莊需另行申請留宿床位（額滿即止，開放行前60天預約）；光頭山崩壁路段需拉繩通過",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/168",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "Alpforest 阿爾發森林",
+        "url": "https://alpforest.com/nenggao-andongjun/",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "baishi-mountain",
+    "mountainName": "白石山",
+    "routeName": "能高安東軍縱走（白石山線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.8,
+    "designations": [],
+    "elevationGainM": 2696,
+    "elevationDifferenceM": 1163,
+    "durationMinutes": 2590,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "天池山莊",
+        "order": 2
+      },
+      {
+        "name": "能高山",
+        "order": 3
+      },
+      {
+        "name": "能高山南峰",
+        "order": 4
+      },
+      {
+        "name": "光頭山",
+        "order": 5
+      },
+      {
+        "name": "白石山",
+        "order": 6
+      },
+      {
+        "name": "安東軍山",
+        "order": 7
+      },
+      {
+        "name": "奧萬大森林遊樂區停車場",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，行前至少7天申請）；入園申請：否（不在國家公園範圍）；天池山莊需另行申請留宿床位（額滿即止，開放行前60天預約）；光頭山崩壁路段需拉繩通過",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/168",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "Alpforest 阿爾發森林",
+        "url": "https://alpforest.com/nenggao-andongjun/",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "andongjun-mountain",
+    "mountainName": "安東軍山",
+    "routeName": "能高安東軍縱走（安東軍山線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.8,
+    "designations": [],
+    "elevationGainM": 2696,
+    "elevationDifferenceM": 1121,
+    "durationMinutes": 2590,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "天池山莊",
+        "order": 2
+      },
+      {
+        "name": "能高山",
+        "order": 3
+      },
+      {
+        "name": "能高山南峰",
+        "order": 4
+      },
+      {
+        "name": "光頭山",
+        "order": 5
+      },
+      {
+        "name": "白石山",
+        "order": 6
+      },
+      {
+        "name": "安東軍山",
+        "order": 7
+      },
+      {
+        "name": "奧萬大森林遊樂區停車場",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是（警政署入山許可證，行前至少7天申請）；入園申請：否（不在國家公園範圍）；天池山莊需另行申請留宿床位（額滿即止，開放行前60天預約）；光頭山崩壁路段需拉繩通過",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+        "fields": [
+          "region",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/168",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      },
+      {
+        "organization": "Alpforest 阿爾發森林",
+        "url": "https://alpforest.com/nenggao-andongjun/",
+        "fields": [
+          "difficulty",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "nanhua-mountain",
+    "mountainName": "南華山",
+    "routeName": "能高越嶺道－奇萊南華縱走（南華山線）",
+    "region": "南投縣仁愛鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 37.5,
+    "designations": [],
+    "elevationGainM": 1552,
+    "elevationDifferenceM": 1239,
+    "durationMinutes": 1000,
+    "difficulty": 4,
+    "checkpoints": [
+      {
+        "name": "屯原登山口",
+        "order": 1
+      },
+      {
+        "name": "天池山莊",
+        "order": 2
+      },
+      {
+        "name": "奇萊南峰",
+        "order": 3
+      },
+      {
+        "name": "南華山",
+        "order": 4
+      },
+      {
+        "name": "光被八表紀念碑",
+        "order": 5
+      },
+      {
+        "name": "天池山莊",
+        "order": 6
+      },
+      {
+        "name": "屯原登山口",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否（屯原至天池山莊西段免辦入山證）；天池山莊需另行申請留宿床位（額滿即止，開放行前60天預約）",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=064",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/71",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "xiangyang-mountain",
+    "mountainName": "向陽山",
+    "routeName": "嘉明湖國家步道（向陽山線）",
+    "region": "臺東縣海端鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 25.5,
+    "designations": [],
+    "elevationGainM": 1851,
+    "elevationDifferenceM": 1276,
+    "durationMinutes": 1025,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "向陽山屋",
+        "order": 2
+      },
+      {
+        "name": "向陽山",
+        "order": 3
+      },
+      {
+        "name": "嘉明湖避難山屋",
+        "order": 4
+      },
+      {
+        "name": "三叉山",
+        "order": 5
+      },
+      {
+        "name": "嘉明湖",
+        "order": 6
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園生態保護區南二段入園證，額滿即止）；入山申請：是（警政署入山許可證）；向陽山屋、嘉明湖避難山屋床位需另行申請",
+    "sourceOrganization": "農業部林業及自然保育署臺東分署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=139",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署臺東分署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=139",
+        "fields": [
+          "region",
+          "elevationDifferenceM",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/151",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "sancha-mountain",
+    "mountainName": "三叉山",
+    "routeName": "嘉明湖國家步道（三叉山線）",
+    "region": "臺東縣海端鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 25.5,
+    "designations": [],
+    "elevationGainM": 1851,
+    "elevationDifferenceM": 1169,
+    "durationMinutes": 1025,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "向陽山屋",
+        "order": 2
+      },
+      {
+        "name": "向陽山",
+        "order": 3
+      },
+      {
+        "name": "嘉明湖避難山屋",
+        "order": 4
+      },
+      {
+        "name": "三叉山",
+        "order": 5
+      },
+      {
+        "name": "嘉明湖",
+        "order": 6
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 7
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園生態保護區南二段入園證，額滿即止）；入山申請：是（警政署入山許可證）；向陽山屋、嘉明湖避難山屋床位需另行申請",
+    "sourceOrganization": "農業部林業及自然保育署臺東分署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=139",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署臺東分署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=139",
+        "fields": [
+          "region",
+          "elevationDifferenceM",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/151",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationGainM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "lulu-mountain",
+    "mountainName": "轆轆山",
+    "routeName": "南二段（轆轆山線）",
+    "region": "臺東縣海端鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.2,
+    "designations": [],
+    "elevationGainM": 3851,
+    "elevationDifferenceM": 899,
+    "durationMinutes": 2635,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "向陽山屋",
+        "order": 2
+      },
+      {
+        "name": "向陽山",
+        "order": 3
+      },
+      {
+        "name": "三叉山",
+        "order": 4
+      },
+      {
+        "name": "拉庫音溪山屋",
+        "order": 5
+      },
+      {
+        "name": "南雙頭山",
+        "order": 6
+      },
+      {
+        "name": "轆轆谷山屋",
+        "order": 7
+      },
+      {
+        "name": "轆轆山",
+        "order": 8
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園生態保護區南二段入園證）；入山申請：是；雲峰下三叉營地至南雙池間有崩壁，山友自行架設輔助繩索，請小心通行；拉庫音溪前後路段需涉水過溪，遇雨溪水可能暴漲須注意安全",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/1783c684-3f87-4862-bf4e-e876e639d405",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/Trail/1783c684-3f87-4862-bf4e-e876e639d405",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/ckfinder/userfiles/files/%E5%8D%97%E4%BA%8C%E6%AE%B5.pdf",
+        "fields": [
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/113",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "nan-shuangtou-mountain",
+    "mountainName": "南雙頭山",
+    "routeName": "南二段（南雙頭山線）",
+    "region": "臺東縣海端鄉",
+    "kind": "hundred_peak",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 54.2,
+    "designations": [],
+    "elevationGainM": 3851,
+    "elevationDifferenceM": 976,
+    "durationMinutes": 2635,
+    "difficulty": 5,
+    "checkpoints": [
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 1
+      },
+      {
+        "name": "向陽山屋",
+        "order": 2
+      },
+      {
+        "name": "向陽山",
+        "order": 3
+      },
+      {
+        "name": "三叉山",
+        "order": 4
+      },
+      {
+        "name": "拉庫音溪山屋",
+        "order": 5
+      },
+      {
+        "name": "南雙頭山",
+        "order": 6
+      },
+      {
+        "name": "轆轆谷山屋",
+        "order": 7
+      },
+      {
+        "name": "轆轆山",
+        "order": 8
+      },
+      {
+        "name": "向陽遊樂園派出所",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入園申請：是（玉山國家公園生態保護區南二段入園證）；入山申請：是；雲峰下三叉營地至南雙池間有崩壁，山友自行架設輔助繩索，請小心通行；拉庫音溪前後路段需涉水過溪，遇雨溪水可能暴漲須注意安全",
+    "sourceOrganization": "內政部國家公園署玉山國家公園管理處",
+    "sourceUrl": "https://www.ysnp.gov.tw/Trail/1783c684-3f87-4862-bf4e-e876e639d405",
+    "sourceReferences": [
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/Trail/1783c684-3f87-4862-bf4e-e876e639d405",
+        "fields": [
+          "region",
+          "difficulty",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "內政部國家公園署玉山國家公園管理處",
+        "url": "https://www.ysnp.gov.tw/ckfinder/userfiles/files/%E5%8D%97%E4%BA%8C%E6%AE%B5.pdf",
+        "fields": [
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "揪山 Joyhike",
+        "url": "https://joyhike.com/path/113",
+        "fields": [
+          "distanceKm",
+          "durationMinutes",
+          "checkpoints",
+          "elevationDifferenceM",
+          "elevationGainM"
         ]
       }
     ],
