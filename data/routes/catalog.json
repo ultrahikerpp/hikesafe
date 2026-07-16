@@ -2110,6 +2110,73 @@
     "reviewedAt": "2026-07-14"
   },
   {
+    "slug": "taiwan-beech-trail",
+    "mountainName": "台灣山毛櫸步道",
+    "routeName": "台灣山毛櫸步道",
+    "region": "宜蘭縣南澳鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 200,
+    "durationMinutes": 180,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "翠峰山莊旁步道入口",
+        "order": 1
+      },
+      {
+        "name": "伐木工寮",
+        "order": 2
+      },
+      {
+        "name": "鐵道轉轍器遺跡",
+        "order": 3
+      },
+      {
+        "name": "山毛櫸稜線",
+        "order": 4
+      },
+      {
+        "name": "步道終點",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=013",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=013",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
     "slug": "yushan-main-peak",
     "mountainName": "玉山",
     "routeName": "玉山主峰步道",
