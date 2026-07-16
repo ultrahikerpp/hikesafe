@@ -11706,5 +11706,78 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "jiangziliao-mountain",
+    "mountainName": "姜子寮山",
+    "routeName": "姜子寮登山步道",
+    "region": "基隆市暖暖區、新北市汐止區、平溪區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 1.67,
+    "designations": [
+      "taiwan_small_hundred_peak:011"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": null,
+    "durationMinutes": 120,
+    "difficulty": 0,
+    "checkpoints": [
+      {
+        "name": "姜子寮山登山口（泰安產業道路底停車場）",
+        "order": 1
+      },
+      {
+        "name": "稜線叉路口",
+        "order": 2
+      },
+      {
+        "name": "姜子寮山",
+        "order": 3
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山／入園管制：否",
+    "sourceOrganization": "基隆市文化觀光局",
+    "sourceUrl": "https://travel.klcg.gov.tw/TourContent.aspx?n=7839&s=568",
+    "sourceReferences": [
+      {
+        "organization": "基隆市文化觀光局",
+        "url": "https://travel.klcg.gov.tw/TourContent.aspx?n=7839&s=568",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=11",
+        "fields": [
+          "slug",
+          "mountainName",
+          "region",
+          "kind",
+          "designations",
+          "checkpoints"
+        ]
+      },
+      {
+        "organization": "基隆市文化觀光局",
+        "url": "https://travel.klcg.gov.tw/TourContent.aspx?n=7839&s=568",
+        "fields": [
+          "startLat",
+          "startLng"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
