@@ -11779,5 +11779,163 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "lilong-mountain",
+    "mountainName": "里龍山",
+    "routeName": "里龍山步道",
+    "region": "屏東縣獅子鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 8.14,
+    "designations": [
+      "taiwan_small_hundred_peak:080"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 850,
+    "durationMinutes": 300,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "里龍山步道主線登山口",
+        "order": 1
+      },
+      {
+        "name": "步道約2.735k休息區（海拔約660公尺）",
+        "order": 2
+      },
+      {
+        "name": "里龍山三角點",
+        "order": 3
+      },
+      {
+        "name": "步道約2.735k休息區（海拔約660公尺）",
+        "order": 4
+      },
+      {
+        "name": "里龍山步道主線登山口",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：是；官方頁面另公告約2.2K鋼構棧橋基礎淘空傾斜，禁止強行通過",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=133",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=79",
+        "fields": [
+          "slug",
+          "mountainName",
+          "kind",
+          "designations"
+        ]
+      },
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=133",
+        "fields": [
+          "routeName",
+          "region",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "nanao-ancient-trail",
+    "mountainName": "南澳古道",
+    "routeName": "南澳古道",
+    "region": "宜蘭縣南澳鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7.6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 100,
+    "durationMinutes": 300,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "旃檀駐在所遺址登山口",
+        "order": 1
+      },
+      {
+        "name": "楓香林",
+        "order": 2
+      },
+      {
+        "name": "吊橋遺址/一號吊橋",
+        "order": 3
+      },
+      {
+        "name": "二號吊橋",
+        "order": 4
+      },
+      {
+        "name": "3.8K步道終點",
+        "order": 5
+      },
+      {
+        "name": "二號吊橋",
+        "order": 6
+      },
+      {
+        "name": "一號吊橋/吊橋遺址",
+        "order": 7
+      },
+      {
+        "name": "楓香林",
+        "order": 8
+      },
+      {
+        "name": "旃檀駐在所遺址登山口",
+        "order": 9
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=002",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=002",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
