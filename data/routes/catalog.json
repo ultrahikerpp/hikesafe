@@ -12198,5 +12198,77 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "beidelaman-giant-tree-trail",
+    "mountainName": "北得拉曼巨木步道",
+    "routeName": "北得拉曼巨木步道",
+    "region": "新竹縣尖石鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 400,
+    "durationMinutes": 195,
+    "difficulty": 3,
+    "checkpoints": [
+      {
+        "name": "水田林道登山口",
+        "order": 1
+      },
+      {
+        "name": "第一休息站",
+        "order": 2
+      },
+      {
+        "name": "迴音谷",
+        "order": 3
+      },
+      {
+        "name": "下神木叉路口",
+        "order": 4
+      },
+      {
+        "name": "1號神木",
+        "order": 5
+      },
+      {
+        "name": "2至4號神木",
+        "order": 6
+      },
+      {
+        "name": "下神木叉路口",
+        "order": 7
+      },
+      {
+        "name": "水田林道登山口",
+        "order": 8
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=035",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=035",
+        "fields": [
+          "mountainName",
+          "routeName",
+          "region",
+          "distanceKm",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
