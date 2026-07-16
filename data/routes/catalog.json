@@ -5144,7 +5144,7 @@
   },
   {
     "slug": "tashan-trail",
-    "mountainName": "塔山步道",
+    "mountainName": "大塔山",
     "routeName": "塔山步道",
     "region": "嘉義縣阿里山鄉",
     "kind": "suburban",
@@ -5230,8 +5230,8 @@
         ]
       }
     ],
-    "sourceVersion": "2026-07-15",
-    "reviewedAt": "2026-07-15"
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   },
   {
     "slug": "jianan-yunfeng-trail",
