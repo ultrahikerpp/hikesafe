@@ -5952,56 +5952,6 @@
     "reviewedAt": "2026-07-16"
   },
   {
-    "slug": "kanding-trail",
-    "mountainName": "崁頂步道",
-    "routeName": "崁頂步道",
-    "region": "臺南市白河區",
-    "kind": "suburban",
-    "startLat": 23.297239,
-    "startLng": 120.503213,
-    "distanceKm": 0.5,
-    "designations": [],
-    "elevationGainM": null,
-    "elevationDifferenceM": 20,
-    "durationMinutes": 30,
-    "difficulty": 1,
-    "checkpoints": [
-      {
-        "name": "福安宮後方",
-        "order": 1
-      },
-      {
-        "name": "福安宮後方",
-        "order": 2
-      }
-    ],
-    "evacuationPoints": [],
-    "permitNotes": "入山申請：否",
-    "sourceOrganization": "農業部林業及自然保育署",
-    "sourceUrl": "https://www.forest.gov.tw/0002770",
-    "sourceReferences": [
-      {
-        "organization": "農業部林業及自然保育署",
-        "url": "https://www.forest.gov.tw/0002770",
-        "fields": [
-          "mountainName",
-          "routeName",
-          "region",
-          "startLat",
-          "startLng",
-          "distanceKm",
-          "elevationDifferenceM",
-          "durationMinutes",
-          "difficulty",
-          "checkpoints",
-          "permitNotes"
-        ]
-      }
-    ],
-    "sourceVersion": "2026-03-13",
-    "reviewedAt": "2026-07-16"
-  },
-  {
     "slug": "nanhu-dashan",
     "mountainName": "南湖大山",
     "routeName": "南湖大山線",
