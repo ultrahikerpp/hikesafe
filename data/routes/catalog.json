@@ -12097,6 +12097,73 @@
     "reviewedAt": "2026-07-16"
   },
   {
+    "slug": "seshui-forest-trail",
+    "mountainName": "澀水森林步道",
+    "routeName": "澀水森林步道",
+    "region": "南投縣魚池鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 300,
+    "durationMinutes": 110,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "澀水社區旅遊服務站",
+        "order": 1
+      },
+      {
+        "name": "景觀橋",
+        "order": 2
+      },
+      {
+        "name": "土地公廟",
+        "order": 3
+      },
+      {
+        "name": "水上平台",
+        "order": 4
+      },
+      {
+        "name": "澀水社區旅遊服務站",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=075",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=075",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
     "slug": "syakaro-national-trail",
     "mountainName": "霞喀羅國家步道",
     "routeName": "霞喀羅國家步道",
