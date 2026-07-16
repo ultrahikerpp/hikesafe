@@ -20,13 +20,15 @@ Rejected. I did not modify `data/routes/catalog.json` or `data/routes/sources.js
   - `TR_permit`: `無`
   - `URL`: `https://recreation.forest.gov.tw/Trail/RT?tr_id=085`
 
-### 2) The official route page publishes a different distance/time scope
+### 2) The official route page itself exposes multiple official top-level values
 
 - URL: `https://recreation.forest.gov.tw/Trail/RT?tr_id=085`
-- Direct values on the page:
-  - `步道全長約3.5公里`
-  - `單程約2小時`
-  - `嘉義縣竹崎鄉`
+- Official values shown on the same page:
+  - page top-level summary: `步道全長 5 公里`
+  - page top-level summary: `建議時間 半天`
+  - body copy: `步道全長約3.5公里`
+  - body copy: `單程約2小時`
+  - location: `嘉義縣竹崎鄉`
   - narrative states the trail is split into two different sections:
     - `從竹崎鄉緞繻村松腳經樟腦寮到紅南坑`
     - `另一段為嘉義分署於1997年開闢，從紅南坑到獨立山頂的環狀新建步道`
@@ -47,33 +49,30 @@ Rejected. I did not modify `data/routes/catalog.json` or `data/routes/sources.js
   - `→(0.8k，35分鐘)→ 獨立山登山道叉路`
   - `→(0.3k，15分鐘)→ 樟腦寮車站`
 - Clear derivation from the published segments:
-  - implied total distance: `3.4公里`
-  - implied total duration: `150分鐘`
+  - segment-sum distance: `3.4公里`
+  - segment-sum duration: `150分鐘`
 
 ## Why this blocks catalog insertion
 
-- `distanceKm` conflicts across the same official source set:
-  - API: `5.0公里`
-  - page narrative: `約3.5公里`
-  - page segment list: `3.4公里`
-- `durationMinutes` also conflicts:
-  - API: `半天` only, not exact minutes
-  - page narrative: `單程約2小時`
-  - page segment list: `150分鐘`
-- The page explicitly mixes multiple route scopes/sections, so I cannot tell which published range is the canonical schema target without:
-  - converting `半天` into minutes,
-  - choosing between one-way vs loop scope,
-  - or stitching/splitting different published ranges.
-- Your constraints forbid all of those.
+- The official route page for `tr_id=085` already conflicts with itself on exact scope:
+  - page top-level summary: `5 公里` and `半天`
+  - page body narrative: `約3.5公里` and `單程約2小時`
+  - page segment list sum: `3.4公里` and `150分鐘`
+- The API repeats one of those page-level scopes (`5.0公里`, `半天`) rather than resolving the discrepancy.
+- Because the same official page contains multiple incompatible distance/time/checkpoint boundaries, I cannot safely determine which scope the catalog should encode as the exact canonical trail:
+  - one-way narrative scope,
+  - segment-listed loop scope,
+  - or page/API top-level summary scope.
+- Your constraints forbid choosing among those incompatible official values.
 
 ## Schema fields that remain unsupported for safe insertion
 
 - `distanceKm`
 - `durationMinutes`
-- exact canonical `checkpoints` scope tied to the chosen distance/time range
+- exact canonical `checkpoints` boundary tied to a chosen official scope
 
 ## Result
 
 - No catalog change.
 - No source registration change.
-- Report created so the route can be revisited if a single official page is later normalized.
+- Report updated to record that the official page itself contains conflicting values, so the route can be revisited only if Forestry later normalizes `tr_id=085` to one exact scope.
