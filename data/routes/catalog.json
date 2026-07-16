@@ -12141,21 +12141,14 @@
         "organization": "農業部林業及自然保育署",
         "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=075",
         "fields": [
-          "slug",
           "mountainName",
           "routeName",
           "region",
-          "kind",
-          "startLat",
-          "startLng",
           "distanceKm",
-          "designations",
-          "elevationGainM",
           "elevationDifferenceM",
           "durationMinutes",
           "difficulty",
           "checkpoints",
-          "evacuationPoints",
           "permitNotes"
         ]
       }
