@@ -12004,5 +12004,108 @@
     ],
     "sourceVersion": "2026-07-16",
     "reviewedAt": "2026-07-16"
+  },
+  {
+    "slug": "syakaro-national-trail",
+    "mountainName": "霞喀羅國家步道",
+    "routeName": "霞喀羅國家步道",
+    "region": "新竹縣尖石鄉；新竹縣五峰鄉",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 22.2,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 300,
+    "durationMinutes": 610,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "石鹿登山口",
+        "order": 1
+      },
+      {
+        "name": "田村台駐在所遺址",
+        "order": 2
+      },
+      {
+        "name": "霞喀羅大山登山口岔路",
+        "order": 3
+      },
+      {
+        "name": "往霞山及麥巴來山岔路",
+        "order": 4
+      },
+      {
+        "name": "楢山駐在所遺址",
+        "order": 5
+      },
+      {
+        "name": "朝日駐在所遺址",
+        "order": 6
+      },
+      {
+        "name": "霞喀羅吊橋",
+        "order": 7
+      },
+      {
+        "name": "白石駐在所遺址",
+        "order": 8
+      },
+      {
+        "name": "白石吊橋",
+        "order": 9
+      },
+      {
+        "name": "武神駐在所遺址",
+        "order": 10
+      },
+      {
+        "name": "馬鞍駐在所遺址",
+        "order": 11
+      },
+      {
+        "name": "栗園駐在所遺址",
+        "order": 12
+      },
+      {
+        "name": "木炭窯",
+        "order": 13
+      },
+      {
+        "name": "養老登山口",
+        "order": 14
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "入山申請：否",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=026",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=026",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
   }
 ]
