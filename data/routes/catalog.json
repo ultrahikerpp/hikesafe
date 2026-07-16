@@ -1324,6 +1324,97 @@
     "reviewedAt": "2026-07-14"
   },
   {
+    "slug": "taman-mountain-trail",
+    "mountainName": "塔曼山步道",
+    "routeName": "塔曼山步道",
+    "region": "桃園市復興區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 6,
+    "designations": [],
+    "elevationGainM": null,
+    "elevationDifferenceM": 130,
+    "durationMinutes": 300,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "大水塔登山口",
+        "order": 1
+      },
+      {
+        "name": "900公尺指標",
+        "order": 2
+      },
+      {
+        "name": "1100公尺指標",
+        "order": 3
+      },
+      {
+        "name": "1500公尺指標",
+        "order": 4
+      },
+      {
+        "name": "2000公尺指標",
+        "order": 5
+      },
+      {
+        "name": "塔曼山",
+        "order": 6
+      },
+      {
+        "name": "2000公尺指標",
+        "order": 7
+      },
+      {
+        "name": "1500公尺指標",
+        "order": 8
+      },
+      {
+        "name": "1100公尺指標",
+        "order": 9
+      },
+      {
+        "name": "900公尺指標",
+        "order": 10
+      },
+      {
+        "name": "大水塔登山口",
+        "order": 11
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": "本路線於塔曼山三角點折返；前往拉拉山或玫瑰西魔山方向進入插天山自然保留區須另申請許可",
+    "sourceOrganization": "農業部林業及自然保育署",
+    "sourceUrl": "https://recreation.forest.gov.tw/Trail/RT?tr_id=034",
+    "sourceReferences": [
+      {
+        "organization": "農業部林業及自然保育署",
+        "url": "https://recreation.forest.gov.tw/Trail/RT?tr_id=034",
+        "fields": [
+          "slug",
+          "mountainName",
+          "routeName",
+          "region",
+          "kind",
+          "startLat",
+          "startLng",
+          "distanceKm",
+          "designations",
+          "elevationGainM",
+          "elevationDifferenceM",
+          "durationMinutes",
+          "difficulty",
+          "checkpoints",
+          "evacuationPoints",
+          "permitNotes"
+        ]
+      }
+    ],
+    "sourceVersion": "2026-07-16",
+    "reviewedAt": "2026-07-16"
+  },
+  {
     "slug": "maliguang-waterfall-trail",
     "mountainName": "馬里光瀑布步道",
     "routeName": "馬里光瀑布步道",
