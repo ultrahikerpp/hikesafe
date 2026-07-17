@@ -489,3 +489,30 @@ exactly the 3 mountains added in this batch (037, 039, 041). `Catalog
 invalid` / the suburban-route and remaining-small-hundred-peak "missing"
 lists are expected and out of this batch's scope (the full catalog is still
 incomplete outside these 10 mountains).
+
+## Post-review correction: 041 頭嵙山 withdrawn
+
+A task reviewer re-checked the implementer's own cached fetch of the
+`sourceUrl` used for this record
+(`travel.taichung.gov.tw/zh-tw/experience/hikingtrail/5`) and found that
+the page opens with an official notice stating the trail is currently
+closed for storm-damage repair following this year's Typhoon Danas and the
+0728 southwest-monsoon flooding event: "路線資訊因今年7月丹娜絲颱風及0728西南氣流帶來連日豪
+大雨，將進行災後復建工程...已封閉此登山步道，整修期間請民眾暫勿前往". The reviewer
+independently re-fetched the live page on the review date and confirmed
+the closure notice is still present, so this is not a stale cache issue.
+
+The catalog schema (`src/features/routes/import.ts`) has no open/closed
+status field, and adding one is a schema change out of scope for this
+data-population task. Rather than publish a currently-closed trail as if
+it were hikeable, or misuse an unrelated field such as `permitNotes`
+(reserved for permit requirements, not closure status) to encode closure
+state, the `dakeng-trail-5-toukeshan` record was withdrawn entirely from
+`data/routes/catalog.json`. The three source pairs added solely for this
+record were removed from `data/routes/sources.json` (verified unreferenced
+by any other remaining catalog record before deletion).
+
+Designation `taiwan_small_hundred_peak:041` (頭嵙山) is now unassigned again,
+pending the trail's reopening and re-verification against a live,
+notice-free source in a future batch. 037 (馬拉邦山) and 039 (稍來山) are
+unaffected and remain as committed in 600aa0f.
