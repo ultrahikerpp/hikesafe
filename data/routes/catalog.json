@@ -5432,7 +5432,7 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 4.6,
-    "designations": [],
+    "designations": ["taiwan_small_hundred_peak:055"],
     "elevationGainM": null,
     "elevationDifferenceM": 495,
     "durationMinutes": 250,
@@ -5505,10 +5505,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=54",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-15",
-    "reviewedAt": "2026-07-15"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "ruitai-ancient-trail",

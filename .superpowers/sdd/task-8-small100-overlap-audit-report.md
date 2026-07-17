@@ -115,3 +115,20 @@ accepted records.
 - `data/routes/sources.json`: 4 new `(教育部體育署, isports.sa.gov.tw PKNO=...)`
   pairs appended (246 → 250).
 - This report added.
+
+## Post-review addition: 055 石壁山
+
+A fresh-context task reviewer re-verified this batch and found the stated
+method (substring match on `mountainName`/`routeName` only) missed one real
+match, because it never checked `checkpoints[].name` — the exact technique
+this audit itself had to use to resolve 063 大棟山. **055 石壁山** (official
+counties 嘉義縣/雲林縣) matches `jianan-yunfeng-trail` (region 雲林縣古坑鄉),
+whose checkpoint order 2 is literally `石壁山三角點`. Independently confirmed
+against `isports.sa.gov.tw/...PKNO=54` (the official page for 055): it names
+both `好望角` and `嘉南雲峰` as directly connected trail features, matching
+this record's checkpoints 3 and 7. Added `designations:
+["taiwan_small_hundred_peak:055"]` and a matching `教育部體育署`
+`sourceReferences` entry, following the same pattern as the other 4.
+`npm run routes:verify` now reports `Small hundred peaks: 12`. No other gaps
+were found in the reviewer's deeper sweep (which also checked checkpoints and
+common character-variant spellings across all 89 then-undesignated peaks).
