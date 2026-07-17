@@ -8373,7 +8373,9 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 3.7,
-    "designations": [],
+    "designations": [
+      "taiwan_small_hundred_peak:002"
+    ],
     "elevationGainM": null,
     "elevationDifferenceM": 380,
     "durationMinutes": 150,
@@ -8422,10 +8424,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=2",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-16",
-    "reviewedAt": "2026-07-16"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "datun-main-peak-trail",
@@ -8436,7 +8445,9 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 5.8,
-    "designations": [],
+    "designations": [
+      "taiwan_small_hundred_peak:001"
+    ],
     "elevationGainM": null,
     "elevationDifferenceM": 640,
     "durationMinutes": 270,
@@ -8493,10 +8504,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=1",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-16",
-    "reviewedAt": "2026-07-16"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "miantian-xiangtian-trail",
