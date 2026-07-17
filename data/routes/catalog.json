@@ -1641,7 +1641,7 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 4.5,
-    "designations": [],
+    "designations": ["taiwan_small_hundred_peak:030"],
     "elevationGainM": null,
     "elevationDifferenceM": 261,
     "durationMinutes": 240,
@@ -1706,10 +1706,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=30",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-14",
-    "reviewedAt": "2026-07-14"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "winter-melon-mountain-hiking-trail",
@@ -5327,7 +5334,7 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 7,
-    "designations": [],
+    "designations": ["taiwan_small_hundred_peak:059"],
     "elevationGainM": null,
     "elevationDifferenceM": 563,
     "durationMinutes": 240,
@@ -5404,10 +5411,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=58",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-16",
-    "reviewedAt": "2026-07-16"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "jianan-yunfeng-trail",
@@ -5588,7 +5602,7 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 1.6,
-    "designations": [],
+    "designations": ["taiwan_small_hundred_peak:058"],
     "elevationGainM": null,
     "elevationDifferenceM": 350,
     "durationMinutes": 60,
@@ -5629,10 +5643,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=57",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-15",
-    "reviewedAt": "2026-07-15"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "duigaoyue-forest-bathing-trail",
@@ -5911,7 +5932,7 @@
     "startLat": null,
     "startLng": null,
     "distanceKm": 4.6,
-    "designations": [],
+    "designations": ["taiwan_small_hundred_peak:063"],
     "elevationGainM": null,
     "elevationDifferenceM": 471,
     "durationMinutes": 120,
@@ -5964,10 +5985,17 @@
           "evacuationPoints",
           "permitNotes"
         ]
+      },
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=62",
+        "fields": [
+          "designations"
+        ]
       }
     ],
-    "sourceVersion": "2026-07-16",
-    "reviewedAt": "2026-07-16"
+    "sourceVersion": "2026-07-17",
+    "reviewedAt": "2026-07-17"
   },
   {
     "slug": "nanhu-dashan",
