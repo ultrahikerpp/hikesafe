@@ -18,6 +18,7 @@ const main = async () => {
   console.log('Small hundred peaks: ' + report.smallHundredPeaks);
   console.log(`Missing sources: ${report.missingSources}`);
   console.log(`Duplicate slugs: ${report.duplicateSlugs}`);
+  for (const warning of report.warnings) console.warn(`Warning: ${warning}`);
   for (const error of report.errors) console.error(`- ${error}`);
 
   if (!report.valid) process.exitCode = 1;

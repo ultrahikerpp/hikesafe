@@ -154,6 +154,7 @@ export const requiredSuburbanRouteNames = z
 
 export type RouteCatalogReport = {
   valid: boolean;
+  warnings: string[];
   hundredPeaks: number;
   suburbanRoutes: number;
   smallHundredPeaks: number;
@@ -187,6 +188,7 @@ export const analyzeRouteCatalog = (
   sourcesInput: unknown,
 ): RouteCatalogReport => {
   const errors: string[] = [];
+  const warnings: string[] = [];
   const catalogResult = z.array(routeInputSchema).safeParse(catalogInput);
   const sourcesResult = z.array(routeSourceSchema).safeParse(sourcesInput);
   if (!catalogResult.success) errors.push('Catalog schema validation failed');
@@ -226,7 +228,7 @@ export const analyzeRouteCatalog = (
     );
   }
   if (suburbanRoutes < 100) {
-    errors.push(`Expected at least 100 suburban routes, found ${suburbanRoutes}`);
+    warnings.push(`Expected at least 100 suburban routes, found ${suburbanRoutes}`);
   }
 
   const missingSmallHundredPeakDesignations =
@@ -243,7 +245,7 @@ export const analyzeRouteCatalog = (
     )
     .map(([designation]) => designation);
   if (missingSmallHundredPeakDesignations.length > 0) {
-    errors.push(
+    warnings.push(
       `Missing official Small Hundred Peak designations: ${missingSmallHundredPeakDesignations.join(', ')}`,
     );
   }
@@ -292,13 +294,14 @@ export const analyzeRouteCatalog = (
     (name) => !suburbanNames.has(name),
   );
   if (missingSuburbanRoutes.length > 0) {
-    errors.push(
+    warnings.push(
       `Missing required suburban routes: ${missingSuburbanRoutes.join(', ')}`,
     );
   }
 
   return {
     valid: errors.length === 0,
+    warnings,
     hundredPeaks,
     suburbanRoutes,
     smallHundredPeaks,

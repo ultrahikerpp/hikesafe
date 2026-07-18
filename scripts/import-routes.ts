@@ -20,6 +20,8 @@ const main = async () => {
     );
   }
 
+  for (const warning of report.warnings) console.warn(`Route catalog warning: ${warning}`);
+
   if (!Array.isArray(catalog)) throw new Error('Route catalog must be an array');
   await importRouteCatalog(catalog);
   console.log(`Imported routes: ${catalog.length}`);
