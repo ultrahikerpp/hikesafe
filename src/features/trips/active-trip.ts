@@ -1,6 +1,7 @@
 import { and, desc, eq } from 'drizzle-orm';
 
 import { checkIns, tripMembers, trips } from '@/src/db/schema';
+import { copy } from '@/src/features/i18n/copy';
 
 export interface ActiveTripInitialState {
   startedAt?: string;
@@ -46,10 +47,10 @@ export const loadActiveTripState = async (
 };
 
 const formatGpsFreshness = (checkIn: SuccessfulCheckIn | undefined, now: Date) => {
-  if (!checkIn) return '尚未取得';
-  if (checkIn.locationStatus !== 'available' || !checkIn.locationCapturedAt) return '未取得 GPS';
+  if (!checkIn) return copy.notAvailableYet;
+  if (checkIn.locationStatus !== 'available' || !checkIn.locationCapturedAt) return copy.unavailableLocation('GPS', 'GPS');
   const minutes = Math.max(0, Math.floor((now.getTime() - checkIn.locationCapturedAt.getTime()) / 60_000));
-  return minutes <= 5 ? `新鮮（${minutes} 分鐘前）` : `過期（${minutes} 分鐘前）`;
+  return minutes <= 5 ? copy.gpsFreshness(minutes) : copy.gpsExpired(minutes);
 };
 
 const databaseRepository: ActiveTripRepository = {

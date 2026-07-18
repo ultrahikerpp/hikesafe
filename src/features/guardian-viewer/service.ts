@@ -1,9 +1,11 @@
 import { desc, eq } from 'drizzle-orm';
 
+import { copy } from '@/src/features/i18n/copy';
+
 export interface GuardianViewer {
   route: string;
   team: string[];
-  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number } | null } | null;
+  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number | null; capturedAt: string; source: 'gps' | 'network' | 'line' } | null } | null;
   report: string;
 }
 
@@ -15,11 +17,17 @@ export const loadGuardianViewer = async ({ tripId }: { tripId: string }): Promis
     .from(trips).innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId)).where(eq(trips.id, tripId)).limit(1);
   if (!trip) return undefined;
   const team = await db.select({ name: users.displayName }).from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId)).where(eq(tripMembers.tripId, tripId));
-  const [checkIn] = await db.select({ createdAt: checkIns.createdAt, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationStatus: checkIns.locationStatus })
+  const [checkIn] = await db.select({ createdAt: checkIns.createdAt, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationCapturedAt: checkIns.locationCapturedAt, locationSource: checkIns.locationSource, locationStatus: checkIns.locationStatus })
     .from(checkIns).where(eq(checkIns.tripId, tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
-  const location = checkIn?.locationStatus === 'available' && checkIn.latitude !== null && checkIn.longitude !== null && checkIn.accuracyMeters !== null
-    ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters } : null;
+  const location = checkIn?.locationStatus === 'available' && checkIn.latitude !== null && checkIn.longitude !== null && checkIn.locationCapturedAt !== null && checkIn.locationSource !== null
+    ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters, capturedAt: checkIn.locationCapturedAt.toISOString(), source: checkIn.locationSource } : null;
   const lastCheckIn = checkIn ? { at: checkIn.createdAt.toISOString(), location } : null;
   return { route: trip.route, team: team.map((member) => member.name), lastCheckIn,
-    report: `HikeSafe 通報摘要\n路線：${trip.route}\n隊伍：${team.map((member) => member.name).join('、')}\n預計下山：${trip.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.at ?? '尚無回報'}` };
+    report: [
+      copy.reportTitle,
+      copy.reportRoute(trip.route),
+      copy.reportTeam(team.map((member) => member.name)),
+      copy.reportPlannedFinish(trip.plannedFinishAt.toISOString()),
+      copy.reportLastCheckIn(lastCheckIn?.at),
+    ].join('\n') };
 };

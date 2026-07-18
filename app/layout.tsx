@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { copy } from '@/src/features/i18n/copy';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'HikeSafe 登山留守',
-  description: '把路線與最後回報留給重要的人',
+  title: copy.homeTitle,
+  description: copy.metadataDescription,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

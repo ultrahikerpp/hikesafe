@@ -92,10 +92,64 @@ describe('trip lifecycle commands', () => {
     expect(repository.checkIns).toEqual([expect.objectContaining({ userId: 'member-1', message: '平安，無定位訊號', locationStatus: 'unavailable' })]);
   });
 
-  it('rejects a network location instead of treating it as fresh GPS', async () => {
+  it('accepts a fresh network location for check-ins', async () => {
     const repository = makeRepository();
     repository.trip.status = 'active';
-    await expect(recordCheckIn({ tripId: 'trip-1', userId: 'member-1', location: { ...freshGps, source: 'network' }, idempotencyKey: 'network-1', now }, repository)).rejects.toThrow('Location must be GPS');
+    await recordCheckIn({
+      tripId: 'trip-1',
+      userId: 'member-1',
+      location: { ...freshGps, source: 'network' },
+      idempotencyKey: 'network-1',
+      now,
+    }, repository);
+
+    expect(repository.checkIns).toEqual([
+      expect.objectContaining({
+        locationStatus: 'available',
+        accuracyMeters: 12,
+        locationSource: 'network',
+      }),
+    ]);
+  });
+
+  it('allows a LINE location for check-ins but still rejects it for trip start', async () => {
+    const repository = makeRepository();
+    repository.trip.status = 'active';
+    await recordCheckIn({
+      tripId: 'trip-1',
+      userId: 'member-1',
+      location: {
+        latitude: 23.47,
+        longitude: 120.95,
+        capturedAt: now,
+        source: 'line',
+      },
+      idempotencyKey: 'line-check-in-1',
+      now,
+    }, repository);
+
+    expect(repository.checkIns).toEqual([
+      expect.objectContaining({
+        locationStatus: 'available',
+        latitude: 23.47,
+        longitude: 120.95,
+        accuracyMeters: null,
+        locationSource: 'line',
+      }),
+    ]);
+
+    await expect(startTrip({
+      tripId: 'trip-1',
+      userId: 'member-1',
+      location: {
+        latitude: 23.47,
+        longitude: 120.95,
+        capturedAt: now,
+        source: 'line',
+      },
+      idempotencyKey: 'start-line-1',
+      now,
+    }, makeRepository())).rejects.toThrow(/GPS/);
   });
 
   it('allows only leader or deputy to extend and atomically replaces unsent alerts', async () => {

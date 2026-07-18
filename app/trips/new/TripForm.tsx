@@ -2,6 +2,8 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { copy } from '@/src/features/i18n/copy';
+
 import {
   calculatePlannedFinish,
   canSubmitQuickTrip,
@@ -70,9 +72,9 @@ export function TripForm() {
   useEffect(() => {
     void refreshRoutes().catch(() => {
       setCatalogAvailable(false);
-      setError('目前沒有可用的已啟用路線版本。正式路線目錄尚未通過安全驗證時，無法建立行程。');
+      setError(copy.routeLoadError());
     });
-    void refreshBindings().catch(() => setError('請先完成 LINE 登入，才能管理留守綁定。'));
+    void refreshBindings().catch(() => setError(copy.authenticationError('管理留守綁定', 'managing guardian bindings')));
     void fetch('/api/trips/quick-defaults').then(async (response) => {
       if (!response.ok) return;
       const { defaults } = await response.json() as { defaults: QuickTripDefaultsResponse };
@@ -148,7 +150,7 @@ export function TripForm() {
     const response = await fetch('/api/guardian-bindings', { method: 'POST' });
     const body = await response.json() as { code?: string; error?: string };
     if (!response.ok || !body.code) {
-      setError(body.error ?? '無法建立綁定碼');
+      setError(body.error ?? copy.bindingCodeError);
       return;
     }
     setBindingCode(body.code);
@@ -192,48 +194,49 @@ export function TripForm() {
       });
       const body = await response.json() as { tripId?: string; error?: string };
       if (!response.ok || !body.tripId) {
-        setError(body.error ?? '無法建立行程');
+        setError(body.error ?? copy.createTripError);
         await refreshStaleChoices();
         return;
       }
       window.location.assign(`/trips/${body.tripId}`);
     } catch {
-      setError('無法建立行程');
+      setError(copy.createTripError);
       await refreshStaleChoices();
     }
   };
 
   return <form className="trip-form" onSubmit={submit}>
-    <h1>快速建立行程</h1>
-    <p>僅能使用已驗證、已啟用的路線。建立後仍需在登山口取得 GPS 才能開始行程。</p>
+    <h1>{copy.quickCreateTrip}</h1>
+    <p>{copy.verifiedRoutesOnly}</p>
 
     {lastRoute && <button type="button" className="secondary-action" onClick={() => chooseRoute(lastRoute.id)}>
-      使用上次路線：{lastRoute.routeName}
+      {copy.useLastRoute(lastRoute.routeName)}
     </button>}
 
-    <label>搜尋已驗證路線
+    <label>{copy.searchVerifiedRoutes}
       <input type="search" value={routeQuery} onChange={(event) => setRouteQuery(event.target.value)} />
     </label>
-    <label>路線
+    <label>{copy.route}
       <select required value={routeVersionId} onChange={(event) => chooseRoute(event.target.value)}>
-        <option value="">請選擇</option>
+        <option value="">{copy.selectOption}</option>
         {renderedRoutes.map((route) => <option key={route.id} value={route.id}>
           {route.region}｜{route.mountainName}｜{route.routeName}
         </option>)}
       </select>
     </label>
-    {selectedRoute && <p className="source-note">
-      {selectedRoute.durationMinutes !== null ? `官方預估 ${selectedRoute.durationMinutes} 分鐘` : '時間資料未載明，請自行預留下山時間'}
-      ；來源：<a href={selectedRoute.sourceUrl}>{selectedRoute.sourceOrganization}</a>；版本 {selectedRoute.sourceVersion}；覆核 {selectedRoute.reviewedAt}
-    </p>}
+    {selectedRoute && <p className="source-note"><a href={selectedRoute.sourceUrl}>
+      {selectedRoute.durationMinutes !== null
+        ? copy.routeSourceSummary(selectedRoute.durationMinutes, selectedRoute.sourceOrganization, selectedRoute.sourceVersion, selectedRoute.reviewedAt)
+        : copy.routeSourceMissingDuration(selectedRoute.sourceOrganization, selectedRoute.sourceVersion, selectedRoute.reviewedAt)}
+    </a></p>}
     {selectedRoute?.sourceReferences?.some((reference) => reference.tier === 'community') &&
-      <p className="source-note">路線資料含社群來源，行前請自行確認現況</p>}
+      <p className="source-note">{copy.communitySourceWarning}</p>}
 
     <div className="quick-time-grid">
-      <label>出發時間
+      <label>{copy.startsAt}
         <input required type="datetime-local" value={startsAt} onChange={(event) => changeStart(event.target.value)} />
       </label>
-      <label>預計下山時間
+      <label>{copy.plannedFinishAt}
         <input required type="datetime-local" value={plannedFinishAt} onChange={(event) => {
           setPlannedFinishAt(event.target.value);
           setFinishWasEdited(true);
@@ -243,7 +246,7 @@ export function TripForm() {
     </div>
 
     <fieldset>
-      <legend>本次留守人</legend>
+      <legend>{copy.tripGuardians}</legend>
       {activeBindings.map((binding) => <label key={binding.id}>
         <input type="checkbox" checked={guardianBindingIds.includes(binding.id)} onChange={(event) => {
           defaultsTouched.current.guardians = true;
@@ -252,29 +255,29 @@ export function TripForm() {
             ? [...new Set([...ids, binding.id])]
             : ids.filter((id) => id !== binding.id));
         }} />
-        {binding.displayName || (binding.sourceType === 'group' ? '已綁定群組' : '已綁定留守人')}
+        {binding.displayName || (binding.sourceType === 'group' ? copy.boundGroup : copy.boundGuardian)}
       </label>)}
-      {activeBindings.length === 0 && <p>尚無有效留守綁定，請先建立綁定碼。</p>}
-      <button type="button" className="secondary-action" onClick={() => void createBinding()}>建立留守綁定碼</button>
-      {bindingCode && <p role="status">本次綁定碼：{bindingCode}（10 分鐘有效）。請在 HikeSafe 官方帳號私訊、群組或聊天室輸入「綁定 {bindingCode}」。</p>}
+      {activeBindings.length === 0 && <p>{copy.noActiveBindings}</p>}
+      <button type="button" className="secondary-action" onClick={() => void createBinding()}>{copy.createBindingCode}</button>
+      {bindingCode && <p role="status">{copy.bindingCodeInstructions(bindingCode)}</p>}
     </fieldset>
 
     <details>
-      <summary>行程與緊急資料</summary>
-      <label>交通工具
+      <summary>{copy.tripEmergencyDetails}</summary>
+      <label>{copy.vehicle}
         <input required value={vehicle} onChange={(event) => {
           defaultsTouched.current.vehicle = true;
           setVehicle(event.target.value);
           setConfirmed(false);
         }} />
       </label>
-      <label>裝備（每行一項）
+      <label>{copy.equipment}
         <textarea value={equipment} onChange={(event) => {
           defaultsTouched.current.equipment = true;
           setEquipment(event.target.value);
         }} />
       </label>
-      <label>領隊聯絡電話（供留守聯絡）
+      <label>{copy.leaderPhone}
         <input type="tel" value={leaderPhone} onChange={(event) => {
           defaultsTouched.current.leaderPhone = true;
           setLeaderPhone(event.target.value);
@@ -287,9 +290,9 @@ export function TripForm() {
         defaultsTouched.current.confirmed = true;
         setConfirmed(event.target.checked);
       }} />
-      我已確認路線、預計下山時間與留守人
+      {copy.confirmTripDetails}
     </label>
-    <button type="submit" disabled={!canSubmit}>{submitting ? '建立中…' : '建立行程草稿'}</button>
+    <button type="submit" disabled={!canSubmit}>{submitting ? copy.creatingTrip : copy.createTripDraft}</button>
     {error && <p role="alert">{error}</p>}
   </form>;
 }

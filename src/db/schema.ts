@@ -34,6 +34,7 @@ export const lineSourceTypeEnum = pgEnum('line_source_type', [
 export const locationSourceEnum = pgEnum('location_source', [
   'gps',
   'network',
+  'line',
 ]);
 export const locationStatusEnum = pgEnum('location_status', [
   'available',
@@ -283,7 +284,7 @@ export const checkIns = pgTable(
   (table) => [
     check(
       'check_ins_location_consistency',
-      sql`(${table.locationStatus} = 'available' and ${table.latitude} is not null and ${table.longitude} is not null and ${table.accuracyMeters} is not null and ${table.locationCapturedAt} is not null and ${table.locationSource} is not null) or (${table.locationStatus} in ('unavailable', 'redacted') and ${table.latitude} is null and ${table.longitude} is null and ${table.accuracyMeters} is null and ${table.locationCapturedAt} is null and ${table.locationSource} is null)`,
+      sql`(${table.locationStatus} = 'available' and ${table.latitude} is not null and ${table.longitude} is not null and ${table.locationCapturedAt} is not null and ((${table.locationSource} in ('gps', 'network') and ${table.accuracyMeters} is not null) or (${table.locationSource} = 'line' and ${table.accuracyMeters} is null))) or (${table.locationStatus} in ('unavailable', 'redacted') and ${table.latitude} is null and ${table.longitude} is null and ${table.accuracyMeters} is null and ${table.locationCapturedAt} is null and ${table.locationSource} is null)`,
     ),
     index('check_ins_last_available_location_idx')
       .on(table.tripId, table.createdAt.desc())
