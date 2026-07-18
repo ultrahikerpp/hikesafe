@@ -24,9 +24,9 @@ describe('buildLineMessage', () => {
       text: expect.stringMatching(/\n/),
       quickReply: {
         items: expect.arrayContaining([
-          { type: 'action', action: { type: 'location', label: '傳送位置' } },
-          { type: 'action', action: { type: 'postback', label: '平安', data: 'hikesafe:check-in:trip-1:safe' } },
-          { type: 'action', action: { type: 'postback', label: '到避難處', data: 'hikesafe:check-in:trip-1:shelter' } },
+          { type: 'action', action: { type: 'location', label: '📍 傳送位置\nSend location' } },
+          { type: 'action', action: { type: 'postback', label: '✅ 平安\nSafe', data: 'hikesafe:check-in:trip-1:safe' } },
+          { type: 'action', action: { type: 'postback', label: '🏠 已到山屋\nAt shelter', data: 'hikesafe:check-in:trip-1:shelter' } },
         ]),
       },
     });
@@ -57,8 +57,8 @@ describe('buildLineMessage', () => {
       text: expect.stringMatching(/\n/),
       quickReply: {
         items: [
-          { type: 'action', action: { type: 'postback', label: '確認求助', data: 'hikesafe:help:trip-1:confirm' } },
-          { type: 'action', action: { type: 'postback', label: '取消', data: 'hikesafe:help:trip-1:cancel' } },
+          { type: 'action', action: { type: 'postback', label: '確認求助\nConfirm', data: 'hikesafe:help:trip-1:confirm' } },
+          { type: 'action', action: { type: 'postback', label: '取消\nCancel', data: 'hikesafe:help:trip-1:cancel' } },
         ],
       },
     });
@@ -107,6 +107,7 @@ describe('buildLineMessage', () => {
     expect(serialized).toContain('"clipboard"');
     expect(serialized).toContain('tel:119');
     expect(serialized).toContain('系統尚未自動聯絡 119');
+    expect(serialized).toContain('HikeSafe has not contacted 119 automatically');
   });
 
   it('discloses unknown LINE accuracy without inventing a GPS value', () => {

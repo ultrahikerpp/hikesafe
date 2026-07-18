@@ -47,8 +47,8 @@ describe('handleLineConversation', () => {
       type: 'text',
       text: expect.stringMatching(/\n/),
       quickReply: { items: expect.arrayContaining([
-        { type: 'action', action: { type: 'location', label: '傳送位置' } },
-        { type: 'action', action: { type: 'postback', label: '平安', data: 'hikesafe:check-in:trip-1:safe' } },
+        { type: 'action', action: { type: 'location', label: bilingual('📍 傳送位置', 'Send location') } },
+        { type: 'action', action: { type: 'postback', label: bilingual('✅ 平安', 'Safe'), data: 'hikesafe:check-in:trip-1:safe' } },
       ]) },
     })]);
   });
