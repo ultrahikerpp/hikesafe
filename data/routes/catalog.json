@@ -12974,5 +12974,680 @@
     ],
     "sourceVersion": "2026-07-18",
     "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "tuku-hill-trail",
+    "mountainName": "土庫丘",
+    "routeName": "更寮古道(土庫岳)",
+    "region": "臺北市南港區、新北市深坑區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3,
+    "designations": [
+      "taiwan_small_hundred_peak:014"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 344,
+    "durationMinutes": 110,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "舊莊街二段122巷登山口",
+        "order": 1
+      },
+      {
+        "name": "南深路91巷底",
+        "order": 2
+      },
+      {
+        "name": "椿萱農場",
+        "order": 3
+      },
+      {
+        "name": "土庫岳",
+        "order": 4
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=14",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=14",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=81",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "dadong-mountain-shulin-trail",
+    "mountainName": "大棟山",
+    "routeName": "樹林大棟山、青龍嶺、大同山步道",
+    "region": "新北市樹林區、桃園市龜山區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 9.5,
+    "designations": [
+      "taiwan_small_hundred_peak:015"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 380,
+    "durationMinutes": 240,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "樹林火車站",
+        "order": 1
+      },
+      {
+        "name": "大安路312巷登山口",
+        "order": 2
+      },
+      {
+        "name": "樹林山",
+        "order": 3
+      },
+      {
+        "name": "大同山",
+        "order": 4
+      },
+      {
+        "name": "青龍嶺",
+        "order": 5
+      },
+      {
+        "name": "大棟山",
+        "order": 6
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=15",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=15",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=212",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "nanshijiao-mountain-trail",
+    "mountainName": "南勢角山",
+    "routeName": "烘爐地登山步道(南勢角山)",
+    "region": "新北市新店區、中和區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 4,
+    "designations": [
+      "taiwan_small_hundred_peak:016"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 255,
+    "durationMinutes": 120,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "福德宮停車場",
+        "order": 1
+      },
+      {
+        "name": "福德宮",
+        "order": 2
+      },
+      {
+        "name": "南勢角山三角點",
+        "order": 3
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=16",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=16",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=105",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "erge-mountain-trail",
+    "mountainName": "二格山",
+    "routeName": "二格山登山步道(栳寮線)",
+    "region": "臺北市文山區、新北市石碇區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5.3,
+    "designations": [
+      "taiwan_small_hundred_peak:017"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": null,
+    "durationMinutes": 90,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "北宜公路栳寮站",
+        "order": 1
+      },
+      {
+        "name": "第一登山口",
+        "order": 2
+      },
+      {
+        "name": "第二登山口",
+        "order": 3
+      },
+      {
+        "name": "第三登山口",
+        "order": 4
+      },
+      {
+        "name": "二格山",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=17",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=17",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=mountain&act=famous-detail&category=2&id=116",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "tianshang-mountain-trail",
+    "mountainName": "天上山",
+    "routeName": "天上山步道",
+    "region": "新北市土城區、三峽區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5.6,
+    "designations": [
+      "taiwan_small_hundred_peak:018"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 379,
+    "durationMinutes": 130,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "承天路桐花公園",
+        "order": 1
+      },
+      {
+        "name": "天上山",
+        "order": 2
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=18",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=18",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=104",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "yuan-mountain-trail",
+    "mountainName": "鳶山",
+    "routeName": "鳶山登山步道",
+    "region": "新北市三峽區、鶯歌區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 8,
+    "designations": [
+      "taiwan_small_hundred_peak:019"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 270,
+    "durationMinutes": 180,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "光復紀念鐘",
+        "order": 1
+      },
+      {
+        "name": "鳶山",
+        "order": 2
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=19",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=19",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=89",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "shizitou-mountain-trail",
+    "mountainName": "獅仔頭山",
+    "routeName": "獅仔頭山登山步道",
+    "region": "新北市新店區、三峽區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5.5,
+    "designations": [
+      "taiwan_small_hundred_peak:020"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 238,
+    "durationMinutes": 150,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "獅頭登山口",
+        "order": 1
+      },
+      {
+        "name": "觀獅坪",
+        "order": 2
+      },
+      {
+        "name": "崖梯",
+        "order": 3
+      },
+      {
+        "name": "大樟樹",
+        "order": 4
+      },
+      {
+        "name": "最高點",
+        "order": 5
+      },
+      {
+        "name": "金毛杜鵑林",
+        "order": 6
+      },
+      {
+        "name": "防蕃古碑",
+        "order": 7
+      },
+      {
+        "name": "石寮(隘寮)遺址",
+        "order": 8
+      },
+      {
+        "name": "古井",
+        "order": 9
+      },
+      {
+        "name": "戰壕遺址",
+        "order": 10
+      },
+      {
+        "name": "獅仔頭山一等三角點",
+        "order": 11
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=20",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=20",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=185",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "jinmian-mountain-trail",
+    "mountainName": "金面山",
+    "routeName": "桃園金面山步道",
+    "region": "桃園市大溪區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 5.8,
+    "designations": [
+      "taiwan_small_hundred_peak:021"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 402,
+    "durationMinutes": 270,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "阮家山莊土雞城第三登山口",
+        "order": 1
+      },
+      {
+        "name": "竹林",
+        "order": 2
+      },
+      {
+        "name": "上稜",
+        "order": 3
+      },
+      {
+        "name": "攀岩稜",
+        "order": 4
+      },
+      {
+        "name": "金面山",
+        "order": 5
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=21",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=21",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=783",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "dongyan-mountain-trail",
+    "mountainName": "東眼山",
+    "routeName": "東眼山自導式步道",
+    "region": "新北市三峽區、桃園市復興區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 3.5,
+    "designations": [
+      "taiwan_small_hundred_peak:022"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 292,
+    "durationMinutes": 120,
+    "difficulty": 1,
+    "checkpoints": [
+      {
+        "name": "東眼山遊客中心",
+        "order": 1
+      },
+      {
+        "name": "木炭窯",
+        "order": 2
+      },
+      {
+        "name": "東眼山三角點",
+        "order": 3
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=22",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=22",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=228",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
+  },
+  {
+    "slug": "xizhou-mountain-trail",
+    "mountainName": "溪洲山",
+    "routeName": "溪洲山步道(福山巖登山步道)",
+    "region": "桃園市大溪區",
+    "kind": "suburban",
+    "startLat": null,
+    "startLng": null,
+    "distanceKm": 7.9,
+    "designations": [
+      "taiwan_small_hundred_peak:023"
+    ],
+    "elevationGainM": null,
+    "elevationDifferenceM": 432,
+    "durationMinutes": 190,
+    "difficulty": 2,
+    "checkpoints": [
+      {
+        "name": "溪洲山福山巖登山口",
+        "order": 1
+      },
+      {
+        "name": "時鐘尾",
+        "order": 2
+      },
+      {
+        "name": "溪洲山",
+        "order": 3
+      }
+    ],
+    "evacuationPoints": [],
+    "permitNotes": null,
+    "sourceOrganization": "教育部體育署",
+    "sourceUrl": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=23",
+    "sourceReferences": [
+      {
+        "organization": "教育部體育署",
+        "url": "https://isports.sa.gov.tw/Apps/TIS/TIS05/TIS0550M_02V1.aspx?PKNO=23",
+        "fields": [
+          "mountainName",
+          "region",
+          "designations",
+          "checkpoints"
+        ],
+        "tier": "official"
+      },
+      {
+        "organization": "健行筆記",
+        "url": "https://hiking.biji.co/index.php?q=trail&act=detail&id=598",
+        "fields": [
+          "routeName",
+          "distanceKm",
+          "durationMinutes",
+          "difficulty",
+          "elevationDifferenceM"
+        ],
+        "tier": "community"
+      }
+    ],
+    "sourceVersion": "2026-07-18",
+    "reviewedAt": "2026-07-18"
   }
 ]
