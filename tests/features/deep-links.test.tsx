@@ -5,18 +5,19 @@ vi.mock('@/app/LiffBootstrap', () => ({ LiffBootstrap: () => <p>LIFF session pen
 
 import { GuardianViewer } from '@/app/trips/[tripId]/guardian-viewer/GuardianViewer';
 import { JoinTrip } from '@/app/trips/join/[token]/JoinTrip';
+import { copy } from '@/src/features/i18n/copy';
 
 describe('LIFF deep links without a prior cookie', () => {
   afterEach(cleanup);
   it('keeps the invite token route visible but prevents join API calls until LIFF bootstrap establishes a session', () => {
     render(<JoinTrip token="invite-token" />);
-    expect(screen.getByRole('button', { name: '加入行程' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: copy.joinTrip })).toBeDisabled();
     expect(screen.getByText('LIFF session pending')).toBeInTheDocument();
   });
 
   it('keeps the guardian grant in the client viewer component until bootstrap completes', () => {
     render(<GuardianViewer tripId="trip-1" grant="guardian-grant" />);
-    expect(screen.getByRole('heading', { name: '留守行程資訊' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.guardianTripInfo })).toBeInTheDocument();
     expect(screen.getByText('LIFF session pending')).toBeInTheDocument();
   });
 });

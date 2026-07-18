@@ -1,5 +1,7 @@
 import { desc, eq } from 'drizzle-orm';
 
+import { copy } from '@/src/features/i18n/copy';
+
 export interface GuardianViewer {
   route: string;
   team: string[];
@@ -21,5 +23,11 @@ export const loadGuardianViewer = async ({ tripId }: { tripId: string }): Promis
     ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters } : null;
   const lastCheckIn = checkIn ? { at: checkIn.createdAt.toISOString(), location } : null;
   return { route: trip.route, team: team.map((member) => member.name), lastCheckIn,
-    report: `HikeSafe 通報摘要\n路線：${trip.route}\n隊伍：${team.map((member) => member.name).join('、')}\n預計下山：${trip.plannedFinishAt.toISOString()}\n最後回報：${lastCheckIn?.at ?? '尚無回報'}` };
+    report: [
+      copy.reportTitle,
+      copy.reportRoute(trip.route),
+      copy.reportTeam(team.map((member) => member.name)),
+      copy.reportPlannedFinish(trip.plannedFinishAt.toISOString()),
+      copy.reportLastCheckIn(lastCheckIn?.at),
+    ].join('\n') };
 };

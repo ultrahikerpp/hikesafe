@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { and, eq } from 'drizzle-orm';
 
 import { sessionCookie, verifySession } from '@/src/features/auth/session';
+import { copy } from '@/src/features/i18n/copy';
 import { loadActiveTripState } from '@/src/features/trips/active-trip';
 
 import { TripActions } from './TripActions';
@@ -31,13 +32,13 @@ export default async function ActiveTripPage({ params }: { params: Promise<{ tri
       .from(guardians).innerJoin(lineBindings, eq(lineBindings.id, guardians.lineBindingId)).innerJoin(users, eq(users.id, lineBindings.userId))
       .where(eq(guardians.tripId, tripId));
     const members = await db.select({ id: users.id, name: users.displayName, role: tripMembers.role }).from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId)).where(eq(tripMembers.tripId, tripId));
-    return <main><DraftTrip tripId={tripId} routeName={trip.routeName} plannedFinishAt={trip.plannedFinishAt.toISOString()} guardians={boundGuardians.map((guardian) => guardian.name || guardian.owner || guardian.sourceType || '已綁定留守人')} members={members} isOwner={trip.ownerUserId === session.userId} /></main>;
+    return <main><DraftTrip tripId={tripId} routeName={trip.routeName} plannedFinishAt={trip.plannedFinishAt.toISOString()} guardians={boundGuardians.map((guardian) => guardian.name || guardian.owner || guardian.sourceType || copy.boundGuardian)} members={members} isOwner={trip.ownerUserId === session.userId} /></main>;
   }
   if (trip.status !== 'active') notFound();
   const initialState = await loadActiveTripState({ tripId, userId: session.userId, now: new Date() });
   if (!initialState) notFound();
   return <main>
-    <h1>進行中行程</h1>
+    <h1>{copy.activeTrip}</h1>
     <TripActions tripId={tripId} initialState={initialState} />
   </main>;
 }

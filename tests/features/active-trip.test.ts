@@ -4,6 +4,7 @@ import {
   loadActiveTripState,
   type ActiveTripRepository,
 } from '@/src/features/trips/active-trip';
+import { copy } from '@/src/features/i18n/copy';
 
 const now = new Date('2026-07-12T01:00:00.000Z');
 
@@ -24,7 +25,7 @@ describe('loadActiveTripState', () => {
       startedAt: '2026-07-12T00:00:00.000Z',
       plannedFinishAt: '2026-07-12T05:00:00.000Z',
       lastSuccessfulCheckInAt: '2026-07-12T00:30:00.000Z',
-      gpsFreshness: '新鮮（1 分鐘前）',
+      gpsFreshness: copy.gpsFreshness(1),
       now: '2026-07-12T01:00:00.000Z',
       pendingQueueCount: 0,
     });

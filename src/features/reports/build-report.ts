@@ -1,3 +1,5 @@
+import { copy } from '@/src/features/i18n/copy';
+
 export interface EmergencyReportLocation {
   latitude: number;
   longitude: number;
@@ -37,13 +39,6 @@ export interface EmergencyReport {
   data: EmergencyReportData;
 }
 
-const list = (
-  items: Array<string | { name: string }>,
-  emptyLabel = '未提供',
-) => items.length
-  ? items.map((item) => typeof item === 'string' ? item : item.name).join('、')
-  : emptyLabel;
-
 const taipeiTime = (value: string) => {
   const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
@@ -51,9 +46,6 @@ const taipeiTime = (value: string) => {
   const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value;
   return `${part('year')}-${part('month')}-${part('day')} ${part('hour')}:${part('minute')} Asia/Taipei`;
 };
-
-const locationTimeLabel = (source: EmergencyReportLocation['source']) =>
-  source === 'line' ? 'LINE 回報時間' : 'GPS 時間';
 
 export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyReport => {
   const location = trip.lastCheckIn?.location;
@@ -79,31 +71,31 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     automatic119Report: false,
   };
   const lines = [
-    'HikeSafe 通報摘要',
-    `隊伍：${list(data.team)}`,
-    `路線：${data.route}`,
-    `開始時間：${taipeiTime(data.startedAt)}`,
-    `預計下山：${taipeiTime(data.plannedFinishAt)}`,
-    `最後成功回報：${data.lastCheckIn ? taipeiTime(data.lastCheckIn.at) : '尚無回報'}`,
+    copy.reportTitle,
+    copy.reportTeam(data.team),
+    copy.reportRoute(data.route),
+    copy.reportStartedAt(taipeiTime(data.startedAt)),
+    copy.reportPlannedFinish(taipeiTime(data.plannedFinishAt)),
+    copy.reportLastCheckIn(data.lastCheckIn ? taipeiTime(data.lastCheckIn.at) : undefined),
   ];
   if (data.lastCheckIn?.location) {
     const current = data.lastCheckIn.location;
     lines.push(
-      `最後位置：${current.latitude}, ${current.longitude}`,
-      `${locationTimeLabel(current.source)}：${taipeiTime(current.capturedAt)}`,
+      copy.reportLocation(current.latitude, current.longitude),
+      copy.reportLocationTime(current.source, taipeiTime(current.capturedAt)),
     );
     if (current.accuracyMeters !== null) {
-      lines.splice(lines.length - 1, 0, `GPS 精度：${current.accuracyMeters} 公尺`);
+      lines.splice(lines.length - 1, 0, copy.reportGpsAccuracy(current.accuracyMeters));
     }
   } else {
-    lines.push('最後位置未取得');
+    lines.push(copy.reportUnavailableLocation);
   }
   lines.push(
-    `車輛：${data.vehicle || '未提供'}`,
-    `裝備：${list(data.equipment)}`,
-    `檢查點：${list(data.checkpoints)}`,
-    `撤離點：${list(data.evacuationPoints, '官方資料未載明')}`,
-    'HikeSafe 尚未代為通報 119',
+    copy.reportVehicle(data.vehicle),
+    copy.reportEquipment(data.equipment),
+    copy.reportCheckpoints(data.checkpoints),
+    copy.reportEvacuationPoints(data.evacuationPoints),
+    copy.noAutomatic119Report,
   );
   return { text: lines.join('\n'), data };
 };

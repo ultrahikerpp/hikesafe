@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { LiffBootstrap } from '@/app/LiffBootstrap';
+import { copy } from '@/src/features/i18n/copy';
 
 import { TripForm } from './TripForm';
 
@@ -13,6 +14,6 @@ export default function NewTripPage() {
     <LiffBootstrap onReady={() => setSessionReady(true)} />
     {sessionReady
       ? <TripForm />
-      : <p role="status">完成 LINE 登入後才能建立行程。</p>}
+      : <p role="status">{copy.loginToCreateTrip}</p>}
   </main>;
 }

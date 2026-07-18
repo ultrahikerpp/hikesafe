@@ -2,6 +2,12 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TripForm } from '@/app/trips/new/TripForm';
+import { copy } from '@/src/features/i18n/copy';
+
+const copyName = (value: string) => new RegExp(value
+  .split('\n')
+  .map((line) => line.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  .join('\\s+'));
 
 const route = {
   id: 'route-version-1',
@@ -75,32 +81,32 @@ describe('TripForm quick creation', () => {
   it('requires an explicit previous-route action and keeps a manually edited finish time', async () => {
     render(<TripForm />);
 
-    const routeSelect = await screen.findByRole('combobox', { name: '路線' });
+    const routeSelect = await screen.findByRole('combobox', { name: copyName(copy.route) });
     expect(routeSelect).toHaveValue('');
-    fireEvent.click(await screen.findByRole('button', { name: '使用上次路線：合歡山主峰線' }));
+    fireEvent.click(await screen.findByRole('button', { name: copyName(copy.useLastRoute(route.routeName)) }));
     expect(routeSelect).toHaveValue(route.id);
 
-    fireEvent.change(screen.getByLabelText('出發時間'), { target: { value: '2026-07-18T08:00' } });
-    expect(screen.getByLabelText('預計下山時間')).toHaveValue('2026-07-18T12:00');
+    fireEvent.change(screen.getByLabelText(copyName(copy.startsAt)), { target: { value: '2026-07-18T08:00' } });
+    expect(screen.getByLabelText(copyName(copy.plannedFinishAt))).toHaveValue('2026-07-18T12:00');
 
-    fireEvent.change(screen.getByLabelText('預計下山時間'), { target: { value: '2026-07-18T13:00' } });
-    fireEvent.change(screen.getByLabelText('出發時間'), { target: { value: '2026-07-18T09:00' } });
-    expect(screen.getByLabelText('預計下山時間')).toHaveValue('2026-07-18T13:00');
+    fireEvent.change(screen.getByLabelText(copyName(copy.plannedFinishAt)), { target: { value: '2026-07-18T13:00' } });
+    fireEvent.change(screen.getByLabelText(copyName(copy.startsAt)), { target: { value: '2026-07-18T09:00' } });
+    expect(screen.getByLabelText(copyName(copy.plannedFinishAt))).toHaveValue('2026-07-18T13:00');
   });
 
   it('prefills active guardians and emergency details but requires final confirmation', async () => {
     render(<TripForm />);
-    fireEvent.click(await screen.findByRole('button', { name: '使用上次路線：合歡山主峰線' }));
+    fireEvent.click(await screen.findByRole('button', { name: copyName(copy.useLastRoute(route.routeName)) }));
 
     expect(await screen.findByRole('checkbox', { name: '小玉' })).toBeChecked();
-    fireEvent.click(screen.getByText('行程與緊急資料'));
-    expect(screen.getByLabelText('交通工具')).toHaveValue('汽車 ABC-1234');
-    expect(screen.getByLabelText('裝備（每行一項）')).toHaveValue('頭燈');
-    expect(screen.getByLabelText('領隊聯絡電話（供留守聯絡）')).toHaveValue('0912345678');
+    fireEvent.click(screen.getByText(copyName(copy.tripEmergencyDetails)));
+    expect(screen.getByLabelText(copyName(copy.vehicle))).toHaveValue('汽車 ABC-1234');
+    expect(screen.getByLabelText(copyName(copy.equipment))).toHaveValue('頭燈');
+    expect(screen.getByLabelText(copyName(copy.leaderPhone))).toHaveValue('0912345678');
 
-    const submit = screen.getByRole('button', { name: '建立行程草稿' });
+    const submit = screen.getByRole('button', { name: copyName(copy.createTripDraft) });
     expect(submit).toBeDisabled();
-    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
     expect(submit).toBeEnabled();
   });
 
@@ -111,13 +117,13 @@ describe('TripForm quick creation', () => {
     render(<TripForm />);
 
     await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜奇萊山主峰線' });
-    fireEvent.change(screen.getByLabelText('路線'), { target: { value: route.id } });
-    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
-    fireEvent.change(screen.getByLabelText('搜尋已驗證路線'), { target: { value: '奇萊' } });
+    fireEvent.change(screen.getByLabelText(copyName(copy.route)), { target: { value: route.id } });
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
+    fireEvent.change(screen.getByLabelText(copyName(copy.searchVerifiedRoutes)), { target: { value: '奇萊' } });
 
-    expect(screen.getByLabelText('路線')).toHaveValue(route.id);
+    expect(screen.getByLabelText(copyName(copy.route))).toHaveValue(route.id);
     expect(screen.getByRole('option', { name: '南投縣｜合歡山主峰｜合歡山主峰線' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '建立行程草稿' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: copyName(copy.createTripDraft) })).toBeEnabled();
   });
 
   it('remains usable from empty fields when quick defaults are unavailable', async () => {
@@ -126,7 +132,7 @@ describe('TripForm quick creation', () => {
     render(<TripForm />);
 
     expect(await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜合歡山主峰線' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /使用上次路線/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /使用上次路線|Use previous route/ })).not.toBeInTheDocument();
   });
 
   it('blocks creation when the verified route catalog is unavailable', async () => {
@@ -134,17 +140,17 @@ describe('TripForm quick creation', () => {
     installFetch({ routesStatus: 503 });
     render(<TripForm />);
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('目前沒有可用的已啟用路線版本');
-    expect(screen.getByRole('button', { name: '建立行程草稿' })).toBeDisabled();
+    expect(await screen.findByRole('alert')).toHaveTextContent(copyName(copy.routeLoadError()));
+    expect(screen.getByRole('button', { name: copyName(copy.createTripDraft) })).toBeDisabled();
   });
 
   it('uses the existing create endpoint and refreshes stale server-validated choices', async () => {
     vi.unstubAllGlobals();
     const fetchMock = installFetch({ tripStatus: 422 });
     render(<TripForm />);
-    fireEvent.click(await screen.findByRole('button', { name: '使用上次路線：合歡山主峰線' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
-    fireEvent.click(screen.getByRole('button', { name: '建立行程草稿' }));
+    fireEvent.click(await screen.findByRole('button', { name: copyName(copy.useLastRoute(route.routeName)) }));
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
+    fireEvent.click(screen.getByRole('button', { name: copyName(copy.createTripDraft) }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Guardian binding is not active');
     const createCall = fetchMock.mock.calls.find(([url, init]) =>
@@ -166,15 +172,15 @@ describe('TripForm quick creation', () => {
     vi.unstubAllGlobals();
     const fetchMock = installFetch({ routes: [[route], []], tripStatus: 422 });
     render(<TripForm />);
-    fireEvent.click(await screen.findByRole('button', { name: '使用上次路線：合歡山主峰線' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
-    const submit = screen.getByRole('button', { name: '建立行程草稿' });
+    fireEvent.click(await screen.findByRole('button', { name: copyName(copy.useLastRoute(route.routeName)) }));
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
+    const submit = screen.getByRole('button', { name: copyName(copy.createTripDraft) });
     expect(submit).toBeEnabled();
     fireEvent.click(submit);
 
     await waitFor(() => {
       expect(fetchMock.mock.calls.filter(([url]) => url === '/api/routes')).toHaveLength(2);
-      expect(screen.getByLabelText('路線')).toHaveValue('');
+      expect(screen.getByLabelText(copyName(copy.route))).toHaveValue('');
     });
     expect(submit).toBeDisabled();
   });
@@ -188,37 +194,37 @@ describe('TripForm quick creation', () => {
     render(<TripForm />);
 
     await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜合歡山東峰線' });
-    fireEvent.change(screen.getByLabelText('路線'), { target: { value: route.id } });
-    fireEvent.change(screen.getByLabelText('出發時間'), { target: { value: '2026-07-18T08:00' } });
+    fireEvent.change(screen.getByLabelText(copyName(copy.route)), { target: { value: route.id } });
+    fireEvent.change(screen.getByLabelText(copyName(copy.startsAt)), { target: { value: '2026-07-18T08:00' } });
     fireEvent.click(screen.getByRole('checkbox', { name: '小玉' }));
-    fireEvent.click(screen.getByText('行程與緊急資料'));
-    fireEvent.change(screen.getByLabelText('交通工具'), { target: { value: '步行' } });
-    fireEvent.change(screen.getByLabelText('裝備（每行一項）'), { target: { value: '雨衣' } });
-    fireEvent.change(screen.getByLabelText('領隊聯絡電話（供留守聯絡）'), { target: { value: '0987654321' } });
-    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
+    fireEvent.click(screen.getByText(copyName(copy.tripEmergencyDetails)));
+    fireEvent.change(screen.getByLabelText(copyName(copy.vehicle)), { target: { value: '步行' } });
+    fireEvent.change(screen.getByLabelText(copyName(copy.equipment)), { target: { value: '雨衣' } });
+    fireEvent.change(screen.getByLabelText(copyName(copy.leaderPhone)), { target: { value: '0987654321' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
 
     resolveDefaults(json({
       defaults: { ...defaults, routeVersionId: alternateRoute.id, vehicle: '汽車 XYZ-5678', equipment: ['頭燈'], leaderPhone: '0912345678' },
     }));
 
-    await waitFor(() => expect(screen.getByLabelText('路線')).toHaveValue(route.id));
-    expect(screen.getByLabelText('交通工具')).toHaveValue('步行');
-    expect(screen.getByLabelText('裝備（每行一項）')).toHaveValue('雨衣');
-    expect(screen.getByLabelText('領隊聯絡電話（供留守聯絡）')).toHaveValue('0987654321');
+    await waitFor(() => expect(screen.getByLabelText(copyName(copy.route))).toHaveValue(route.id));
+    expect(screen.getByLabelText(copyName(copy.vehicle))).toHaveValue('步行');
+    expect(screen.getByLabelText(copyName(copy.equipment))).toHaveValue('雨衣');
+    expect(screen.getByLabelText(copyName(copy.leaderPhone))).toHaveValue('0987654321');
     expect(screen.getByRole('checkbox', { name: '小玉' })).toBeChecked();
-    expect(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) })).toBeChecked();
   });
 
   it('recovers from a rejected create request without showing success', async () => {
     vi.unstubAllGlobals();
     const fetchMock = installFetch({ tripReject: true });
     render(<TripForm />);
-    fireEvent.click(await screen.findByRole('button', { name: '使用上次路線：合歡山主峰線' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
-    fireEvent.click(screen.getByRole('button', { name: '建立行程草稿' }));
+    fireEvent.click(await screen.findByRole('button', { name: copyName(copy.useLastRoute(route.routeName)) }));
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
+    fireEvent.click(screen.getByRole('button', { name: copyName(copy.createTripDraft) }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('無法建立行程');
-    expect(screen.getByRole('button', { name: '建立行程草稿' })).toBeDisabled();
+    expect(await screen.findByRole('alert')).toHaveTextContent(copyName(copy.createTripError));
+    expect(screen.getByRole('button', { name: copyName(copy.createTripDraft) })).toBeDisabled();
     await waitFor(() => {
       expect(fetchMock.mock.calls.filter(([url]) => url === '/api/routes')).toHaveLength(2);
       expect(fetchMock.mock.calls.filter(([url]) => url === '/api/guardian-bindings')).toHaveLength(2);
