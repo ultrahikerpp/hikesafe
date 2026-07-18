@@ -12,7 +12,7 @@ const locationFix = (): Promise<{ latitude: number; longitude: number; accuracyM
   }), () => resolve(undefined), { enableHighAccuracy: true, maximumAge: 0, timeout: 15_000 });
 });
 
-export function DraftTrip({ tripId, routeName, plannedFinishAt, guardians, members, isOwner }: { tripId: string; routeName: string; plannedFinishAt: string; guardians: string[]; members: Array<{ id: string; name: string; role: string }>; isOwner: boolean }) {
+export function DraftTrip({ tripId, routeName, plannedFinishAt, guardians, members, isOwner }: { tripId: string; routeName: string; plannedFinishAt: string; guardians: Array<string | undefined>; members: Array<{ id: string; name: string; role: string }>; isOwner: boolean }) {
   const [notice, setNotice] = useState<string>();
   const [inviteUrl, setInviteUrl] = useState<string>();
   const start = async () => {

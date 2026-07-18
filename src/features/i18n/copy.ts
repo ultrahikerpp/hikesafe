@@ -1,13 +1,10 @@
 export const bilingual = (chinese: string, english: string) =>
   chinese + '\n' + english;
 
-const names = (items: string[]) => {
-  const localized = items.map((item) => item.split('\n', 2));
-  return {
-    chinese: localized.map(([chinese]) => chinese).join('、'),
-    english: localized.map(([chinese, english]) => english ?? chinese).join(', '),
-  };
-};
+const listValues = (items: string[]) => ({
+  chinese: items.join('、'),
+  english: items.join(', '),
+});
 
 const quantity = (value: number, singular: string, plural: string) =>
   `${value} ${value === 1 ? singular : plural}`;
@@ -166,16 +163,17 @@ export const copy = {
   reportCount: (count: number) => bilingual(`${count} 筆`, quantity(count, 'check-in', 'check-ins')),
   inviteLink: (url: string) => bilingual(`邀請連結：${url}`, `Invitation link: ${url}`),
   assignDeputy: (name: string) => bilingual(`指定 ${name} 為副領隊`, `Assign ${name} as deputy leader`),
-  guardianNames: (guardians: string[]) => {
-    const value = names(guardians);
-    return bilingual(value.chinese, value.english);
+  guardianNames: (guardians: Array<string | undefined>) => {
+    const chinese = guardians.map((guardian) => guardian ?? '已綁定留守人');
+    const english = guardians.map((guardian) => guardian ?? 'Bound guardian');
+    return bilingual(chinese.join('、'), english.join(', '));
   },
   memberNames: (members: Array<{ name: string; role: string }>) => bilingual(
     members.map(({ name, role }) => `${name}（${role === 'deputy' ? '副領隊' : role === 'leader' ? '隊長' : '隊員'}）`).join('、'),
     members.map(({ name, role }) => `${name} (${role === 'deputy' ? 'Deputy leader' : role === 'leader' ? 'Leader' : 'Member'})`).join(', '),
   ),
   viewerTeam: (members: string[]) => {
-    const value = names(members);
+    const value = listValues(members);
     return bilingual(`隊伍：${value.chinese}`, `Team: ${value.english}`);
   },
   useLastRoute: (routeName: string) => bilingual(`使用上次路線：${routeName}`, `Use previous route: ${routeName}`),
@@ -188,7 +186,7 @@ export const copy = {
     `Binding code: ${code} (valid for 10 minutes). Send “綁定 ${code}” to the official HikeSafe account in a direct message, group, or chat room.`,
   ),
   reportTeam: (members: string[]) => {
-    const value = names(members);
+    const value = listValues(members);
     return bilingual(`隊伍：${value.chinese}`, `Team: ${value.english}`);
   },
   reportRoute: (routeName: string) => bilingual(`路線：${routeName}`, `Route: ${routeName}`),
@@ -211,15 +209,15 @@ export const copy = {
   ),
   reportVehicle: (vehicle: string) => bilingual(`車輛：${vehicle || '未提供'}`, `Vehicle: ${vehicle || 'Not provided'}`),
   reportEquipment: (items: string[]) => {
-    const value = names(items);
+    const value = listValues(items);
     return bilingual(`裝備：${value.chinese || '未提供'}`, `Equipment: ${value.english || 'Not provided'}`);
   },
   reportCheckpoints: (items: string[]) => {
-    const value = names(items);
+    const value = listValues(items);
     return bilingual(`檢查點：${value.chinese || '未提供'}`, `Checkpoints: ${value.english || 'Not provided'}`);
   },
   reportEvacuationPoints: (items: string[]) => {
-    const value = names(items);
+    const value = listValues(items);
     return bilingual(
       `撤離點：${value.chinese || '官方資料未載明'}`,
       `Evacuation points: ${value.english || 'Not specified in official data'}`,

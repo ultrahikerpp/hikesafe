@@ -21,3 +21,13 @@ it('keeps dynamic system values unchanged on both language lines', () => {
   expect(copy.viewerTeam(['阿山'])).toBe('隊伍：阿山\nTeam: 阿山');
   expect(copy.reportRoute('玉山主峰線')).toBe('路線：玉山主峰線\nRoute: 玉山主峰線');
 });
+
+it('preserves every line of dynamic list values verbatim', () => {
+  const checkpoint = '第一段\n第二段\n第三段';
+
+  expect(copy.guardianNames([checkpoint])).toBe(`${checkpoint}\n${checkpoint}`);
+  expect(copy.viewerTeam([checkpoint])).toBe(`隊伍：${checkpoint}\nTeam: ${checkpoint}`);
+  expect(copy.reportCheckpoints([checkpoint])).toBe(
+    `檢查點：${checkpoint}\nCheckpoints: ${checkpoint}`,
+  );
+});

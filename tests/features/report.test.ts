@@ -110,4 +110,15 @@ describe('buildEmergencyReport', () => {
 
     expect(report.text).toContain(copy.reportEvacuationPoints([]));
   });
+
+  it('preserves multiline user-entered report values verbatim', () => {
+    const equipment = '主繩\n副繩\n備用繩';
+    const report = buildEmergencyReport({
+      ...trip,
+      equipment: [equipment],
+      lastCheckIn: null,
+    });
+
+    expect(report.text.split(equipment)).toHaveLength(3);
+  });
 });
