@@ -10,6 +10,7 @@ import {
   guardians,
   idempotencyKeys,
   lineBindings,
+  locationSourceEnum,
   locationStatusEnum,
   routeVersions,
   routes,
@@ -102,6 +103,14 @@ describe('database schema', () => {
     );
   });
 
+  it('declares LINE as a persisted location source', () => {
+    expect(locationSourceEnum.enumValues).toEqual([
+      'gps',
+      'network',
+      'line',
+    ]);
+  });
+
   it('constrains viewer grants to a guardian on the same trip', () => {
     const guardianUniqueIndexes = getTableConfig(guardians).indexes
       .filter((index) => index.config.unique)
@@ -182,6 +191,10 @@ describe('database schema', () => {
 
 describe('initial migration contract', () => {
   const migration = readFileSync('drizzle/0000_initial.sql', 'utf8');
+  const lineLocationMigration = readFileSync(
+    'drizzle/0011_line_location_source.sql',
+    'utf8',
+  );
 
   it('enforces location consistency including redaction', () => {
     const normalizedMigration = migration.replaceAll('"check_ins".', '');
@@ -245,6 +258,18 @@ describe('initial migration contract', () => {
     );
     expect(migration).toContain(
       'CREATE INDEX "route_versions_active_catalog_idx" ON "route_versions" USING btree ("region","kind","mountain_name","route_name") WHERE "route_versions"."is_active" = true',
+    );
+  });
+
+  it('allows null accuracy only for LINE locations in the follow-up migration', () => {
+    expect(lineLocationMigration).toContain(
+      `ALTER TYPE "public"."location_source" ADD VALUE IF NOT EXISTS 'line';`,
+    );
+    expect(lineLocationMigration).toContain(
+      `"location_source" IN ('gps', 'network') AND "accuracy_meters" IS NOT NULL`,
+    );
+    expect(lineLocationMigration).toContain(
+      `"location_source" = 'line' AND "accuracy_meters" IS NULL`,
     );
   });
 });

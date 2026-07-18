@@ -4,7 +4,12 @@ import { alertDeliveries, alertEvents, checkIns, idempotencyKeys, tripMembers, t
 import { scheduleAlertEvents } from '@/src/features/alerts/domain';
 import { canFinishTrip, type TripRole, type TripStatus } from '@/src/features/trips/domain';
 import { hashIdempotencyRequest } from '@/src/lib/idempotency';
-import { assertFreshLocation, type LocationFix } from '@/src/lib/location';
+import {
+  assertFreshLineLocation,
+  assertFreshLocation,
+  type CheckInLocation,
+  type LocationFix,
+} from '@/src/lib/location';
 
 interface TripSnapshot {
   id: string;
@@ -22,9 +27,9 @@ interface StoredCheckIn {
   locationStatus: 'available' | 'unavailable';
   latitude?: number;
   longitude?: number;
-  accuracyMeters?: number;
+  accuracyMeters?: number | null;
   locationCapturedAt?: Date;
-  locationSource?: 'gps';
+  locationSource?: 'gps' | 'network' | 'line';
   createdAt: Date;
 }
 
@@ -63,7 +68,7 @@ export interface RecordCheckInCommand {
   tripId: string;
   userId: string;
   message?: string;
-  location?: LocationFix;
+  location?: CheckInLocation;
   idempotencyKey: string;
   now: Date;
 }
@@ -80,7 +85,7 @@ export interface FinishTripCommand {
   tripId: string;
   userId: string;
   message?: string;
-  location?: LocationFix;
+  location?: CheckInLocation;
   idempotencyKey: string;
   now: Date;
 }
@@ -88,6 +93,13 @@ export interface HelpTripCommand extends FinishTripCommand {}
 
 const assertGps = (location: LocationFix, now: Date) => {
   if (location.source !== 'gps') throw new Error('Location must be GPS');
+  return assertFreshLocation(location, now);
+};
+
+const assertCheckInLocation = (location: CheckInLocation, now: Date) => {
+  if (location.source === 'line') {
+    return assertFreshLineLocation(location, now);
+  }
   return assertFreshLocation(location, now);
 };
 
@@ -103,7 +115,7 @@ const checkInValues = (
       createdAt: command.now,
     };
   }
-  const location = assertGps(command.location, command.now);
+  const location = assertCheckInLocation(command.location, command.now);
   return {
     tripId: command.tripId,
     userId: command.userId,
@@ -111,9 +123,9 @@ const checkInValues = (
     locationStatus: 'available' as const,
     latitude: location.latitude,
     longitude: location.longitude,
-    accuracyMeters: location.accuracyMeters,
+    accuracyMeters: 'accuracyMeters' in location ? location.accuracyMeters : null,
     locationCapturedAt: location.capturedAt,
-    locationSource: 'gps' as const,
+    locationSource: location.source,
     createdAt: command.now,
   };
 };

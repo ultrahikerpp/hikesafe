@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { assertFreshLocation } from '@/src/lib/location';
+import { assertFreshLineLocation, assertFreshLocation } from '@/src/lib/location';
 
 const now = new Date('2026-07-12T08:06:01Z');
 const validFix = {
@@ -12,6 +12,20 @@ const validFix = {
 };
 
 describe('location validation', () => {
+  it('accepts a fresh LINE location without invented accuracy', () => {
+    expect(() =>
+      assertFreshLineLocation(
+        {
+          latitude: 23.47,
+          longitude: 120.95,
+          capturedAt: new Date('2026-07-18T08:00:00.000Z'),
+          source: 'line',
+        },
+        new Date('2026-07-18T08:00:05.000Z'),
+      ),
+    ).not.toThrow();
+  });
+
   it('rejects a stale fix instead of presenting it as current', () => {
     expect(() =>
       assertFreshLocation(
@@ -62,5 +76,19 @@ describe('location validation', () => {
     expect(() =>
       assertFreshLocation({ ...validFix, latitude, longitude }, now),
     ).toThrow('Location coordinates are outside Taiwan');
+  });
+
+  it('rejects an implausibly future LINE timestamp', () => {
+    expect(() =>
+      assertFreshLineLocation(
+        {
+          latitude: 23.47,
+          longitude: 120.95,
+          capturedAt: new Date('2026-07-18T08:00:31.000Z'),
+          source: 'line',
+        },
+        new Date('2026-07-18T08:00:00.000Z'),
+      ),
+    ).toThrow('Location timestamp is in the future');
   });
 });

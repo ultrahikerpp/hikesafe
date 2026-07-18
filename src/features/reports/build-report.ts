@@ -1,7 +1,7 @@
 export interface EmergencyReportLocation {
   latitude: number;
   longitude: number;
-  accuracyMeters: number;
+  accuracyMeters: number | null;
   capturedAt: Date;
 }
 
@@ -23,7 +23,7 @@ export interface EmergencyReportData {
   route: string;
   startedAt: string;
   plannedFinishAt: string;
-  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number; capturedAt: string } | null } | null;
+  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number | null; capturedAt: string } | null } | null;
   vehicle: string;
   equipment: string[];
   checkpoints: string[];
@@ -85,9 +85,11 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     const current = data.lastCheckIn.location;
     lines.push(
       `最後位置：${current.latitude}, ${current.longitude}`,
-      `GPS 精度：${current.accuracyMeters} 公尺`,
       `GPS 時間：${taipeiTime(current.capturedAt)}`,
     );
+    if (current.accuracyMeters !== null) {
+      lines.splice(lines.length - 1, 0, `GPS 精度：${current.accuracyMeters} 公尺`);
+    }
   } else {
     lines.push('最後位置未取得');
   }
@@ -131,7 +133,7 @@ export const loadEmergencyReport = async (tripId: string): Promise<EmergencyRepo
   ]);
   const checkIn = lastCheckIn[0];
   const location = checkIn?.locationStatus === 'available' && checkIn.latitude !== null && checkIn.longitude !== null &&
-    checkIn.accuracyMeters !== null && checkIn.locationCapturedAt !== null
+    checkIn.locationCapturedAt !== null
     ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters, capturedAt: checkIn.locationCapturedAt }
     : null;
   return buildEmergencyReport({

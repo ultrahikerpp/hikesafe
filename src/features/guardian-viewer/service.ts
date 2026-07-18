@@ -3,7 +3,7 @@ import { desc, eq } from 'drizzle-orm';
 export interface GuardianViewer {
   route: string;
   team: string[];
-  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number } | null } | null;
+  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number | null } | null } | null;
   report: string;
 }
 
@@ -17,7 +17,7 @@ export const loadGuardianViewer = async ({ tripId }: { tripId: string }): Promis
   const team = await db.select({ name: users.displayName }).from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId)).where(eq(tripMembers.tripId, tripId));
   const [checkIn] = await db.select({ createdAt: checkIns.createdAt, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationStatus: checkIns.locationStatus })
     .from(checkIns).where(eq(checkIns.tripId, tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
-  const location = checkIn?.locationStatus === 'available' && checkIn.latitude !== null && checkIn.longitude !== null && checkIn.accuracyMeters !== null
+  const location = checkIn?.locationStatus === 'available' && checkIn.latitude !== null && checkIn.longitude !== null
     ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters } : null;
   const lastCheckIn = checkIn ? { at: checkIn.createdAt.toISOString(), location } : null;
   return { route: trip.route, team: team.map((member) => member.name), lastCheckIn,
