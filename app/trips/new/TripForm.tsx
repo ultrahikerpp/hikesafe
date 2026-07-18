@@ -121,6 +121,9 @@ export function TripForm() {
         .includes(query),
     );
   }, [routeQuery, routes]);
+  const renderedRoutes = selectedRoute && !visibleRoutes.some(({ id }) => id === selectedRoute.id)
+    ? [selectedRoute, ...visibleRoutes]
+    : visibleRoutes;
 
   const chooseRoute = (id: string) => {
     defaultsTouched.current.route = true;
@@ -214,7 +217,7 @@ export function TripForm() {
     <label>路線
       <select required value={routeVersionId} onChange={(event) => chooseRoute(event.target.value)}>
         <option value="">請選擇</option>
-        {visibleRoutes.map((route) => <option key={route.id} value={route.id}>
+        {renderedRoutes.map((route) => <option key={route.id} value={route.id}>
           {route.region}｜{route.mountainName}｜{route.routeName}
         </option>)}
       </select>

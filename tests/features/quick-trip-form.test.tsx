@@ -104,6 +104,22 @@ describe('TripForm quick creation', () => {
     expect(submit).toBeEnabled();
   });
 
+  it('keeps a confirmed selected route visible when searching for another route', async () => {
+    const alternateRoute = { ...route, id: 'route-version-2', routeName: '奇萊山主峰線' };
+    vi.unstubAllGlobals();
+    installFetch({ routes: [[route, alternateRoute]] });
+    render(<TripForm />);
+
+    await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜奇萊山主峰線' });
+    fireEvent.change(screen.getByLabelText('路線'), { target: { value: route.id } });
+    fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
+    fireEvent.change(screen.getByLabelText('搜尋已驗證路線'), { target: { value: '奇萊' } });
+
+    expect(screen.getByLabelText('路線')).toHaveValue(route.id);
+    expect(screen.getByRole('option', { name: '南投縣｜合歡山主峰｜合歡山主峰線' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '建立行程草稿' })).toBeEnabled();
+  });
+
   it('remains usable from empty fields when quick defaults are unavailable', async () => {
     vi.unstubAllGlobals();
     installFetch({ defaultsStatus: 503 });
