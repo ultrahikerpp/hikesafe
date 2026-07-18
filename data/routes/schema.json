@@ -37,7 +37,7 @@
       "kind": { "enum": ["hundred_peak", "suburban"] },
       "startLat": { "type": ["number", "null"], "minimum": 21, "maximum": 26 },
       "startLng": { "type": ["number", "null"], "minimum": 119, "maximum": 123 },
-      "distanceKm": { "type": "number", "exclusiveMinimum": 0 },
+      "distanceKm": { "type": ["number", "null"], "exclusiveMinimum": 0 },
       "designations": {
         "type": "array",
         "items": {
@@ -47,8 +47,8 @@
       },
       "elevationGainM": { "type": ["integer", "null"], "minimum": 0 },
       "elevationDifferenceM": { "type": ["integer", "null"], "minimum": 0 },
-      "durationMinutes": { "type": "integer", "exclusiveMinimum": 0 },
-      "difficulty": { "type": "integer", "minimum": 0, "maximum": 6 },
+      "durationMinutes": { "type": ["integer", "null"], "exclusiveMinimum": 0 },
+      "difficulty": { "type": ["integer", "null"], "minimum": 0, "maximum": 6 },
       "checkpoints": { "$ref": "#/$defs/orderedPlaces" },
       "evacuationPoints": { "$ref": "#/$defs/optionalPlaces" },
       "permitNotes": { "type": ["string", "null"] },
@@ -125,7 +125,8 @@
               "difficulty", "checkpoints", "evacuationPoints", "permitNotes"
             ]
           }
-        }
+        },
+        "tier": { "enum": ["official", "community"] }
       }
     }
   }

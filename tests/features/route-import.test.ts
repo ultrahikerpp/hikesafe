@@ -38,6 +38,7 @@ const routeWithSourceReferences = {
       organization: validRoute.sourceOrganization,
       url: validRoute.sourceUrl,
       fields: ['startLat', 'startLng'],
+      tier: 'official' as const,
     },
     {
       organization: '農業部林業及自然保育署',
@@ -49,6 +50,7 @@ const routeWithSourceReferences = {
         'checkpoints',
         'permitNotes',
       ],
+      tier: 'official' as const,
     },
   ],
 };
@@ -86,6 +88,52 @@ it('requires traceable source and review metadata', () => {
   ).toThrow();
   expect(
     () => validateRouteInput({ ...routeWithSourceReferences, elevationDifferenceM: -1 }),
+  ).toThrow();
+});
+
+it('accepts a null distance, duration, or difficulty when no official source publishes an exact value', () => {
+  const routeWithGaps = validateRouteInput({
+    ...routeWithSourceReferences,
+    distanceKm: null,
+    durationMinutes: null,
+    difficulty: null,
+  });
+
+  expect(routeWithGaps).toMatchObject({
+    distanceKm: null,
+    durationMinutes: null,
+    difficulty: null,
+  });
+});
+
+it('defaults a source reference to the official tier and accepts an explicit community tier', () => {
+  const officialDefault = validateRouteInput(routeWithSourceReferences);
+  expect(officialDefault.sourceReferences.every(({ tier }) => tier === 'official')).toBe(true);
+
+  const withCommunitySource = validateRouteInput({
+    ...routeWithSourceReferences,
+    sourceReferences: [
+      ...routeWithSourceReferences.sourceReferences,
+      {
+        organization: '健行筆記',
+        url: 'https://hiking.biji.co/index.php?q=trail&act=detail&id=69',
+        fields: ['distanceKm', 'durationMinutes'],
+        tier: 'community',
+      },
+    ],
+  });
+  expect(withCommunitySource.sourceReferences.at(-1)).toMatchObject({
+    organization: '健行筆記',
+    tier: 'community',
+  });
+
+  expect(() =>
+    validateRouteInput({
+      ...routeWithSourceReferences,
+      sourceReferences: [
+        { ...routeWithSourceReferences.sourceReferences[0], tier: 'unofficial' },
+      ],
+    }),
   ).toThrow();
 });
 
@@ -170,7 +218,8 @@ class MemoryRouteTransaction implements RouteCatalogTransaction {
           input.startLat === null ? null : Number(input.startLat.toFixed(6)),
         startLng:
           input.startLng === null ? null : Number(input.startLng.toFixed(6)),
-        distanceKm: Number(input.distanceKm.toFixed(2)),
+        distanceKm:
+          input.distanceKm === null ? null : Number(input.distanceKm.toFixed(2)),
       }),
       isActive: true,
     });
@@ -219,6 +268,7 @@ describe('route catalog import', () => {
           'evacuationPoints',
           'permitNotes',
         ],
+        tier: 'official',
       },
     ]);
   });

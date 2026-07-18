@@ -1,13 +1,18 @@
+export interface QuickRouteSourceReference {
+  tier?: 'official' | 'community';
+}
+
 export interface QuickRouteOption {
   id: string;
   region: string;
   mountainName: string;
   routeName: string;
-  durationMinutes: number;
+  durationMinutes: number | null;
   sourceOrganization: string;
   sourceUrl: string;
   sourceVersion: string;
   reviewedAt: string;
+  sourceReferences?: QuickRouteSourceReference[];
 }
 
 export interface QuickTripDefaultsResponse {
@@ -30,9 +35,9 @@ export const currentStartValue = (now = new Date()) => {
   return localDateTime(rounded);
 };
 
-export const calculatePlannedFinish = (startsAt: string, durationMinutes: number) => {
+export const calculatePlannedFinish = (startsAt: string, durationMinutes: number | null) => {
   const start = new Date(startsAt);
-  if (!startsAt || Number.isNaN(start.getTime()) || durationMinutes <= 0) return '';
+  if (!startsAt || Number.isNaN(start.getTime()) || durationMinutes === null || durationMinutes <= 0) return '';
   return localDateTime(new Date(start.getTime() + durationMinutes * 60_000));
 };
 

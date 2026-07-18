@@ -18,6 +18,10 @@ describe('quick trip form state', () => {
       .toBe('2026-07-18T12:00');
   });
 
+  it('does not auto-fill a finish time when the route has no published duration', () => {
+    expect(calculatePlannedFinish('2026-07-18T08:00', null)).toBe('');
+  });
+
   it('rejects incomplete or reversed windows and accepts a confirmed complete setup', () => {
     expect(isValidTripWindow('2026-07-18T08:00', '2026-07-18T07:59')).toBe(false);
     expect(canSubmitQuickTrip({

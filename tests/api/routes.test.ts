@@ -26,6 +26,7 @@ const activeRoute: RouteCatalogRecord = {
       organization: validRoute.sourceOrganization,
       url: validRoute.sourceUrl,
       fields: ['startLat', 'startLng'],
+      tier: 'official' as const,
     },
     {
       organization: validRoute.sourceOrganization,
@@ -37,6 +38,7 @@ const activeRoute: RouteCatalogRecord = {
         'checkpoints',
         'permitNotes',
       ],
+      tier: 'official' as const,
     },
   ],
 };
@@ -125,5 +127,35 @@ describe('GET /api/routes', () => {
       permitNotes: null,
       difficulty: 0,
     });
+  });
+
+  it('returns a null distance, duration, or difficulty when no source publishes an exact value', async () => {
+    vi.mocked(searchRoutes).mockResolvedValue([
+      {
+        ...activeRoute,
+        distanceKm: null,
+        durationMinutes: null,
+        difficulty: null,
+        sourceReferences: [
+          ...activeRoute.sourceReferences,
+          {
+            organization: '健行筆記',
+            url: 'https://hiking.biji.co/index.php?q=trail&act=detail&id=69',
+            fields: ['distanceKm'],
+            tier: 'community',
+          },
+        ],
+      },
+    ]);
+
+    const response = await GET(new Request('http://localhost/api/routes'));
+    const body = await response.json();
+
+    expect(body.routes[0]).toMatchObject({
+      distanceKm: null,
+      durationMinutes: null,
+      difficulty: null,
+    });
+    expect(body.routes[0].sourceReferences.at(-1)).toMatchObject({ tier: 'community' });
   });
 });

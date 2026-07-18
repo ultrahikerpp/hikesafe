@@ -222,7 +222,12 @@ export function TripForm() {
         </option>)}
       </select>
     </label>
-    {selectedRoute && <p className="source-note">官方預估 {selectedRoute.durationMinutes} 分鐘；來源：<a href={selectedRoute.sourceUrl}>{selectedRoute.sourceOrganization}</a>；版本 {selectedRoute.sourceVersion}；覆核 {selectedRoute.reviewedAt}</p>}
+    {selectedRoute && <p className="source-note">
+      {selectedRoute.durationMinutes !== null ? `官方預估 ${selectedRoute.durationMinutes} 分鐘` : '時間資料未載明，請自行預留下山時間'}
+      ；來源：<a href={selectedRoute.sourceUrl}>{selectedRoute.sourceOrganization}</a>；版本 {selectedRoute.sourceVersion}；覆核 {selectedRoute.reviewedAt}
+    </p>}
+    {selectedRoute?.sourceReferences?.some((reference) => reference.tier === 'community') &&
+      <p className="source-note">路線資料含社群來源，行前請自行確認現況</p>}
 
     <div className="quick-time-grid">
       <label>出發時間

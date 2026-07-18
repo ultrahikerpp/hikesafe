@@ -73,6 +73,7 @@ export const routeSourceReferenceSchema = z.object({
     message: 'Source reference URL must use HTTPS',
   }),
   fields: z.array(routeSourceFieldSchema).min(1),
+  tier: z.enum(['official', 'community']).default('official'),
 });
 
 export const normalizeStoredRouteSourceReferences = (
@@ -85,6 +86,7 @@ export const normalizeStoredRouteSourceReferences = (
         organization: sourceOrganization,
         url: sourceUrl,
         fields: routeSourceFieldSchema.options,
+        tier: 'official' as const,
       }]
     : z.array(routeSourceReferenceSchema).min(1).parse(sourceReferences);
 
@@ -110,7 +112,8 @@ export const routeInputSchema = z.object({
     .number()
     .positive()
     .transform((value) => roundTo(value, 2))
-    .pipe(z.number().positive()),
+    .pipe(z.number().positive())
+    .nullable(),
   designations: z
     .array(
       z
@@ -120,8 +123,8 @@ export const routeInputSchema = z.object({
     .default([]),
   elevationGainM: z.number().int().nonnegative().nullable(),
   elevationDifferenceM: z.number().int().nonnegative().nullable(),
-  durationMinutes: z.number().int().positive(),
-  difficulty: z.number().int().min(0).max(6),
+  durationMinutes: z.number().int().positive().nullable(),
+  difficulty: z.number().int().min(0).max(6).nullable(),
   checkpoints: z.array(orderedPlaceSchema).min(1),
   evacuationPoints: z.array(orderedPlaceSchema),
   permitNotes: z.string().nullable(),

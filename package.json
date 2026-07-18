@@ -15,6 +15,9 @@
     "build": "next build",
     "start": "next start",
     "routes:verify": "tsx scripts/verify-route-catalog.ts",
+    "routes:scrape:isports": "tsx scripts/scrape/small100-isports.ts",
+    "routes:scrape:biji": "tsx scripts/scrape/small100-biji.ts",
+    "routes:scrape:hiker": "tsx scripts/scrape/small100-hiker.ts",
     "db:migrate": "tsx scripts/migrate.ts"
   },
   "keywords": [],

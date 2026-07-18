@@ -2,8 +2,9 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TripForm } from '@/app/trips/new/TripForm';
+import type { QuickRouteOption } from '@/app/trips/new/quick-trip-form';
 
-const route = {
+const route: QuickRouteOption = {
   id: 'route-version-1',
   region: '南投縣',
   mountainName: '合歡山主峰',
@@ -35,7 +36,7 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 const installFetch = (options: {
   defaultsResponse?: Promise<Response>;
   defaultsStatus?: number;
-  routes?: (typeof route)[][];
+  routes?: QuickRouteOption[][];
   routesStatus?: number;
   tripReject?: boolean;
   tripStatus?: number;
@@ -102,6 +103,37 @@ describe('TripForm quick creation', () => {
     expect(submit).toBeDisabled();
     fireEvent.click(screen.getByRole('checkbox', { name: '我已確認路線、預計下山時間與留守人' }));
     expect(submit).toBeEnabled();
+  });
+
+  it('shows an unavailable-duration note and does not auto-fill the finish time for a route with no published duration', async () => {
+    const routeWithoutDuration = { ...route, id: 'route-version-3', durationMinutes: null };
+    vi.unstubAllGlobals();
+    installFetch({ routes: [[routeWithoutDuration]] });
+    render(<TripForm />);
+
+    await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜合歡山主峰線' });
+    fireEvent.change(screen.getByLabelText('路線'), { target: { value: routeWithoutDuration.id } });
+
+    expect(screen.getByText(/時間資料未載明/)).toBeInTheDocument();
+    expect(screen.getByLabelText('預計下山時間')).toHaveValue('');
+  });
+
+  it('warns when the selected route cites a community source', async () => {
+    const communityRoute = {
+      ...route,
+      id: 'route-version-4',
+      sourceReferences: [
+        { organization: '健行筆記', url: 'https://hiking.biji.co/', fields: ['distanceKm'], tier: 'community' as const },
+      ],
+    };
+    vi.unstubAllGlobals();
+    installFetch({ routes: [[communityRoute]] });
+    render(<TripForm />);
+
+    await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜合歡山主峰線' });
+    fireEvent.change(screen.getByLabelText('路線'), { target: { value: communityRoute.id } });
+
+    expect(screen.getByText('路線資料含社群來源，行前請自行確認現況')).toBeInTheDocument();
   });
 
   it('keeps a confirmed selected route visible when searching for another route', async () => {
