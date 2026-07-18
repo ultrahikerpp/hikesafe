@@ -252,7 +252,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
           vehicle: delivery.vehicle, equipment: delivery.equipment as string[],
           checkpoints: delivery.checkpoints as string[], evacuationPoints: delivery.evacuationPoints as string[],
         });
-        const trip: AlertMessageTrip = { id: delivery.tripId, routeName: delivery.routeName, plannedFinishAt: delivery.plannedFinishAt, team: members.map((member) => member.name), lastCheckInAt: lastCheckIn?.createdAt ?? null, lastLocationStatus: lastCheckIn?.locationStatus ?? 'unavailable', leaderPhone: delivery.leaderPhone,
+        const trip: AlertMessageTrip = { id: delivery.tripId, routeName: delivery.routeName, plannedFinishAt: delivery.plannedFinishAt, team: members.map((member) => member.name), lastCheckInAt: lastCheckIn?.createdAt ?? null, lastLocationStatus: lastCheckIn?.locationStatus ?? 'unavailable', lastLocationAccuracyMeters: lastCheckIn?.accuracyMeters ?? null, lastLocationSource: lastCheckIn?.locationSource ?? null, leaderPhone: delivery.leaderPhone,
           reportText: report.text };
         if (delivery.stage === 'overdue_120' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
           const token = createGrantToken(delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET);

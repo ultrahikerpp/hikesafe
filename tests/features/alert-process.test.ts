@@ -24,6 +24,8 @@ const event = {
     team: ['阿山'],
     lastCheckInAt: null,
     lastLocationStatus: 'unavailable' as const,
+    lastLocationAccuracyMeters: null,
+    lastLocationSource: null,
   },
   recipients: [{ id: 'line-user-1', name: '阿山' }],
 };

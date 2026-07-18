@@ -1,4 +1,5 @@
 import type { AlertStage } from '@/src/features/alerts/domain';
+import { bilingual } from '@/src/features/i18n/copy';
 
 export interface AlertMessageTrip {
   id: string;
@@ -7,14 +8,29 @@ export interface AlertMessageTrip {
   team: string[];
   lastCheckInAt: Date | null;
   lastLocationStatus: 'available' | 'unavailable' | 'redacted';
+  lastLocationAccuracyMeters: number | null;
+  lastLocationSource: 'gps' | 'network' | 'line' | null;
   viewerGrantUrl?: string;
   reportText?: string;
   leaderPhone?: string;
 }
 
+export type LineQuickReplyAction =
+  | { type: 'postback'; label: string; data: string }
+  | { type: 'location'; label: string };
+
+export interface LineQuickReply {
+  items: Array<{ type: 'action'; action: LineQuickReplyAction }>;
+}
+
 export type LineMessage =
-  | { type: 'text'; text: string }
+  | { type: 'text'; text: string; quickReply?: LineQuickReply }
   | { type: 'flex'; altText: string; contents: Record<string, unknown> };
+
+export interface LineTripChoice {
+  id: string;
+  routeName: string;
+}
 
 const formatTime = (value: Date | null) => {
   if (!value) return '尚無回報';
@@ -30,6 +46,47 @@ const locationText = (status: AlertMessageTrip['lastLocationStatus']) => ({
   unavailable: '最後位置：無法取得',
   redacted: '最後位置：已隱藏',
 }[status]);
+
+const locationDetails = (trip: AlertMessageTrip) => [
+  locationText(trip.lastLocationStatus),
+  ...(trip.lastLocationSource === 'line' && trip.lastLocationAccuracyMeters === null
+    ? [bilingual('位置精度：LINE 未提供', 'Location accuracy: Not provided by LINE')]
+    : []),
+];
+
+const postback = (label: string, data: string): LineQuickReplyAction => ({ type: 'postback', label, data });
+const conciseLabel = (label: string) => Array.from(label).slice(0, 20).join('');
+
+export const buildCheckInPrompt = ({ tripId, includeLocation }: { tripId: string; includeLocation: boolean }): LineMessage => ({
+  type: 'text',
+  text: bilingual('請選擇回報內容', 'Choose a check-in'),
+  quickReply: {
+    items: [
+      ...(includeLocation ? [{ type: 'action' as const, action: { type: 'location' as const, label: '傳送位置' } }] : []),
+      { type: 'action', action: postback('平安', `hikesafe:check-in:${tripId}:safe`) },
+      { type: 'action', action: postback('到避難處', `hikesafe:check-in:${tripId}:shelter`) },
+    ],
+  },
+});
+
+export const buildTripChooser = (trips: LineTripChoice[]): LineMessage => ({
+  type: 'text',
+  text: bilingual('請選擇要回報的行程', 'Choose a trip to check in'),
+  quickReply: {
+    items: trips.map((trip) => ({ type: 'action', action: postback(conciseLabel(trip.routeName), `hikesafe:trip:${trip.id}:select`) })),
+  },
+});
+
+export const buildHelpConfirmation = (tripId: string): LineMessage => ({
+  type: 'text',
+  text: bilingual('需要協助？確認後會通知留守人。', 'Need help? Confirm to notify guardians.'),
+  quickReply: {
+    items: [
+      { type: 'action', action: postback('確認求助', `hikesafe:help:${tripId}:confirm`) },
+      { type: 'action', action: postback('取消', `hikesafe:help:${tripId}:cancel`) },
+    ],
+  },
+});
 
 const card = (
   color: string,
@@ -77,13 +134,13 @@ export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): Lin
     ], []);
   }
   if (stage === 'help') {
-    return card('#D64545', '需要協助：請立即聯絡隊員', trip, [locationText(trip.lastLocationStatus), '此訊息不代表 HikeSafe 已代為通報 119。'], [
+    return card('#D64545', '需要協助：請立即聯絡隊員', trip, [...locationDetails(trip), '此訊息不代表 HikeSafe 已代為通報 119。'], [
       ...(trip.viewerGrantUrl ? [{ label: '查看行程', uri: trip.viewerGrantUrl }] : []),
       { label: '複製通報摘要', clipboardText: trip.reportText ?? '' }, { label: '撥打 119', uri: 'tel:119' },
     ]);
   }
   if (stage === 'finished') {
-    return card('#2E8B57', '已安全下山', trip, [locationText(trip.lastLocationStatus), '行程已結束，未送出的逾時警示已取消。'], []);
+    return card('#2E8B57', '已安全下山', trip, [...locationDetails(trip), '行程已結束，未送出的逾時警示已取消。'], []);
   }
   if (stage === 'due') {
     return {
@@ -102,7 +159,7 @@ export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): Lin
       : trip.viewerGrantUrl ? [{ label: '查看行程', uri: trip.viewerGrantUrl }] : []);
   }
   return card('#D64545', '已逾時 120 分鐘：請評估通報', trip, [
-    locationText(trip.lastLocationStatus),
+    ...locationDetails(trip),
     `通報摘要：${trip.reportText ?? '請整理隊伍與路線資訊後通報。'}`,
     '系統尚未自動聯絡 119，請由留守人員依現況判斷是否通報。',
     ...(!trip.viewerGrantUrl ? ['請透過 LINE 聯絡已綁定的個別留守人員取得行程資訊。'] : []),
