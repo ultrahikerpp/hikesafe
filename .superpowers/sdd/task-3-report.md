@@ -56,3 +56,20 @@ The implementation was then added minimally and the focused tests passed.
   the shared `LineMessage` type unchanged.
 - The build emitted Next.js's existing multi-lockfile workspace-root warning;
   it did not affect compilation or type checking.
+
+## Reviewer fix: guardian viewer location source
+
+- Added `locationSource` to the guardian-viewer check-in query and returned it as
+  `location.source` for available locations.
+- The returned source is constrained to the persisted `gps`, `network`, or
+  `line` values. Available LINE locations retain null accuracy; GPS and network
+  accuracy values are unchanged.
+- Unavailable and redacted locations still return `null`; authorization behavior
+  was not changed.
+- Regression test coverage exercises LINE, GPS, and network source/accuracy
+  payloads through `loadGuardianViewer`.
+
+Verification for this fix:
+
+- `npm test -- tests/features/guardian-viewer.test.ts tests/api/guardian-viewer.test.ts tests/features/line-messages.test.ts tests/features/alert-process.test.ts tests/features/report.test.ts` — 5 files, 40 tests passed.
+- `git diff --check` — passed.
