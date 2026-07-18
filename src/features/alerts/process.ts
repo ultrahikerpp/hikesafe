@@ -44,6 +44,14 @@ export interface AlertProcessRepository extends AlertDeliveryRepository {
 
 export interface ProcessDueAlertsInput { now: Date; repository?: AlertProcessRepository; send?: (delivery: AlertDelivery) => Promise<void>; }
 export interface AlertProcessResult { claimed: number; sent: number; failed: number; skipped: number; }
+type ReportableCheckIn = {
+  locationStatus: 'available' | 'unavailable' | 'redacted';
+  latitude: number | null;
+  longitude: number | null;
+  accuracyMeters: number | null;
+  locationCapturedAt: Date | null;
+  locationSource: 'gps' | 'network' | 'line' | null;
+};
 
 const retryDelaysMinutes = [1, 5, 15, 30] as const;
 const retryWindowMs = (23 * 60 + 45) * 60_000;
@@ -62,6 +70,21 @@ export const materializeDeliveryMessages = (messages: LineMessage[], deliveryId:
 const noOpSend = async () => undefined;
 const isRetryConflict = (error: unknown) => typeof error === 'object' && error !== null && 'status' in error && error.status === 409;
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : 'LINE delivery failed';
+
+export const toEmergencyReportLocation = (checkIn: ReportableCheckIn | undefined) =>
+  checkIn?.locationStatus === 'available' &&
+  checkIn.latitude !== null &&
+  checkIn.longitude !== null &&
+  checkIn.locationCapturedAt !== null &&
+  checkIn.locationSource !== null
+    ? {
+      latitude: checkIn.latitude,
+      longitude: checkIn.longitude,
+      accuracyMeters: checkIn.accuracyMeters,
+      capturedAt: checkIn.locationCapturedAt,
+      source: checkIn.locationSource,
+    }
+    : null;
 
 export const processDueAlerts = async ({ now, repository = databaseRepository, send = noOpSend }: ProcessDueAlertsInput): Promise<AlertProcessResult> => {
   const claims = await repository.claimDueActiveEvents({ now, limit: 100 });
@@ -219,11 +242,9 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
       if (deadline <= now) return { outcome: 'expired' as const };
       let messages = delivery.message as LineMessage[] | null;
       if (!messages) {
-        const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, locationStatus: checkIns.locationStatus, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationCapturedAt: checkIns.locationCapturedAt }).from(checkIns).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
+        const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, locationStatus: checkIns.locationStatus, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationCapturedAt: checkIns.locationCapturedAt, locationSource: checkIns.locationSource }).from(checkIns).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
         const members = await transaction.select({ name: users.displayName }).from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId)).where(eq(tripMembers.tripId, delivery.tripId));
-        const location = lastCheckIn?.locationStatus === 'available' && lastCheckIn.latitude !== null && lastCheckIn.longitude !== null && lastCheckIn.accuracyMeters !== null && lastCheckIn.locationCapturedAt !== null
-          ? { latitude: lastCheckIn.latitude, longitude: lastCheckIn.longitude, accuracyMeters: lastCheckIn.accuracyMeters, capturedAt: lastCheckIn.locationCapturedAt }
-          : null;
+        const location = toEmergencyReportLocation(lastCheckIn);
         const report = buildEmergencyReport({
           team: members.map((member) => member.name), route: delivery.routeName,
           startedAt: delivery.startedAt ?? delivery.startsAt, plannedFinishAt: delivery.plannedFinishAt,

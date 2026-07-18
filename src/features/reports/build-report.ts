@@ -3,6 +3,7 @@ export interface EmergencyReportLocation {
   longitude: number;
   accuracyMeters: number | null;
   capturedAt: Date;
+  source: 'gps' | 'network' | 'line';
 }
 
 export interface EmergencyReportInput {
@@ -23,7 +24,7 @@ export interface EmergencyReportData {
   route: string;
   startedAt: string;
   plannedFinishAt: string;
-  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number | null; capturedAt: string } | null } | null;
+  lastCheckIn: { at: string; location: { latitude: number; longitude: number; accuracyMeters: number | null; capturedAt: string; source: 'gps' | 'network' | 'line' } | null } | null;
   vehicle: string;
   equipment: string[];
   checkpoints: string[];
@@ -51,6 +52,9 @@ const taipeiTime = (value: string) => {
   return `${part('year')}-${part('month')}-${part('day')} ${part('hour')}:${part('minute')} Asia/Taipei`;
 };
 
+const locationTimeLabel = (source: EmergencyReportLocation['source']) =>
+  source === 'line' ? 'LINE 回報時間' : 'GPS 時間';
+
 export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyReport => {
   const location = trip.lastCheckIn?.location;
   const data: EmergencyReportData = {
@@ -65,6 +69,7 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
         longitude: location.longitude,
         accuracyMeters: location.accuracyMeters,
         capturedAt: location.capturedAt.toISOString(),
+        source: location.source,
       } : null,
     } : null,
     vehicle: trip.vehicle,
@@ -85,7 +90,7 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
     const current = data.lastCheckIn.location;
     lines.push(
       `最後位置：${current.latitude}, ${current.longitude}`,
-      `GPS 時間：${taipeiTime(current.capturedAt)}`,
+      `${locationTimeLabel(current.source)}：${taipeiTime(current.capturedAt)}`,
     );
     if (current.accuracyMeters !== null) {
       lines.splice(lines.length - 1, 0, `GPS 精度：${current.accuracyMeters} 公尺`);
@@ -129,12 +134,13 @@ export const loadEmergencyReport = async (tripId: string): Promise<EmergencyRepo
       longitude: checkIns.longitude,
       accuracyMeters: checkIns.accuracyMeters,
       locationCapturedAt: checkIns.locationCapturedAt,
+      locationSource: checkIns.locationSource,
     }).from(checkIns).where(eq(checkIns.tripId, tripId)).orderBy(desc(checkIns.createdAt)).limit(1),
   ]);
   const checkIn = lastCheckIn[0];
   const location = checkIn?.locationStatus === 'available' && checkIn.latitude !== null && checkIn.longitude !== null &&
-    checkIn.locationCapturedAt !== null
-    ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters, capturedAt: checkIn.locationCapturedAt }
+    checkIn.locationCapturedAt !== null && checkIn.locationSource !== null
+    ? { latitude: checkIn.latitude, longitude: checkIn.longitude, accuracyMeters: checkIn.accuracyMeters, capturedAt: checkIn.locationCapturedAt, source: checkIn.locationSource }
     : null;
   return buildEmergencyReport({
     team: team.map((member) => member.name),

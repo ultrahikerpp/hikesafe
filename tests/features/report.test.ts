@@ -63,6 +63,30 @@ describe('buildEmergencyReport', () => {
     expect(report.data.lastCheckIn?.location).toBeNull();
   });
 
+  it('labels a LINE-backed timestamp without inventing GPS accuracy', () => {
+    const report = buildEmergencyReport({
+      ...trip,
+      lastCheckIn: {
+        at: new Date('2026-07-12T05:10:00.000Z'),
+        location: {
+          latitude: 23.4701,
+          longitude: 120.9502,
+          accuracyMeters: null,
+          capturedAt: new Date('2026-07-12T05:09:00.000Z'),
+          source: 'line',
+        },
+      },
+    });
+
+    expect(report.text).toContain('最後位置：23.4701, 120.9502');
+    expect(report.text).toContain('LINE 回報時間：2026-07-12 13:09 Asia/Taipei');
+    expect(report.text).not.toContain('GPS 精度');
+    expect(report.text).not.toContain('GPS 時間');
+    expect(report.data.lastCheckIn?.location).toEqual(
+      expect.objectContaining({ accuracyMeters: null, source: 'line' }),
+    );
+  });
+
   it('serializes real route checkpoint and evacuation objects by their names', () => {
     const report = buildEmergencyReport({
       ...trip,

@@ -6,6 +6,7 @@ import {
   processDueAlerts,
   retryDeadlineAt,
   retryAt,
+  toEmergencyReportLocation,
   type AlertDeliveryWork,
   type AlertProcessRepository,
 } from '@/src/features/alerts/process';
@@ -36,6 +37,23 @@ const repository = (overrides: Partial<AlertProcessRepository> = {}): AlertProce
 });
 
 describe('processDueAlerts', () => {
+  it('keeps LINE check-in coordinates for emergency reports even when accuracy is null', () => {
+    expect(toEmergencyReportLocation({
+      locationStatus: 'available',
+      latitude: 23.4701,
+      longitude: 120.9502,
+      accuracyMeters: null,
+      locationCapturedAt: new Date('2026-07-12T05:09:00.000Z'),
+      locationSource: 'line',
+    })).toEqual({
+      latitude: 23.4701,
+      longitude: 120.9502,
+      accuracyMeters: null,
+      capturedAt: new Date('2026-07-12T05:09:00.000Z'),
+      source: 'line',
+    });
+  });
+
   it('derives the same raw viewer token from delivery id and grant version without persisting it', () => {
     const one = createGrantToken('delivery-1', 2, 'grant-secret');
     const two = createGrantToken('delivery-1', 2, 'grant-secret');
