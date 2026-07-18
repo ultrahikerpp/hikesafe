@@ -112,6 +112,7 @@ describe('LINE webhook binding', () => {
     const body = JSON.stringify({
       events: [{
         type: 'message',
+        webhookEventId: 'binding-event-1',
         replyToken: 'reply-token',
         source,
         message: { type: 'text', text: '綁定 ABC123' },
@@ -129,7 +130,10 @@ describe('LINE webhook binding', () => {
 
     expect(response.status).toBe(200);
     expect(repository.bound).toEqual([{ sourceType, sourceId }]);
-    expect(reply).toHaveBeenCalledWith('reply-token', '已綁定 HikeSafe 留守通知');
+    expect(reply).toHaveBeenCalledWith('reply-token', [{
+      type: 'text',
+      text: '已綁定 HikeSafe 留守通知\nHikeSafe guardian notifications linked',
+    }]);
     expect(JSON.stringify(logger.error.mock.calls)).not.toContain(accessToken);
   });
 
@@ -143,6 +147,7 @@ describe('LINE webhook binding', () => {
     const event = (userId: string) => JSON.stringify({
       events: [{
         type: 'message',
+        webhookEventId: 'binding-event-2',
         replyToken: 'reply-token',
         source: { type: 'group', groupId: 'group-1', userId },
         message: { type: 'text', text: '綁定 ABC123' },
@@ -184,6 +189,7 @@ describe('LINE webhook binding', () => {
         { type: 'follow', source: { type: 'user', userId: 'line-user-1' } },
         {
           type: 'message',
+          webhookEventId: 'binding-event-3',
           replyToken: 'reply-token',
           source: { type: 'group', groupId: 'group-1', userId: 'line-user-1' },
           message: { type: 'text', text: '綁定 ABC123' },
@@ -206,6 +212,7 @@ describe('LINE webhook binding', () => {
     const body = JSON.stringify({
       events: [{
         type: 'message',
+        webhookEventId: 'binding-event-4',
         replyToken: 'reply-token',
         source: { type: 'user', userId: 'line-user-1' },
         message: { type: 'text', text: '綁定 ABC123' },

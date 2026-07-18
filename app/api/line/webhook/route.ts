@@ -8,6 +8,12 @@ import {
   type BindingRepository,
   type LineSourceType,
 } from '@/src/features/line/bindings';
+import { bilingual } from '@/src/features/i18n/copy';
+import {
+  handleLineConversation,
+  type LineConversationEvent,
+} from '@/src/features/line/conversation';
+import type { LineMessage } from '@/src/features/line/messages';
 
 const sourceSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('user'), userId: z.string().min(1) }),
@@ -23,8 +29,9 @@ const sourceSchema = z.discriminatedUnion('type', [
   }),
 ]);
 
-const messageEventSchema = z.object({
+const textEventSchema = z.object({
   type: z.literal('message'),
+  webhookEventId: z.string().min(1),
   replyToken: z.string().min(1),
   source: sourceSchema,
   message: z.object({
@@ -33,6 +40,32 @@ const messageEventSchema = z.object({
   }),
 });
 
+const locationEventSchema = z.object({
+  type: z.literal('message'),
+  webhookEventId: z.string().min(1),
+  replyToken: z.string().min(1),
+  source: sourceSchema,
+  message: z.object({
+    type: z.literal('location'),
+    latitude: z.number(),
+    longitude: z.number(),
+  }),
+});
+
+const postbackEventSchema = z.object({
+  type: z.literal('postback'),
+  webhookEventId: z.string().min(1),
+  replyToken: z.string().min(1),
+  source: sourceSchema,
+  postback: z.object({ data: z.string() }),
+});
+
+const conversationEventSchema = z.union([
+  textEventSchema,
+  locationEventSchema,
+  postbackEventSchema,
+]);
+
 const webhookSchema = z.object({
   events: z.array(z.unknown()),
 });
@@ -40,7 +73,8 @@ const webhookSchema = z.object({
 interface WebhookDependencies {
   repository?: BindingRepository;
   now?: () => Date;
-  reply?: (replyToken: string, text: string) => Promise<void>;
+  conversation?: (event: LineConversationEvent) => Promise<LineMessage[]>;
+  reply?: (replyToken: string, messages: LineMessage[]) => Promise<void>;
   logger?: Pick<Console, 'error'>;
 }
 
@@ -53,14 +87,14 @@ const validSignature = (body: string, signature: string | null) => {
   return expected.length === received.length && timingSafeEqual(expected, received);
 };
 
-const replyToLine = async (replyToken: string, text: string) => {
+const replyToLine = async (replyToken: string, messages: LineMessage[]) => {
   const response = await fetch('https://api.line.me/v2/bot/message/reply', {
     method: 'POST',
     headers: {
       authorization: `Bearer ${getEnv().LINE_CHANNEL_ACCESS_TOKEN}`,
       'content-type': 'application/json',
     },
-    body: JSON.stringify({ replyToken, messages: [{ type: 'text', text }] }),
+    body: JSON.stringify({ replyToken, messages }),
   });
   if (!response.ok) throw new Error('LINE reply failed');
 };
@@ -77,6 +111,14 @@ const sourceValue = (source: z.infer<typeof sourceSchema>): {
     return { ownerLineUserId: source.userId, sourceType: 'room', sourceId: source.roomId };
   }
   return { ownerLineUserId: source.userId, sourceType: 'user', sourceId: source.userId };
+};
+
+const bindingSuccess: LineMessage = {
+  type: 'text',
+  text: bilingual(
+    '已綁定 HikeSafe 留守通知',
+    'HikeSafe guardian notifications linked',
+  ),
 };
 
 export const handleLineWebhook = async (
@@ -96,27 +138,54 @@ export const handleLineWebhook = async (
   }
 
   for (const value of payload.events) {
-    const parsedEvent = messageEventSchema.safeParse(value);
+    const parsedEvent = conversationEventSchema.safeParse(value);
     if (!parsedEvent.success) continue;
     const event = parsedEvent.data;
-    const match = /^綁定 ([A-Z0-9]{6})$/.exec(event.message.text.trim());
-    if (!match) continue;
-    const bound = await consumeBindingCode(
-      {
-        code: match[1],
-        ...sourceValue(event.source),
-        now: (dependencies.now ?? (() => new Date()))(),
-      },
-      dependencies.repository,
-    );
-    if (!bound) continue;
-    try {
-      await (dependencies.reply ?? replyToLine)(
-        event.replyToken,
-        '已綁定 HikeSafe 留守通知',
+    const eventNow = (dependencies.now ?? (() => new Date()))();
+    const match = event.type === 'message' && event.message.type === 'text'
+      ? /^綁定 ([A-Z0-9]{6})$/.exec(event.message.text.trim())
+      : null;
+    if (match) {
+      const bound = await consumeBindingCode(
+        {
+          code: match[1],
+          ...sourceValue(event.source),
+          now: eventNow,
+        },
+        dependencies.repository,
       );
+      if (!bound) continue;
+      try {
+        await (dependencies.reply ?? replyToLine)(event.replyToken, [bindingSuccess]);
+      } catch {
+        (dependencies.logger ?? console).error('Unable to send LINE binding reply');
+      }
+      continue;
+    }
+
+    const conversationEvent: LineConversationEvent = {
+      lineUserId: event.source.userId,
+      eventId: event.webhookEventId,
+      now: eventNow,
+      ...(event.type === 'postback'
+        ? { postbackData: event.postback.data }
+        : event.message.type === 'text'
+          ? { text: event.message.text }
+          : {
+              location: {
+                latitude: event.message.latitude,
+                longitude: event.message.longitude,
+                capturedAt: eventNow,
+                source: 'line' as const,
+              },
+            }),
+    };
+    const messages = await (dependencies.conversation ?? handleLineConversation)(conversationEvent);
+    if (messages.length === 0) continue;
+    try {
+      await (dependencies.reply ?? replyToLine)(event.replyToken, messages);
     } catch {
-      (dependencies.logger ?? console).error('Unable to send LINE binding reply');
+      (dependencies.logger ?? console).error('Unable to send LINE conversation reply');
     }
   }
   return new Response('OK');
