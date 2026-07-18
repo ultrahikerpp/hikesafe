@@ -200,13 +200,18 @@ export const copy = {
     `最後位置：${latitude}, ${longitude}`,
     `Latest location: ${latitude}, ${longitude}`,
   ),
-  reportLocationTime: (source: 'gps' | 'network' | 'line', time: string) => source === 'line'
-    ? bilingual(`LINE 回報時間：${time}`, `LINE check-in time: ${time}`)
-    : bilingual(`GPS 時間：${time}`, `GPS time: ${time}`),
-  reportGpsAccuracy: (accuracyMeters: number) => bilingual(
-    `GPS 精度：${accuracyMeters} 公尺`,
-    `GPS accuracy: ${accuracyMeters} meters`,
-  ),
+  reportLocationTime: (source: 'gps' | 'network' | 'line', time: string) => ({
+    gps: bilingual(`GPS 時間：${time}`, `GPS time: ${time}`),
+    network: bilingual(`網路定位時間：${time}`, `Network location time: ${time}`),
+    line: bilingual(`LINE 回報時間：${time}`, `LINE check-in time: ${time}`),
+  })[source],
+  reportLocationAccuracy: (source: 'gps' | 'network' | 'line', accuracyMeters: number | null) => {
+    if (source === 'line') return bilingual('位置精度：LINE 未提供', 'Location accuracy: Not provided by LINE');
+    if (accuracyMeters === null) return undefined;
+    return source === 'gps'
+      ? bilingual(`GPS 精度：${accuracyMeters} 公尺`, `GPS accuracy: ${accuracyMeters} meters`)
+      : bilingual(`網路定位精度：${accuracyMeters} 公尺`, `Network location accuracy: ${accuracyMeters} meters`);
+  },
   reportVehicle: (vehicle: string) => bilingual(`車輛：${vehicle || '未提供'}`, `Vehicle: ${vehicle || 'Not provided'}`),
   reportEquipment: (items: string[]) => {
     const value = listValues(items);

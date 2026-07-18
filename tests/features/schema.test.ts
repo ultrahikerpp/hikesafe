@@ -195,6 +195,10 @@ describe('initial migration contract', () => {
     'drizzle/0011_line_location_source.sql',
     'utf8',
   );
+  const manualLineLocationMigration = readFileSync(
+    'docs/supabase-line-location-migration.sql',
+    'utf8',
+  );
 
   it('enforces location consistency including redaction', () => {
     const normalizedMigration = migration.replaceAll('"check_ins".', '');
@@ -261,15 +265,21 @@ describe('initial migration contract', () => {
     );
   });
 
-  it('allows null accuracy only for LINE locations in the follow-up migration', () => {
-    expect(lineLocationMigration).toContain(
+  it.each([
+    ['Drizzle', lineLocationMigration],
+    ['manual Supabase', manualLineLocationMigration],
+  ])('uses the new LINE enum value transaction-safely in the %s migration', (_, sql) => {
+    expect(sql).toContain(
       `ALTER TYPE "public"."location_source" ADD VALUE IF NOT EXISTS 'line';`,
     );
-    expect(lineLocationMigration).toContain(
+    expect(sql).toContain(
       `"location_source" IN ('gps', 'network') AND "accuracy_meters" IS NOT NULL`,
     );
-    expect(lineLocationMigration).toContain(
-      `"location_source" = 'line' AND "accuracy_meters" IS NULL`,
+    expect(sql).toContain(
+      `"location_source"::text = 'line' AND "accuracy_meters" IS NULL`,
+    );
+    expect(sql).not.toContain(
+      `"location_source" = 'line'`,
     );
   });
 });

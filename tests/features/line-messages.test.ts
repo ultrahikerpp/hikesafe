@@ -47,6 +47,18 @@ describe('buildLineMessage', () => {
       { type: 'action', action: { type: 'postback', label: '雪山東峰線', data: 'hikesafe:trip:trip-2:select' } },
     ]);
     expect(chooser.quickReply?.items.some(({ action }) => action.type === 'location')).toBe(false);
+    expect(chooser.quickReply?.items.every(({ action }) => Array.from(action.label).length <= 20)).toBe(true);
+  });
+
+  it('uses a bilingual text-only web fallback for 14 active trips', () => {
+    const chooser = buildTripChooser(Array.from({ length: 14 }, (_, index) => ({
+      id: `trip-${index + 1}`,
+      routeName: `行程 ${index + 1}`,
+    })));
+
+    expect(chooser.type).toBe('text');
+    expect(chooser.text).toMatch(/請開啟 HikeSafe 網頁.*\n.*Open HikeSafe on the web/s);
+    expect(chooser.quickReply).toBeUndefined();
   });
 
   it('builds a bilingual help confirmation with explicit confirm and cancel actions', () => {

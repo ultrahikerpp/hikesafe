@@ -84,9 +84,8 @@ export const buildEmergencyReport = (trip: EmergencyReportInput): EmergencyRepor
       copy.reportLocation(current.latitude, current.longitude),
       copy.reportLocationTime(current.source, taipeiTime(current.capturedAt)),
     );
-    if (current.accuracyMeters !== null) {
-      lines.splice(lines.length - 1, 0, copy.reportGpsAccuracy(current.accuracyMeters));
-    }
+    const accuracy = copy.reportLocationAccuracy(current.source, current.accuracyMeters);
+    if (accuracy) lines.splice(lines.length - 1, 0, accuracy);
   } else {
     lines.push(copy.reportUnavailableLocation);
   }

@@ -72,13 +72,24 @@ export const buildCheckInPrompt = ({ tripId, includeLocation }: { tripId: string
   },
 });
 
-export const buildTripChooser = (trips: LineTripChoice[]): LineMessage => ({
-  type: 'text',
-  text: bilingual('請選擇要回報的行程', 'Choose a trip to check in'),
-  quickReply: {
-    items: trips.map((trip) => ({ type: 'action', action: postback(conciseLabel(trip.routeName), `hikesafe:trip:${trip.id}:select`) })),
-  },
-});
+export const buildTripChooser = (trips: LineTripChoice[]): LineMessage => {
+  if (trips.length > 13) {
+    return {
+      type: 'text',
+      text: bilingual(
+        '行程數量超過 LINE 可顯示的選項，請開啟 HikeSafe 網頁選擇行程。',
+        'There are too many trips to show in LINE. Open HikeSafe on the web to choose a trip.',
+      ),
+    };
+  }
+  return {
+    type: 'text',
+    text: bilingual('請選擇要回報的行程', 'Choose a trip to check in'),
+    quickReply: {
+      items: trips.map((trip) => ({ type: 'action', action: postback(conciseLabel(trip.routeName), `hikesafe:trip:${trip.id}:select`) })),
+    },
+  };
+};
 
 export const buildHelpConfirmation = (tripId: string): LineMessage => ({
   type: 'text',

@@ -25,6 +25,7 @@ describe('buildEmergencyReport', () => {
           longitude: 120.9502,
           accuracyMeters: 12,
           capturedAt: new Date('2026-07-12T05:09:00.000Z'),
+          source: 'gps',
         },
       },
     });
@@ -34,7 +35,7 @@ describe('buildEmergencyReport', () => {
     expect(report.text).toContain(copy.reportStartedAt('2026-07-12 09:00 Asia/Taipei'));
     expect(report.text).toContain(copy.reportPlannedFinish('2026-07-12 17:00 Asia/Taipei'));
     expect(report.text).toContain(copy.reportLastCheckIn('2026-07-12 13:10 Asia/Taipei'));
-    expect(report.text).toContain(copy.reportGpsAccuracy(12));
+    expect(report.text).toContain(copy.reportLocationAccuracy('gps', 12));
     expect(report.text).toContain(copy.reportLocationTime('gps', '2026-07-12 13:09 Asia/Taipei'));
     expect(report.text).toContain(copy.reportVehicle(trip.vehicle));
     expect(report.text).toContain(copy.reportEquipment(trip.equipment));
@@ -81,11 +82,33 @@ describe('buildEmergencyReport', () => {
 
     expect(report.text).toContain(copy.reportLocation(23.4701, 120.9502));
     expect(report.text).toContain(copy.reportLocationTime('line', '2026-07-12 13:09 Asia/Taipei'));
+    expect(report.text).toContain(copy.reportLocationAccuracy('line', null));
+    expect(report.text).toContain('位置精度：LINE 未提供\nLocation accuracy: Not provided by LINE');
     expect(report.text).not.toMatch(/GPS 精度|GPS accuracy/);
     expect(report.text).not.toMatch(/GPS 時間|GPS time/);
     expect(report.data.lastCheckIn?.location).toEqual(
       expect.objectContaining({ accuracyMeters: null, source: 'line' }),
     );
+  });
+
+  it('labels network time and accuracy as network-derived', () => {
+    const report = buildEmergencyReport({
+      ...trip,
+      lastCheckIn: {
+        at: new Date('2026-07-12T05:10:00.000Z'),
+        location: {
+          latitude: 23.4701,
+          longitude: 120.9502,
+          accuracyMeters: 18,
+          capturedAt: new Date('2026-07-12T05:09:00.000Z'),
+          source: 'network',
+        },
+      },
+    });
+
+    expect(report.text).toContain(copy.reportLocationTime('network', '2026-07-12 13:09 Asia/Taipei'));
+    expect(report.text).toContain(copy.reportLocationAccuracy('network', 18));
+    expect(report.text).not.toMatch(/GPS 時間|GPS time|GPS 精度|GPS accuracy/);
   });
 
   it('serializes real route checkpoint and evacuation objects by their names', () => {
