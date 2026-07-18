@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   calculatePlannedFinish,
@@ -42,13 +42,23 @@ export function TripForm() {
   const [submitting, setSubmitting] = useState(false);
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [error, setError] = useState('');
+  const defaultsTouched = useRef({
+    confirmed: false,
+    equipment: false,
+    guardians: false,
+    leaderPhone: false,
+    route: false,
+    vehicle: false,
+  });
 
   const refreshRoutes = useCallback(async () => {
     const response = await fetch('/api/routes');
     if (!response.ok) throw new Error('Route catalog unavailable');
     const body = await response.json() as { routes: QuickRouteOption[] };
     setRoutes(body.routes);
+    setRouteVersionId((id) => body.routes.some((route) => route.id === id) ? id : '');
     setCatalogAvailable(true);
+    setConfirmed(false);
   }, []);
 
   const refreshBindings = useCallback(async () => {
@@ -66,11 +76,28 @@ export function TripForm() {
     void fetch('/api/trips/quick-defaults').then(async (response) => {
       if (!response.ok) return;
       const { defaults } = await response.json() as { defaults: QuickTripDefaultsResponse };
-      setLastRouteVersionId(defaults.routeVersionId);
-      setGuardianBindingIds(defaults.guardianBindingIds);
-      setVehicle(defaults.vehicle);
-      setEquipment(defaults.equipment.join('\n'));
-      setLeaderPhone(defaults.leaderPhone);
+      if (defaultsTouched.current.confirmed) return;
+      let applied = false;
+      if (!defaultsTouched.current.route) {
+        setLastRouteVersionId(defaults.routeVersionId);
+      }
+      if (!defaultsTouched.current.guardians) {
+        setGuardianBindingIds(defaults.guardianBindingIds);
+        applied = true;
+      }
+      if (!defaultsTouched.current.vehicle) {
+        setVehicle(defaults.vehicle);
+        applied = true;
+      }
+      if (!defaultsTouched.current.equipment) {
+        setEquipment(defaults.equipment.join('\n'));
+        applied = true;
+      }
+      if (!defaultsTouched.current.leaderPhone) {
+        setLeaderPhone(defaults.leaderPhone);
+        applied = true;
+      }
+      if (applied) setConfirmed(false);
     }).catch(() => undefined);
   }, [refreshBindings, refreshRoutes]);
 
@@ -96,6 +123,7 @@ export function TripForm() {
   }, [routeQuery, routes]);
 
   const chooseRoute = (id: string) => {
+    defaultsTouched.current.route = true;
     setRouteVersionId(id);
     setConfirmed(false);
     const route = routes.find((item) => item.id === id);
@@ -133,34 +161,43 @@ export function TripForm() {
     confirmed,
   });
 
+  const refreshStaleChoices = async () => {
+    setSubmitting(false);
+    await Promise.allSettled([refreshRoutes(), refreshBindings()]);
+  };
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!canSubmit) return;
     setSubmitting(true);
     setError('');
-    const response = await fetch('/api/trips', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        routeVersionId,
-        startsAt: new Date(startsAt).toISOString(),
-        plannedFinishAt: new Date(plannedFinishAt).toISOString(),
-        members: [],
-        guardianBindingIds: selectedGuardianBindingIds,
-        vehicle: vehicle.trim(),
-        equipment: splitLines(equipment),
-        leaderPhone,
-        idempotencyKey,
-      }),
-    });
-    const body = await response.json() as { tripId?: string; error?: string };
-    if (!response.ok || !body.tripId) {
-      setSubmitting(false);
-      setError(body.error ?? '無法建立行程');
-      await Promise.allSettled([refreshRoutes(), refreshBindings()]);
-      return;
+    try {
+      const response = await fetch('/api/trips', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          routeVersionId,
+          startsAt: new Date(startsAt).toISOString(),
+          plannedFinishAt: new Date(plannedFinishAt).toISOString(),
+          members: [],
+          guardianBindingIds: selectedGuardianBindingIds,
+          vehicle: vehicle.trim(),
+          equipment: splitLines(equipment),
+          leaderPhone,
+          idempotencyKey,
+        }),
+      });
+      const body = await response.json() as { tripId?: string; error?: string };
+      if (!response.ok || !body.tripId) {
+        setError(body.error ?? '無法建立行程');
+        await refreshStaleChoices();
+        return;
+      }
+      window.location.assign(`/trips/${body.tripId}`);
+    } catch {
+      setError('無法建立行程');
+      await refreshStaleChoices();
     }
-    window.location.assign(`/trips/${body.tripId}`);
   };
 
   return <form className="trip-form" onSubmit={submit}>
@@ -201,6 +238,7 @@ export function TripForm() {
       <legend>本次留守人</legend>
       {activeBindings.map((binding) => <label key={binding.id}>
         <input type="checkbox" checked={guardianBindingIds.includes(binding.id)} onChange={(event) => {
+          defaultsTouched.current.guardians = true;
           setConfirmed(false);
           setGuardianBindingIds((ids) => event.target.checked
             ? [...new Set([...ids, binding.id])]
@@ -216,18 +254,31 @@ export function TripForm() {
     <details>
       <summary>行程與緊急資料</summary>
       <label>交通工具
-        <input required value={vehicle} onChange={(event) => { setVehicle(event.target.value); setConfirmed(false); }} />
+        <input required value={vehicle} onChange={(event) => {
+          defaultsTouched.current.vehicle = true;
+          setVehicle(event.target.value);
+          setConfirmed(false);
+        }} />
       </label>
       <label>裝備（每行一項）
-        <textarea value={equipment} onChange={(event) => setEquipment(event.target.value)} />
+        <textarea value={equipment} onChange={(event) => {
+          defaultsTouched.current.equipment = true;
+          setEquipment(event.target.value);
+        }} />
       </label>
       <label>領隊聯絡電話（供留守聯絡）
-        <input type="tel" value={leaderPhone} onChange={(event) => setLeaderPhone(event.target.value)} />
+        <input type="tel" value={leaderPhone} onChange={(event) => {
+          defaultsTouched.current.leaderPhone = true;
+          setLeaderPhone(event.target.value);
+        }} />
       </label>
     </details>
 
     <label className="confirmation-row">
-      <input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} />
+      <input type="checkbox" checked={confirmed} onChange={(event) => {
+        defaultsTouched.current.confirmed = true;
+        setConfirmed(event.target.checked);
+      }} />
       我已確認路線、預計下山時間與留守人
     </label>
     <button type="submit" disabled={!canSubmit}>{submitting ? '建立中…' : '建立行程草稿'}</button>
