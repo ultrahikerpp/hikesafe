@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { copy } from '@/src/features/i18n/copy';
+import { Notice } from '@/app/components/Notice';
 
 export function LiffBootstrap({ onReady }: { onReady?: () => void }) {
   const [state, setState] = useState<'loading' | 'ready' | 'unconfigured' | 'error'>('loading');
@@ -25,7 +26,7 @@ export function LiffBootstrap({ onReady }: { onReady?: () => void }) {
   }, []);
 
   if (state === 'ready') return null;
-  if (state === 'unconfigured') return <p role="status">{copy.liffUnconfigured}</p>;
-  if (state === 'error') return <p role="alert">{copy.liffLoginError}</p>;
-  return <p role="status">{copy.liffLoading}</p>;
+  if (state === 'unconfigured') return <Notice tone="warning">{copy.liffUnconfigured}</Notice>;
+  if (state === 'error') return <Notice tone="error">{copy.liffLoginError}</Notice>;
+  return <p className="source-note" role="status">{copy.liffLoading}</p>;
 }

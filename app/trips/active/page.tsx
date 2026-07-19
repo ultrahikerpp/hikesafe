@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 
 import { sessionCookie, verifySession } from '@/src/features/auth/session';
 import { copy } from '@/src/features/i18n/copy';
+import { Card } from '@/app/components/Card';
 
 export default async function ActiveTripPage() {
   const token = (await cookies()).get(sessionCookie.name)?.value;
@@ -21,8 +22,10 @@ export default async function ActiveTripPage() {
   }
   return <main>
     <h1>{copy.currentTrip}</h1>
-    <p>{copy.noActiveTrip}</p>
-    <p>{copy.noActiveTripInstructions}</p>
-    <Link href="/trips/new">{copy.createTrip}</Link>
+    <Card>
+      <p>{copy.noActiveTrip}</p>
+      <p className="source-note">{copy.noActiveTripInstructions}</p>
+      <Link className="btn btn-primary" href="/trips/new">{copy.createTrip}</Link>
+    </Card>
   </main>;
 }
