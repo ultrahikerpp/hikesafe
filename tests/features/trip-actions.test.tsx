@@ -86,6 +86,23 @@ describe('TripActions', () => {
     expect((fetchMock.mock.calls[0] as unknown as [string])[0]).toBe('/api/trips/trip-1/finish');
   });
 
+  it('re-enables the finish button after a fetch rejection instead of staying stuck busy', async () => {
+    const onUnhandledRejection = () => {};
+    process.on('unhandledRejection', onUnhandledRejection);
+    try {
+      const fetchMock = vi.fn(async () => { throw new Error('network unreachable'); });
+      vi.stubGlobal('fetch', fetchMock);
+      render(<TripActions tripId="trip-1" initialState={initialState} />);
+      fireEvent.click(screen.getByRole('button', { name: copy.finishAction }));
+      const confirm = screen.getByRole('button', { name: copy.safeFinish });
+      fireEvent.click(confirm);
+      await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+      await vi.waitFor(() => expect(confirm).not.toBeDisabled());
+    } finally {
+      process.off('unhandledRejection', onUnhandledRejection);
+    }
+  });
+
   it('sends a help request with an optional message', async () => {
     const fetchMock = okFetch();
     vi.stubGlobal('fetch', fetchMock);

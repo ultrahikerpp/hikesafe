@@ -104,51 +104,60 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
   const extend = async (minutes: number) => {
     if (!Number.isFinite(minutes) || minutes <= 0) return;
     setBusy(true);
-    const response = await fetch(`/api/trips/${tripId}/extend`, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        plannedFinishAt: new Date(Date.now() + minutes * 60_000).toISOString(),
-        idempotencyKey: crypto.randomUUID(),
-      }),
-    });
-    setNotice(response.ok
-      ? { tone: 'success', text: copy.finishTimeExtended }
-      : { tone: 'error', text: copy.finishTimeExtensionError });
-    setBusy(false);
-    setOpenAction(undefined);
+    try {
+      const response = await fetch(`/api/trips/${tripId}/extend`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          plannedFinishAt: new Date(Date.now() + minutes * 60_000).toISOString(),
+          idempotencyKey: crypto.randomUUID(),
+        }),
+      });
+      setNotice(response.ok
+        ? { tone: 'success', text: copy.finishTimeExtended }
+        : { tone: 'error', text: copy.finishTimeExtensionError });
+      setOpenAction(undefined);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const finish = async () => {
     setBusy(true);
-    const location = await captureLocation();
-    const response = await fetch(`/api/trips/${tripId}/finish`, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ location, idempotencyKey: crypto.randomUUID() }),
-    });
-    setNotice(response.ok
-      ? { tone: 'success', text: copy.tripFinished }
-      : { tone: 'error', text: copy.tripFinishError });
-    setBusy(false);
-    setOpenAction(undefined);
+    try {
+      const location = await captureLocation();
+      const response = await fetch(`/api/trips/${tripId}/finish`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ location, idempotencyKey: crypto.randomUUID() }),
+      });
+      setNotice(response.ok
+        ? { tone: 'success', text: copy.tripFinished }
+        : { tone: 'error', text: copy.tripFinishError });
+      setOpenAction(undefined);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const help = async () => {
     setBusy(true);
-    const location = await captureLocation();
-    const response = await fetch(`/api/trips/${tripId}/help`, {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        message: helpMessage.trim() || undefined,
-        location,
-        idempotencyKey: crypto.randomUUID(),
-      }),
-    });
-    setNotice(response.ok
-      ? { tone: 'success', text: copy.helpConfirmation() }
-      : { tone: 'error', text: copy.helpError });
-    setBusy(false);
-    setOpenAction(undefined);
-    setHelpMessage('');
+    try {
+      const location = await captureLocation();
+      const response = await fetch(`/api/trips/${tripId}/help`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          message: helpMessage.trim() || undefined,
+          location,
+          idempotencyKey: crypto.randomUUID(),
+        }),
+      });
+      setNotice(response.ok
+        ? { tone: 'success', text: copy.helpConfirmation() }
+        : { tone: 'error', text: copy.helpError });
+      setOpenAction(undefined);
+      setHelpMessage('');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return <section aria-label={copy.activeTripLabel}>
