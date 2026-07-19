@@ -31,3 +31,9 @@ it('preserves every line of dynamic list values verbatim', () => {
     `檢查點：${checkpoint}\nCheckpoints: ${checkpoint}`,
   );
 });
+
+it('keeps the phase-1 action copy bilingual', () => {
+  expect(copy.quickCheckInSafe).toBe('平安\nSafe');
+  expect(copy.extendByMinutes(30)).toBe('+30 分鐘\n+30 minutes');
+  expect(copy.finishAction).toBe('平安下山（結束行程）\nSafely down (finish trip)');
+});
