@@ -3,6 +3,9 @@
 import { useState } from 'react';
 
 import { copy } from '@/src/features/i18n/copy';
+import { Button } from '@/app/components/Button';
+import { Card } from '@/app/components/Card';
+import { Notice } from '@/app/components/Notice';
 
 const locationFix = (): Promise<{ latitude: number; longitude: number; accuracyMeters: number; capturedAt: string; source: 'gps' } | undefined> => new Promise((resolve) => {
   if (!navigator.geolocation) return resolve(undefined);
@@ -36,15 +39,23 @@ export function DraftTrip({ tripId, routeName, plannedFinishAt, guardians, membe
 
   return <section aria-label={copy.tripDraft}>
     <h1>{copy.tripDraft}</h1>
-    <dl>
-      <div><dt>{copy.route}</dt><dd>{routeName}</dd></div>
-      <div><dt>{copy.plannedFinish}</dt><dd>{new Date(plannedFinishAt).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })}</dd></div>
-      <div><dt>{copy.guardians}</dt><dd>{guardians.length ? copy.guardianNames(guardians) : copy.noBoundGuardian}</dd></div>
-      <div><dt>{copy.members}</dt><dd>{copy.memberNames(members)}</dd></div>
-    </dl>
-    {isOwner && <><button onClick={() => void invite()}>{copy.createSquadInvite}</button>{inviteUrl && <p role="status">{copy.inviteLink(inviteUrl)}</p>}
-      {members.filter((member) => member.role === 'member').map((member) => <button key={member.id} onClick={() => void deputy(member.id)}>{copy.assignDeputy(member.name)}</button>)}</>}
-    <button onClick={() => void start()}>{copy.startAndNotify}</button>
-    {notice && <p role="status">{notice}</p>}
+    <Card>
+      <dl className="status-list">
+        <div><dt>{copy.route}</dt><dd>{routeName}</dd></div>
+        <div><dt>{copy.plannedFinish}</dt><dd>{new Date(plannedFinishAt).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })}</dd></div>
+        <div><dt>{copy.guardians}</dt><dd>{guardians.length ? copy.guardianNames(guardians) : copy.noBoundGuardian}</dd></div>
+        <div><dt>{copy.members}</dt><dd>{copy.memberNames(members)}</dd></div>
+      </dl>
+    </Card>
+    {isOwner && <Card>
+      <Button variant="secondary" onClick={() => void invite()}>{copy.createSquadInvite}</Button>
+      {inviteUrl && <Notice tone="success">{copy.inviteLink(inviteUrl)}</Notice>}
+      {members.filter((member) => member.role === 'member').map((member) =>
+        <Button key={member.id} variant="ghost" onClick={() => void deputy(member.id)}>
+          {copy.assignDeputy(member.name)}
+        </Button>)}
+    </Card>}
+    <Button onClick={() => void start()}>{copy.startAndNotify}</Button>
+    {notice && <Notice tone="warning">{notice}</Notice>}
   </section>;
 }
