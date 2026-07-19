@@ -4,12 +4,18 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 're
 
 import { copy } from '@/src/features/i18n/copy';
 
+import { Button } from '@/app/components/Button';
+import { Card } from '@/app/components/Card';
+import { Chip } from '@/app/components/Chip';
+import { Notice } from '@/app/components/Notice';
+
 import {
   calculatePlannedFinish,
-  canSubmitQuickTrip,
   currentStartValue,
+  missingQuickTripFields,
   type QuickRouteOption,
   type QuickTripDefaultsResponse,
+  type QuickTripField,
 } from './quick-trip-form';
 
 interface GuardianBinding {
@@ -24,6 +30,14 @@ const splitLines = (value: string) => value
   .split(/\n|,/)
   .map((item) => item.trim())
   .filter(Boolean);
+
+const fieldLabels: Record<QuickTripField, string> = {
+  route: copy.route,
+  guardians: copy.tripGuardians,
+  timeWindow: copy.fieldTimeWindow,
+  vehicle: copy.vehicle,
+  confirmation: copy.fieldConfirmation,
+};
 
 export function TripForm() {
   const [routes, setRoutes] = useState<QuickRouteOption[]>([]);
@@ -157,7 +171,7 @@ export function TripForm() {
     await refreshBindings();
   };
 
-  const canSubmit = catalogAvailable && !submitting && canSubmitQuickTrip({
+  const missing = missingQuickTripFields({
     routeVersionId,
     guardianBindingIds: selectedGuardianBindingIds,
     startsAt,
@@ -165,6 +179,7 @@ export function TripForm() {
     vehicle,
     confirmed,
   });
+  const canSubmit = catalogAvailable && !submitting && missing.length === 0;
 
   const refreshStaleChoices = async () => {
     setSubmitting(false);
@@ -207,46 +222,48 @@ export function TripForm() {
 
   return <form className="trip-form" onSubmit={submit}>
     <h1>{copy.quickCreateTrip}</h1>
-    <p>{copy.verifiedRoutesOnly}</p>
+    <p className="source-note">{copy.verifiedRoutesOnly}</p>
 
-    {lastRoute && <button type="button" className="secondary-action" onClick={() => chooseRoute(lastRoute.id)}>
-      {copy.useLastRoute(lastRoute.routeName)}
-    </button>}
-
-    <label>{copy.searchVerifiedRoutes}
-      <input type="search" value={routeQuery} onChange={(event) => setRouteQuery(event.target.value)} />
-    </label>
-    <label>{copy.route}
-      <select required value={routeVersionId} onChange={(event) => chooseRoute(event.target.value)}>
-        <option value="">{copy.selectOption}</option>
-        {renderedRoutes.map((route) => <option key={route.id} value={route.id}>
-          {route.region}｜{route.mountainName}｜{route.routeName}
-        </option>)}
-      </select>
-    </label>
-    {selectedRoute && <p className="source-note"><a href={selectedRoute.sourceUrl}>
-      {selectedRoute.durationMinutes !== null
-        ? copy.routeSourceSummary(selectedRoute.durationMinutes, selectedRoute.sourceOrganization, selectedRoute.sourceVersion, selectedRoute.reviewedAt)
-        : copy.routeSourceMissingDuration(selectedRoute.sourceOrganization, selectedRoute.sourceVersion, selectedRoute.reviewedAt)}
-    </a></p>}
-    {selectedRoute?.sourceReferences?.some((reference) => reference.tier === 'community') &&
-      <p className="source-note">{copy.communitySourceWarning}</p>}
-
-    <div className="quick-time-grid">
-      <label>{copy.startsAt}
-        <input required type="datetime-local" value={startsAt} onChange={(event) => changeStart(event.target.value)} />
+    <Card title={copy.route}>
+      {lastRoute && <Button variant="secondary" onClick={() => chooseRoute(lastRoute.id)}>
+        {copy.useLastRoute(lastRoute.routeName)}
+      </Button>}
+      <label>{copy.searchVerifiedRoutes}
+        <input type="search" value={routeQuery} onChange={(event) => setRouteQuery(event.target.value)} />
       </label>
-      <label>{copy.plannedFinishAt}
-        <input required type="datetime-local" value={plannedFinishAt} onChange={(event) => {
-          setPlannedFinishAt(event.target.value);
-          setFinishWasEdited(true);
-          setConfirmed(false);
-        }} />
+      <label>{copy.route}
+        <select required value={routeVersionId} onChange={(event) => chooseRoute(event.target.value)}>
+          <option value="">{copy.selectOption}</option>
+          {renderedRoutes.map((route) => <option key={route.id} value={route.id}>
+            {route.region}｜{route.mountainName}｜{route.routeName}
+          </option>)}
+        </select>
       </label>
-    </div>
+      {selectedRoute && <p className="source-note"><a href={selectedRoute.sourceUrl}>
+        {selectedRoute.durationMinutes !== null
+          ? copy.routeSourceSummary(selectedRoute.durationMinutes, selectedRoute.sourceOrganization, selectedRoute.sourceVersion, selectedRoute.reviewedAt)
+          : copy.routeSourceMissingDuration(selectedRoute.sourceOrganization, selectedRoute.sourceVersion, selectedRoute.reviewedAt)}
+      </a></p>}
+      {selectedRoute?.sourceReferences?.some((reference) => reference.tier === 'community') &&
+        <p className="source-note">{copy.communitySourceWarning}</p>}
+    </Card>
 
-    <fieldset>
-      <legend>{copy.tripGuardians}</legend>
+    <Card title={copy.sectionTime}>
+      <div className="quick-time-grid">
+        <label>{copy.startsAt}
+          <input required type="datetime-local" value={startsAt} onChange={(event) => changeStart(event.target.value)} />
+        </label>
+        <label>{copy.plannedFinishAt}
+          <input required type="datetime-local" value={plannedFinishAt} onChange={(event) => {
+            setPlannedFinishAt(event.target.value);
+            setFinishWasEdited(true);
+            setConfirmed(false);
+          }} />
+        </label>
+      </div>
+    </Card>
+
+    <Card title={copy.tripGuardians}>
       {activeBindings.map((binding) => <label key={binding.id}>
         <input type="checkbox" checked={guardianBindingIds.includes(binding.id)} onChange={(event) => {
           defaultsTouched.current.guardians = true;
@@ -257,12 +274,12 @@ export function TripForm() {
         }} />
         {binding.displayName || (binding.sourceType === 'group' ? copy.boundGroup : copy.boundGuardian)}
       </label>)}
-      {activeBindings.length === 0 && <p>{copy.noActiveBindings}</p>}
-      <button type="button" className="secondary-action" onClick={() => void createBinding()}>{copy.createBindingCode}</button>
-      {bindingCode && <p role="status">{copy.bindingCodeInstructions(bindingCode)}</p>}
-    </fieldset>
+      {activeBindings.length === 0 && <p className="source-note">{copy.noActiveBindings}</p>}
+      <Button variant="secondary" onClick={() => void createBinding()}>{copy.createBindingCode}</Button>
+      {bindingCode && <Notice tone="success">{copy.bindingCodeInstructions(bindingCode)}</Notice>}
+    </Card>
 
-    <details>
+    <details className="card">
       <summary>{copy.tripEmergencyDetails}</summary>
       <label>{copy.vehicle}
         <input required value={vehicle} onChange={(event) => {
@@ -292,7 +309,14 @@ export function TripForm() {
       }} />
       {copy.confirmTripDetails}
     </label>
-    <button type="submit" disabled={!canSubmit}>{submitting ? copy.creatingTrip : copy.createTripDraft}</button>
-    {error && <p role="alert">{error}</p>}
+
+    {missing.length > 0 && <div className="missing-fields" role="status">
+      <span className="label">{copy.missingFieldsLabel}</span>
+      {missing.map((field) => <Chip key={field} tone="warning">{fieldLabels[field]}</Chip>)}
+    </div>}
+    <Button type="submit" disabled={!canSubmit}>
+      {submitting ? copy.creatingTrip : copy.createTripDraft}
+    </Button>
+    {error && <Notice tone="error">{error}</Notice>}
   </form>;
 }

@@ -262,4 +262,18 @@ describe('TripForm quick creation', () => {
       expect(fetchMock.mock.calls.filter(([url]) => url === '/api/guardian-bindings')).toHaveLength(2);
     });
   });
+
+  it('lists what is still missing while the submit button is disabled', async () => {
+    render(<TripForm />);
+    await screen.findByRole('option', { name: '南投縣｜合歡山主峰｜合歡山主峰線' });
+
+    expect(screen.getByText(copyName(copy.missingFieldsLabel))).toBeInTheDocument();
+    expect(screen.getByText(copyName(copy.fieldConfirmation))).toBeInTheDocument();
+
+    fireEvent.click(await screen.findByRole('button', { name: copyName(copy.useLastRoute(route.routeName)) }));
+    fireEvent.click(screen.getByRole('checkbox', { name: copyName(copy.confirmTripDetails) }));
+    await waitFor(() =>
+      expect(screen.queryByText(copyName(copy.missingFieldsLabel))).not.toBeInTheDocument());
+    expect(screen.getByRole('button', { name: copyName(copy.createTripDraft) })).toBeEnabled();
+  });
 });

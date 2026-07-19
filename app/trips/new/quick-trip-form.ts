@@ -47,17 +47,22 @@ export const isValidTripWindow = (startsAt: string, plannedFinishAt: string) => 
   return Number.isFinite(start) && Number.isFinite(finish) && finish > start;
 };
 
-export const canSubmitQuickTrip = (input: {
+export type QuickTripField = 'route' | 'guardians' | 'timeWindow' | 'vehicle' | 'confirmation';
+
+export const missingQuickTripFields = (input: {
   routeVersionId: string;
   guardianBindingIds: string[];
   startsAt: string;
   plannedFinishAt: string;
   vehicle: string;
   confirmed: boolean;
-}) => Boolean(
-  input.routeVersionId &&
-  input.guardianBindingIds.length > 0 &&
-  input.vehicle.trim() &&
-  input.confirmed &&
-  isValidTripWindow(input.startsAt, input.plannedFinishAt),
-);
+}): QuickTripField[] => [
+  ...(input.routeVersionId ? [] : ['route' as const]),
+  ...(input.guardianBindingIds.length > 0 ? [] : ['guardians' as const]),
+  ...(isValidTripWindow(input.startsAt, input.plannedFinishAt) ? [] : ['timeWindow' as const]),
+  ...(input.vehicle.trim() ? [] : ['vehicle' as const]),
+  ...(input.confirmed ? [] : ['confirmation' as const]),
+];
+
+export const canSubmitQuickTrip = (input: Parameters<typeof missingQuickTripFields>[0]) =>
+  missingQuickTripFields(input).length === 0;

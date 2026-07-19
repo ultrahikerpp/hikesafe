@@ -5,6 +5,7 @@ import {
   canSubmitQuickTrip,
   currentStartValue,
   isValidTripWindow,
+  missingQuickTripFields,
 } from '@/app/trips/new/quick-trip-form';
 
 describe('quick trip form state', () => {
@@ -40,5 +41,27 @@ describe('quick trip form state', () => {
       vehicle: '汽車 ABC-1234',
       confirmed: true,
     })).toBe(false);
+  });
+
+  it('lists every missing quick-trip field in a stable order', () => {
+    expect(missingQuickTripFields({
+      routeVersionId: '',
+      guardianBindingIds: [],
+      startsAt: '2026-07-18T08:00',
+      plannedFinishAt: '',
+      vehicle: ' ',
+      confirmed: false,
+    })).toEqual(['route', 'guardians', 'timeWindow', 'vehicle', 'confirmation']);
+  });
+
+  it('returns no missing fields for a submittable quick trip', () => {
+    expect(missingQuickTripFields({
+      routeVersionId: 'route-1',
+      guardianBindingIds: ['binding-1'],
+      startsAt: '2026-07-18T08:00',
+      plannedFinishAt: '2026-07-18T12:00',
+      vehicle: '汽車',
+      confirmed: true,
+    })).toEqual([]);
   });
 });
