@@ -16,24 +16,24 @@ const locationFix = (): Promise<{ latitude: number; longitude: number; accuracyM
 });
 
 export function DraftTrip({ tripId, routeName, plannedFinishAt, guardians, members, isOwner }: { tripId: string; routeName: string; plannedFinishAt: string; guardians: Array<string | undefined>; members: Array<{ id: string; name: string; role: string }>; isOwner: boolean }) {
-  const [notice, setNotice] = useState<string>();
+  const [notice, setNotice] = useState<{ tone: 'success' | 'warning' | 'error'; text: string }>();
   const [inviteUrl, setInviteUrl] = useState<string>();
   const start = async () => {
     const location = await locationFix();
-    if (!location) { setNotice(copy.gpsRequiredToStart); return; }
+    if (!location) { setNotice({ tone: 'warning', text: copy.gpsRequiredToStart }); return; }
     const response = await fetch(`/api/trips/${tripId}/start`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ location, idempotencyKey: crypto.randomUUID() }) });
-    if (!response.ok) { setNotice(copy.startTripError); return; }
+    if (!response.ok) { setNotice({ tone: 'error', text: copy.startTripError }); return; }
     window.location.reload();
   };
   const invite = async () => {
     const response = await fetch(`/api/trips/${tripId}/invites`, { method: 'POST' });
     const body = await response.json() as { token?: string; error?: string };
-    if (!response.ok || !body.token) { setNotice(body.error ?? copy.inviteLinkError); return; }
+    if (!response.ok || !body.token) { setNotice({ tone: 'error', text: body.error ?? copy.inviteLinkError }); return; }
     setInviteUrl(`${window.location.origin}/trips/join/${body.token}`);
   };
   const deputy = async (memberUserId: string) => {
     const response = await fetch(`/api/trips/${tripId}/members/deputy`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ memberUserId }) });
-    setNotice(response.ok ? copy.deputyAssigned : copy.deputyAssignmentError);
+    setNotice(response.ok ? { tone: 'success', text: copy.deputyAssigned } : { tone: 'error', text: copy.deputyAssignmentError });
     if (response.ok) window.location.reload();
   };
 
@@ -56,6 +56,6 @@ export function DraftTrip({ tripId, routeName, plannedFinishAt, guardians, membe
         </Button>)}
     </Card>}
     <Button onClick={() => void start()}>{copy.startAndNotify}</Button>
-    {notice && <Notice tone="warning">{notice}</Notice>}
+    {notice && <Notice tone={notice.tone}>{notice.text}</Notice>}
   </section>;
 }
