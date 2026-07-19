@@ -23,7 +23,8 @@ const loadActiveTrip = async (): Promise<HomeActiveTrip | undefined> => {
       .limit(1);
     if (!trip) return undefined;
     return { id: trip.id, routeName: trip.routeName, plannedFinishAt: formatTime(trip.plannedFinishAt.toISOString()) };
-  } catch {
+  } catch (error) {
+    console.error('Failed to load active trip for home page', error);
     return undefined;
   }
 };
