@@ -7,6 +7,7 @@ import {
   buildHelpConfirmation,
   buildTripChooser,
 } from '@/src/features/line/prompts';
+import { parsePostback } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
 import { recordCheckIn, requestHelp } from '@/src/features/trips/commands';
 import type { LineLocationFix } from '@/src/lib/location';
@@ -58,10 +59,6 @@ const safeMessage = bilingual('平安', 'Safe');
 const shelterMessage = bilingual('已到山屋', 'At shelter');
 const helpMessage = bilingual('需要協助', 'Need help');
 
-const checkInPostback = /^hikesafe:check-in:([^:]+):(safe|shelter)$/;
-const helpPostback = /^hikesafe:help:([^:]+):(confirm|cancel)$/;
-const tripPostback = /^hikesafe:trip:([^:]+):select$/;
-
 const databaseRepository: LineConversationRepository = {
   async findUserByLineUserId(lineUserId) {
     const { db } = await import('@/src/db/client');
@@ -85,11 +82,7 @@ const databaseRepository: LineConversationRepository = {
 
 const isSupported = (event: LineConversationEvent) => {
   if (event.location) return true;
-  if (event.postbackData) {
-    return checkInPostback.test(event.postbackData)
-      || helpPostback.test(event.postbackData)
-      || tripPostback.test(event.postbackData);
-  }
+  if (event.postbackData) return parsePostback(event.postbackData) !== undefined;
   const text = event.text?.trim();
   return text === '需要協助' || text === '求助' || text === '回報' || Boolean(text?.match(/^回報\s+/));
 };
@@ -145,17 +138,15 @@ export const handleLineConversation = async (
 
   const postbackData = event.postbackData;
   if (postbackData) {
-    const checkInMatch = postbackData.match(checkInPostback);
-    const helpMatch = postbackData.match(helpPostback);
-    const tripMatch = postbackData.match(tripPostback);
-    const tripId = checkInMatch?.[1] ?? helpMatch?.[1] ?? tripMatch?.[1];
-    if (!tripId || !activeTrips.some((trip) => trip.id === tripId)) {
+    const parsed = parsePostback(postbackData);
+    if (!parsed || !activeTrips.some((trip) => trip.id === parsed.tripId)) {
       return [textMessage(unavailableTrip)];
     }
-    if (tripMatch) return [buildCheckInPrompt({ tripId, includeLocation: false })];
-    if (helpMatch?.[2] === 'cancel') return [];
+    const { tripId } = parsed;
+    if (parsed.kind === 'trip') return [buildCheckInPrompt({ tripId, includeLocation: false })];
+    if (parsed.kind === 'help' && parsed.action === 'cancel') return [];
 
-    if (helpMatch?.[2] === 'confirm') {
+    if (parsed.kind === 'help') {
       try {
         await requestHelp({
           tripId,
@@ -170,11 +161,13 @@ export const handleLineConversation = async (
       }
     }
 
+    if (parsed.kind !== 'check-in') return [textMessage(unavailableTrip)];
+
     try {
       await recordCheckIn({
         tripId,
         userId: user.id,
-        message: checkInMatch?.[2] === 'safe' ? safeMessage : shelterMessage,
+        message: parsed.message === 'safe' ? safeMessage : shelterMessage,
         idempotencyKey: event.eventId,
         now: event.now,
       });
