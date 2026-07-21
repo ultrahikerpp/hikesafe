@@ -34,15 +34,21 @@ export function GuardiansContent() {
   const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string }>();
   const [busy, setBusy] = useState(false);
   const [bindingCode, setBindingCode] = useState('');
+  const [loadFailed, setLoadFailed] = useState(false);
 
   const refresh = useCallback(async () => {
     const response = await fetch('/api/guardian-bindings');
-    if (!response.ok) return;
+    if (!response.ok) throw new Error('Guardian bindings unavailable');
     const body = await response.json() as { bindings: GuardianBinding[] };
     setBindings(body.bindings.filter((binding) => binding.boundAt && binding.sourceId));
   }, []);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    void refresh().catch(() => {
+      setLoadFailed(true);
+      setNotice({ tone: 'error', text: copy.authenticationError('讀取留守人清單', 'loading your guardian list') });
+    });
+  }, [refresh]);
   useEffect(() => { void shareAvailable().then(setCanShare); }, []);
 
   const createInvite = async () => {
@@ -102,7 +108,7 @@ export function GuardiansContent() {
     </Card>
 
     <Card title={copy.myGuardians}>
-      {bindings.length === 0 && <p className="source-note">{copy.noGuardianBindings}</p>}
+      {bindings.length === 0 && !loadFailed && <p className="source-note">{copy.noGuardianBindings}</p>}
       {bindings.map((binding) => <div key={binding.id} className="card-row">
         <span>{binding.displayName || copy.boundGuardian}</span>
         <Chip tone={binding.sourceType === 'group' ? 'neutral' : 'success'}>
