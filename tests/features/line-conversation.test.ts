@@ -6,9 +6,10 @@ import {
   type ActiveLineTrip,
   type LineConversationRepository,
 } from '@/src/features/line/conversation';
-import { recordCheckIn, requestHelp } from '@/src/features/trips/commands';
+import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
 
 vi.mock('@/src/features/trips/commands', () => ({
+  extendTrip: vi.fn(),
   recordCheckIn: vi.fn(),
   requestHelp: vi.fn(),
 }));
@@ -36,6 +37,7 @@ const event = (overrides: Partial<Parameters<typeof handleLineConversation>[0]> 
 
 describe('handleLineConversation', () => {
   beforeEach(() => {
+    vi.mocked(extendTrip).mockReset();
     vi.mocked(recordCheckIn).mockReset();
     vi.mocked(requestHelp).mockReset();
   });
@@ -262,6 +264,52 @@ describe('handleLineConversation', () => {
 
     expect(messages[0].quickReply?.items.some(({ action }) =>
       action.type === 'postback' && action.data === 'hikesafe:check-in:trip-1:safe')).toBe(true);
+  });
+
+  it('offers the extension options for one active trip', async () => {
+    const messages = await handleLineConversation(event({ text: '延長' }), { repository: makeRepository() });
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:extend:trip-1:30', 'hikesafe:extend:trip-1:60', 'hikesafe:extend:trip-1:120']);
+  });
+
+  it('offers an extend-intent chooser for multiple active trips', async () => {
+    const messages = await handleLineConversation(event({ text: '延長' }), { repository: makeRepository(trips) });
+
+    expect(messages[1].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:trip:trip-1:extend', 'hikesafe:trip:trip-2:extend']);
+  });
+
+  it('extends from the planned finish time, not from now', async () => {
+    vi.mocked(extendTrip).mockResolvedValue({
+      tripId: 'trip-1', plannedFinishAt: new Date('2026-07-18T09:00:00.000Z'),
+    } as never);
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:extend:trip-1:60' }),
+      { repository: makeRepository() },
+    );
+
+    expect(extendTrip).toHaveBeenCalledWith(expect.objectContaining({
+      tripId: 'trip-1',
+      userId: 'user-1',
+      plannedFinishAt: new Date('2026-07-18T09:00:00.000Z'),
+      idempotencyKey: 'line-event-1',
+      now,
+    }));
+    expect(messages).toEqual([{ type: 'text', text: copy.finishTimeExtended }]);
+  });
+
+  it('reports an extension failure with the shared bilingual error copy', async () => {
+    vi.mocked(extendTrip).mockRejectedValue(new Error('Planned finish must extend the active trip'));
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:extend:trip-1:30' }),
+      { repository: makeRepository() },
+    );
+
+    expect(messages).toEqual([{ type: 'text', text: copy.finishTimeExtensionError }]);
   });
 
   it('returns the matching prompt for the extend and finish intents', async () => {

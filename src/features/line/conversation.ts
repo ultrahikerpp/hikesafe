@@ -13,7 +13,7 @@ import {
 } from '@/src/features/line/prompts';
 import { parsePostback } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
-import { recordCheckIn, requestHelp } from '@/src/features/trips/commands';
+import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
 import type { LineLocationFix } from '@/src/lib/location';
 
 export interface ActiveLineTrip {
@@ -88,7 +88,7 @@ const isSupported = (event: LineConversationEvent) => {
   if (event.location) return true;
   if (event.postbackData) return parsePostback(event.postbackData) !== undefined;
   const text = event.text?.trim();
-  return text === '需要協助' || text === '求助' || text === '回報' || text === '說明'
+  return text === '需要協助' || text === '求助' || text === '回報' || text === '說明' || text === '延長'
     || Boolean(text?.match(/^回報\s+/));
 };
 
@@ -173,6 +173,23 @@ export const handleLineConversation = async (
       }
     }
 
+    if (parsed.kind === 'extend') {
+      const trip = activeTrips.find((item) => item.id === tripId);
+      if (!trip) return [textMessage(unavailableTrip)];
+      try {
+        await extendTrip({
+          tripId,
+          userId: user.id,
+          plannedFinishAt: new Date(trip.plannedFinishAt.getTime() + parsed.minutes * 60_000),
+          idempotencyKey: event.eventId,
+          now: event.now,
+        });
+        return [textMessage(copy.finishTimeExtended)];
+      } catch {
+        return [textMessage(copy.finishTimeExtensionError)];
+      }
+    }
+
     if (parsed.kind !== 'check-in') return [textMessage(unavailableTrip)];
 
     try {
@@ -193,6 +210,11 @@ export const handleLineConversation = async (
   if (text === '需要協助' || text === '求助') {
     if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'help');
     return [buildHelpConfirmation(activeTrips[0].id)];
+  }
+  if (text === '延長') {
+    if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
+    if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'extend');
+    return [buildExtendPrompt(activeTrips[0].id)];
   }
   if (text === '回報') {
     return activeTrips.length === 1
