@@ -7,13 +7,14 @@ import {
   buildExtendPrompt,
   buildFinishConfirmation,
   buildHelpConfirmation,
+  buildStartLocationPrompt,
   buildTripChooser,
   buildUsageReply,
   type TripChooserIntent,
 } from '@/src/features/line/prompts';
 import { parsePostback } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
-import { extendTrip, finishTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip, recordCheckIn, requestHelp, startTrip } from '@/src/features/trips/commands';
 import type { LineLocationFix } from '@/src/lib/location';
 
 export interface ActiveLineTrip {
@@ -25,6 +26,7 @@ export interface ActiveLineTrip {
 export interface LineConversationRepository {
   findUserByLineUserId(lineUserId: string): Promise<{ id: string } | undefined>;
   listActiveTripsForMember(userId: string): Promise<ActiveLineTrip[]>;
+  listDraftTripsForMember(userId: string): Promise<ActiveLineTrip[]>;
 }
 
 export interface LineConversationEvent {
@@ -58,10 +60,37 @@ const conversationError = bilingual(
   '目前無法處理 LINE 回報，請稍後再試。',
   'LINE check-ins are unavailable right now. Try again later.',
 );
+const tripStarted = bilingual('行程已開始，祝一路平安。', 'The trip has started. Stay safe.');
+const startError = bilingual('無法開始行程，請稍後再試。', 'The trip could not be started. Try again later.');
+const deputyRequired = bilingual(
+  '多人行程需要先指派副領隊才能開始，請開啟行程頁指派。',
+  'A multi-person trip needs a deputy before it can start. Open the trip page to assign one.',
+);
+const locationUnusable = bilingual(
+  '無法使用這個位置，請重新傳送目前位置。',
+  'That location cannot be used. Send your current location again.',
+);
+const multipleDrafts = bilingual(
+  '你有多筆待開始的行程，請開啟行程頁選擇要開始哪一個。',
+  'You have several trips waiting to start. Open the trip page to choose one.',
+);
 
 const safeMessage = bilingual('平安', 'Safe');
 const shelterMessage = bilingual('已到山屋', 'At shelter');
 const helpMessage = bilingual('需要協助', 'Need help');
+
+const tripsForMemberByStatus = async (userId: string, status: 'active' | 'draft') => {
+  const { db } = await import('@/src/db/client');
+  return db.select({
+    id: trips.id,
+    routeName: routeVersions.routeName,
+    plannedFinishAt: trips.plannedFinishAt,
+  }).from(tripMembers)
+    .innerJoin(users, eq(users.id, tripMembers.userId))
+    .innerJoin(trips, eq(trips.id, tripMembers.tripId))
+    .innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
+    .where(and(eq(users.id, userId), eq(trips.status, status)));
+};
 
 const databaseRepository: LineConversationRepository = {
   async findUserByLineUserId(lineUserId) {
@@ -70,18 +99,8 @@ const databaseRepository: LineConversationRepository = {
       .where(eq(users.lineUserId, lineUserId)).limit(1);
     return user;
   },
-  async listActiveTripsForMember(userId) {
-    const { db } = await import('@/src/db/client');
-    return db.select({
-      id: trips.id,
-      routeName: routeVersions.routeName,
-      plannedFinishAt: trips.plannedFinishAt,
-    }).from(tripMembers)
-      .innerJoin(users, eq(users.id, tripMembers.userId))
-      .innerJoin(trips, eq(trips.id, tripMembers.tripId))
-      .innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
-      .where(and(eq(users.id, userId), eq(trips.status, 'active')));
-  },
+  listActiveTripsForMember: (userId) => tripsForMemberByStatus(userId, 'active'),
+  listDraftTripsForMember: (userId) => tripsForMemberByStatus(userId, 'draft'),
 };
 
 const isSupported = (event: LineConversationEvent) => {
@@ -98,6 +117,28 @@ const chooseAndRetry = (activeTrips: ActiveLineTrip[], intent: TripChooserIntent
   buildTripChooser(activeTrips, intent),
 ];
 
+const startDraftTrip = async (
+  tripId: string,
+  userId: string,
+  event: LineConversationEvent & { location: LineLocationFix },
+): Promise<LineMessage[]> => {
+  try {
+    await startTrip({
+      tripId,
+      userId,
+      location: event.location,
+      idempotencyKey: event.eventId,
+      now: event.now,
+    });
+    return [textMessage(tripStarted)];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '';
+    if (message === 'Multi-person trips require a deputy before start') return [textMessage(deputyRequired)];
+    if (message.startsWith('Location')) return [textMessage(locationUnusable)];
+    return [textMessage(startError)];
+  }
+};
+
 export const handleLineConversation = async (
   event: LineConversationEvent,
   dependencies: { repository?: LineConversationRepository } = {},
@@ -109,48 +150,62 @@ export const handleLineConversation = async (
   const repository = dependencies.repository ?? databaseRepository;
   let user: { id: string } | undefined;
   let activeTrips: ActiveLineTrip[];
+  let draftTrips: ActiveLineTrip[];
   try {
     user = await repository.findUserByLineUserId(event.lineUserId);
     if (!user) {
       return [textMessage(copy.authenticationError('使用 LINE 回報', 'using LINE check-ins'))];
     }
-    activeTrips = await repository.listActiveTripsForMember(user.id);
+    [activeTrips, draftTrips] = await Promise.all([
+      repository.listActiveTripsForMember(user.id),
+      repository.listDraftTripsForMember(user.id),
+    ]);
   } catch {
     return [textMessage(conversationError)];
   }
 
-  if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
-
   if (event.location) {
-    if (activeTrips.length !== 1) {
-      return [textMessage(ambiguousLocation), buildTripChooser(activeTrips)];
+    if (activeTrips.length > 1) {
+      return [textMessage(ambiguousLocation), buildTripChooser(activeTrips, 'select')];
     }
-    try {
-      await recordCheckIn({
-        tripId: activeTrips[0].id,
-        userId: user.id,
-        location: {
-          latitude: event.location.latitude,
-          longitude: event.location.longitude,
-          capturedAt: event.now,
-          source: 'line',
-        },
-        idempotencyKey: event.eventId,
-        now: event.now,
-      });
-      return [textMessage(copy.checkInSuccess())];
-    } catch {
-      return [textMessage(checkInError)];
+    if (activeTrips.length === 1) {
+      try {
+        await recordCheckIn({
+          tripId: activeTrips[0].id,
+          userId: user.id,
+          location: {
+            latitude: event.location.latitude,
+            longitude: event.location.longitude,
+            capturedAt: event.now,
+            source: 'line',
+          },
+          idempotencyKey: event.eventId,
+          now: event.now,
+        });
+        return [textMessage(copy.checkInSuccess())];
+      } catch {
+        return [textMessage(checkInError)];
+      }
     }
+    if (draftTrips.length > 1) return [textMessage(multipleDrafts)];
+    if (draftTrips.length === 0) return [textMessage(copy.noActiveTrip)];
+    return startDraftTrip(draftTrips[0].id, user.id, event as LineConversationEvent & { location: LineLocationFix });
   }
 
   const postbackData = event.postbackData;
   if (postbackData) {
     const parsed = parsePostback(postbackData);
-    if (!parsed || !activeTrips.some((trip) => trip.id === parsed.tripId)) {
-      return [textMessage(unavailableTrip)];
-    }
+    if (!parsed) return [textMessage(unavailableTrip)];
     const { tripId } = parsed;
+
+    if (parsed.kind === 'start') {
+      if (!draftTrips.some((trip) => trip.id === tripId)) return [textMessage(unavailableTrip)];
+      if (parsed.action === 'cancel') return [];
+      return [buildStartLocationPrompt()];
+    }
+
+    if (!activeTrips.some((trip) => trip.id === tripId)) return [textMessage(unavailableTrip)];
+
     if (parsed.kind === 'trip') {
       if (parsed.intent === 'help') return [buildHelpConfirmation(tripId)];
       if (parsed.intent === 'extend') return [buildExtendPrompt(tripId)];
@@ -224,6 +279,7 @@ export const handleLineConversation = async (
 
   const text = event.text?.trim();
   if (text === '需要協助' || text === '求助') {
+    if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
     if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'help');
     return [buildHelpConfirmation(activeTrips[0].id)];
   }
@@ -238,13 +294,15 @@ export const handleLineConversation = async (
     return [buildFinishConfirmation(activeTrips[0].id)];
   }
   if (text === '回報') {
+    if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
     return activeTrips.length === 1
       ? [buildCheckInPrompt({ tripId: activeTrips[0].id, includeLocation: true })]
-      : [buildTripChooser(activeTrips)];
+      : [buildTripChooser(activeTrips, 'select')];
   }
 
   const message = text?.match(/^回報\s+([\s\S]+)$/)?.[1].trim();
   if (!message) return [];
+  if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
   if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'select');
   try {
     await recordCheckIn({

@@ -6,13 +6,14 @@ import {
   type ActiveLineTrip,
   type LineConversationRepository,
 } from '@/src/features/line/conversation';
-import { extendTrip, finishTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip, recordCheckIn, requestHelp, startTrip } from '@/src/features/trips/commands';
 
 vi.mock('@/src/features/trips/commands', () => ({
-  extendTrip: vi.fn(),
-  finishTrip: vi.fn(),
   recordCheckIn: vi.fn(),
   requestHelp: vi.fn(),
+  extendTrip: vi.fn(),
+  finishTrip: vi.fn(),
+  startTrip: vi.fn(),
 }));
 
 const now = new Date('2026-07-18T02:00:00.000Z');
@@ -24,9 +25,11 @@ const trips: ActiveLineTrip[] = [
 const makeRepository = (
   activeTrips: ActiveLineTrip[] = trips.slice(0, 1),
   user: { id: string } | undefined = { id: 'user-1' },
+  draftTrips: ActiveLineTrip[] = [],
 ): LineConversationRepository => ({
   findUserByLineUserId: vi.fn(async (lineUserId) => lineUserId === 'line-user-1' ? user : undefined),
   listActiveTripsForMember: vi.fn(async () => activeTrips),
+  listDraftTripsForMember: vi.fn(async () => draftTrips),
 });
 
 const event = (overrides: Partial<Parameters<typeof handleLineConversation>[0]> = {}) => ({
@@ -42,6 +45,7 @@ describe('handleLineConversation', () => {
     vi.mocked(finishTrip).mockReset();
     vi.mocked(recordCheckIn).mockReset();
     vi.mocked(requestHelp).mockReset();
+    vi.mocked(startTrip).mockReset();
   });
 
   it('returns a location-enabled check-in prompt for one active trip', async () => {
@@ -381,5 +385,109 @@ describe('handleLineConversation', () => {
     );
     expect(finish[0].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
       .toEqual(['hikesafe:finish:trip-1:confirm', 'hikesafe:finish:trip-1:cancel']);
+  });
+
+  const lineLocation = { latitude: 23.47, longitude: 120.95, capturedAt: now, source: 'line' as const };
+  const draft: ActiveLineTrip = { id: 'draft-1', routeName: '合歡北峰線', plannedFinishAt: new Date('2026-07-18T10:00:00.000Z') };
+
+  it('asks for a location when the start postback is confirmed', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:start:draft-1:confirm' }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft]) },
+    );
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0].quickReply?.items).toEqual([
+      { type: 'action', action: { type: 'location', label: bilingual('📍 傳送位置', 'Send location') } },
+    ]);
+  });
+
+  it('rejects a start postback for a trip that is not one of the user drafts', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:start:other-1:confirm' }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft]) },
+    );
+
+    expect(messages[0].text).toContain('此行程不在你的進行中行程內');
+    expect(startTrip).not.toHaveBeenCalled();
+  });
+
+  it('stays silent when the user cancels starting', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:start:draft-1:cancel' }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft]) },
+    );
+
+    expect(messages).toEqual([]);
+  });
+
+  it('starts the only draft trip when a location arrives and no trip is active', async () => {
+    vi.mocked(startTrip).mockResolvedValue({ tripId: 'draft-1', status: 'active', startedAt: now } as never);
+
+    const messages = await handleLineConversation(
+      event({ location: lineLocation }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft]) },
+    );
+
+    expect(startTrip).toHaveBeenCalledWith(expect.objectContaining({
+      tripId: 'draft-1', userId: 'user-1', location: lineLocation, idempotencyKey: 'line-event-1', now,
+    }));
+    expect(messages).toHaveLength(1);
+    expect(messages[0].text).toContain('行程已開始');
+    expect(recordCheckIn).not.toHaveBeenCalled();
+  });
+
+  it('still checks in when an active trip exists alongside a draft', async () => {
+    vi.mocked(recordCheckIn).mockResolvedValue({ id: 'check-in-1' } as never);
+
+    await handleLineConversation(
+      event({ location: lineLocation }),
+      { repository: makeRepository(trips.slice(0, 1), { id: 'user-1' }, [draft]) },
+    );
+
+    expect(recordCheckIn).toHaveBeenCalled();
+    expect(startTrip).not.toHaveBeenCalled();
+  });
+
+  it('points at the trip page when several drafts could be started', async () => {
+    const messages = await handleLineConversation(
+      event({ location: lineLocation }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft, { ...draft, id: 'draft-2' }]) },
+    );
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0].text).toContain('多筆待開始的行程');
+    expect(startTrip).not.toHaveBeenCalled();
+  });
+
+  it('reports no active trip when a location arrives with nothing to act on', async () => {
+    const messages = await handleLineConversation(
+      event({ location: lineLocation }),
+      { repository: makeRepository([], { id: 'user-1' }, []) },
+    );
+
+    expect(messages).toEqual([{ type: 'text', text: copy.noActiveTrip }]);
+  });
+
+  it('guides the user to assign a deputy when the domain rejects the start', async () => {
+    vi.mocked(startTrip).mockRejectedValue(new Error('Multi-person trips require a deputy before start'));
+
+    const messages = await handleLineConversation(
+      event({ location: lineLocation }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft]) },
+    );
+
+    expect(messages[0].text).toContain('副領隊');
+  });
+
+  it('asks for a fresh location when the location is unusable', async () => {
+    vi.mocked(startTrip).mockRejectedValue(new Error('Location is stale'));
+
+    const messages = await handleLineConversation(
+      event({ location: lineLocation }),
+      { repository: makeRepository([], { id: 'user-1' }, [draft]) },
+    );
+
+    expect(messages[0].text).toContain('重新傳送目前位置');
   });
 });
