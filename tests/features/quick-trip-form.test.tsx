@@ -65,6 +65,9 @@ const installFetch = (options: {
       ? json({ error: 'Guardian binding is not active' }, options.tripStatus)
       : json({ tripId: 'trip-1' }, 201);
     }
+    if (url === '/api/guardian-invites' && init?.method === 'POST') {
+      return json({ inviteUrl: 'https://liff.line.me/liff-id/guardian/accept?token=abc', expiresAt: '2026-07-21T00:00:00.000Z' }, 201);
+    }
     throw new Error(`Unexpected fetch: ${url}`);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -275,5 +278,12 @@ describe('TripForm quick creation', () => {
     await waitFor(() =>
       expect(screen.queryByText(copyName(copy.missingFieldsLabel))).not.toBeInTheDocument());
     expect(screen.getByRole('button', { name: copyName(copy.createTripDraft) })).toBeEnabled();
+  });
+
+  it('offers a guardian invite link instead of a binding code', async () => {
+    render(<TripForm />);
+
+    expect(await screen.findByRole('button', { name: copy.inviteGuardian })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: copy.createBindingCode })).not.toBeInTheDocument();
   });
 });

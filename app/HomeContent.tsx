@@ -34,6 +34,7 @@ export function HomeContent({ activeTrip }: { activeTrip?: HomeActiveTrip }) {
       <a href="/trips/active">{copy.startHike}</a>
       <a href="/trips/active#check-in">{copy.progressReport}</a>
       <a href="/trips/active#finish">{copy.safeDown}</a>
+      <a href="/guardians">{copy.myGuardians}</a>
     </nav>
     <p className="source-note" aria-label={copy.alertLegendLabel}>{copy.alertLegend}</p>
   </main>;

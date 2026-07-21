@@ -47,7 +47,7 @@ export function TripForm() {
   const [catalogAvailable, setCatalogAvailable] = useState(false);
   const [bindings, setBindings] = useState<GuardianBinding[]>([]);
   const [guardianBindingIds, setGuardianBindingIds] = useState<string[]>([]);
-  const [bindingCode, setBindingCode] = useState('');
+  const [inviteUrl, setInviteUrl] = useState('');
   const [vehicle, setVehicle] = useState('');
   const [equipment, setEquipment] = useState('');
   const [leaderPhone, setLeaderPhone] = useState('');
@@ -159,16 +159,16 @@ export function TripForm() {
     }
   };
 
-  const createBinding = async () => {
-    setError('');
-    const response = await fetch('/api/guardian-bindings', { method: 'POST' });
-    const body = await response.json() as { code?: string; error?: string };
-    if (!response.ok || !body.code) {
-      setError(body.error ?? copy.bindingCodeError);
-      return;
+  const inviteGuardian = async () => {
+    try {
+      const response = await fetch('/api/guardian-invites', { method: 'POST' });
+      if (response.status === 409) { setError(copy.inviteLimitReached); return; }
+      if (!response.ok) { setError(copy.inviteCreateError); return; }
+      setInviteUrl((await response.json() as { inviteUrl: string }).inviteUrl);
+    } catch (requestError) {
+      console.error('Guardian invite request failed', { error: requestError });
+      setError(copy.inviteCreateError);
     }
-    setBindingCode(body.code);
-    await refreshBindings();
   };
 
   const missing = missingQuickTripFields({
@@ -275,8 +275,11 @@ export function TripForm() {
         {binding.displayName || (binding.sourceType === 'group' ? copy.boundGroup : copy.boundGuardian)}
       </label>)}
       {activeBindings.length === 0 && <p className="source-note">{copy.noActiveBindings}</p>}
-      <Button variant="secondary" onClick={() => void createBinding()}>{copy.createBindingCode}</Button>
-      {bindingCode && <Notice tone="success">{copy.bindingCodeInstructions(bindingCode)}</Notice>}
+      <Button variant="secondary" onClick={() => void inviteGuardian()}>{copy.inviteGuardian}</Button>
+      {inviteUrl && <Button variant="ghost" onClick={() => void (async () => {
+        await navigator.clipboard.writeText(inviteUrl);
+        setError('');
+      })()}>{copy.copyInviteLink}</Button>}
     </Card>
 
     <details className="card">

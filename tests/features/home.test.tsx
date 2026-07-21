@@ -27,4 +27,10 @@ describe('home content', () => {
     render(<HomeContent />);
     expect(screen.getByText((_, element) => element?.textContent === copy.homeTripInstructions)).toBeInTheDocument();
   });
+
+  it('links to the guardian management page', () => {
+    render(<HomeContent />);
+
+    expect(screen.getByRole('link', { name: copy.myGuardians })).toHaveAttribute('href', '/guardians');
+  });
 });
