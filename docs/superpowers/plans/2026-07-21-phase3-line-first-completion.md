@@ -1557,6 +1557,8 @@ const startDraftTrip = async (
 
 `message.startsWith('Location')` 涵蓋 `src/lib/location.ts` 丟出的全部四種訊息（`Location is stale`、`Location timestamp is invalid`、`Location timestamp is in the future`、`Location coordinates are outside Taiwan`）。
 
+**設計取捨（已與專案負責人確認）：** 這裡刻意用錯誤訊息字串比對，而非型別化錯誤。領域層目前一律丟通用 `Error`；導入專屬錯誤類別要動 `src/features/trips/commands.ts` 與其所有呼叫端，超出本期範圍。spec §6 要求開始行程失敗必須給可行動指引，字串比對是現況下唯一能做到的方式。已列為 fast-follow，不在本期修。
+
 - [ ] **Step 6: 接上 start postback 並補回各文字分支的空清單處理**
 
 postback 區塊的授權檢查要先讓 start 走 draft 清單。把授權段改為：
@@ -2048,7 +2050,9 @@ import 加入：
 import { pushTripSummary } from '@/src/features/line/trip-summary';
 ```
 
-成功路徑改為（`pushTripSummary` 本身不 throw，這裡再包一層 `catch` 是為了防止未來改動或 mock 意外拒絕時影響 201）：
+成功路徑改為下列形式。
+
+**設計取捨（已與專案負責人確認）：** `pushTripSummary` 的契約是永不 throw，且已有專屬測試驗證，因此這層 `.catch()` 在目前程式碼路徑下確實不會被觸發。仍要保留，理由是這裡是 API 邊界，而失敗後果是「行程其實已建立成功，使用者卻收到 500 並可能重送」——這個縱深防禦值得那一行。Task 10 Step 6 的「push 拒絕仍回 201」測試就是釘住這個保證，兩者要一起保留或一起移除。
 
 ```ts
     const result = await createTrip({
