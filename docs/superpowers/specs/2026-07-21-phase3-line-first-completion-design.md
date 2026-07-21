@@ -130,16 +130,16 @@ Phase 1（UI 設計系統，107ae7b）與 Phase 2（連結式留守人邀請，6
 
 `scripts/line/setup-rich-menu.ts`（IO 外殼）：SVG → `sharp` → 2500×1686 PNG → Messaging API 建立／上傳／設為預設。可重複執行（先刪除同名 `hikesafe-main`）。`--dry-run` 只把 PNG 與 payload JSON 寫到 gitignored 輸出目錄，不呼叫任何 API。
 
-六格（每格 1250×562）：
+**2 欄 × 3 列**，每格 1250×562（2500÷2＝1250、1686÷3＝562，皆整除；3 欄會得到 833.33 的非整數寬度）：
 
 | 位置 | 標籤 | Action |
 | --- | --- | --- |
-| 左上 | 建立行程 | uri `https://liff.line.me/{LIFF_ID}/trips/new` |
-| 中上 | 進行中行程 | uri `.../trips/active` |
-| 右上 | 回報平安 | message `回報` |
-| 左下 | 我的留守人 | uri `.../guardians` |
-| 中下 | 需要協助 | message `需要協助` |
-| 右下 | 使用說明 | message `說明` |
+| 左上 `(0,0)` | 建立行程 | uri `https://liff.line.me/{LIFF_ID}/trips/new` |
+| 右上 `(1250,0)` | 進行中行程 | uri `.../trips/active` |
+| 左中 `(0,562)` | 回報平安 | message `回報` |
+| 右中 `(1250,562)` | 我的留守人 | uri `.../guardians` |
+| 左下 `(0,1124)` | 需要協助 | message `需要協助` |
+| 右下 `(1250,1124)` | 使用說明 | message `說明` |
 
 配色沿用 Phase 1 tokens：主色 `#06C755`、底 `#F7F8FA`、卡片 `#FFFFFF`、主文字 `#111827`、次要 `#8B8F98`；「需要協助」格用危險色 `#D93025`。
 
