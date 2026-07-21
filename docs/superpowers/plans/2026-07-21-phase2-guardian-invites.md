@@ -20,6 +20,7 @@
 - 單一使用者未過期且未使用的邀請上限 10 條，以具名常數 `pendingInviteLimit` 表示。
 - commit 訊息格式 `<type>: <description>`，不加 Co-Authored-By 或任何署名。
 - React 元件測試一律用 `fireEvent`（`@testing-library/react`），不用 `userEvent`——`@testing-library/user-event` 不在這個 repo 的 `devDependencies` 裡。文字斷言用逐字 `.textContent` 比對（`const el = await screen.findByRole(...); expect(el.textContent).toBe(copy.xxx)`），不用 `toHaveTextContent`——jest-dom 只正規化收到的 DOM 文字，不正規化比對字串，對含字面 `\n` 的雙語文案（`bilingual()` 產生）永遠比不中。若計畫某個 task 的測試片段仍寫著 `userEvent` 或 `toHaveTextContent`，視為筆誤，一律照此規則改寫，不要照抄。
+- 每個含多個 `it()` 且會 `render()` React 元件的測試檔，一律要有 `afterEach(cleanup)`（`cleanup` 從 `@testing-library/react` import）。這個 repo 的 `vitest.config.ts` 沒有設 `test.globals: true`，RTL 的自動 cleanup 依賴全域 `afterEach` 才會註冊，沒設就不會自動觸發，導致前一個測試 render 出來的 DOM 殘留、下一個測試對同一個 role/name 撈到「multiple elements」。既有慣例可參考 `tests/features/trip-actions.test.tsx`／`tests/features/home.test.tsx`／`tests/features/deep-links.test.tsx`／`tests/features/quick-trip-form.test.tsx`。若計畫某個 task 的測試片段沒有這個 `afterEach(cleanup)`，一律照此規則補上，不要照抄。
 - 測試指令一律 `npx vitest run <path>`。全套**不要**用裸 `npm test`——它會撈到 `.worktrees/quick-trip-creation`（無關分支）與需要本機 Postgres 的整合測試，兩者的失敗都不是回歸。全套一律用 `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`（本計畫開工前基準：43 files / 243 tests 全綠）。
 
 ## File Structure
