@@ -19,6 +19,7 @@
 - 邀請效期 24 小時，寫入既有 `line_bindings.code_expires_at` 欄位。
 - 單一使用者未過期且未使用的邀請上限 10 條，以具名常數 `pendingInviteLimit` 表示。
 - commit 訊息格式 `<type>: <description>`，不加 Co-Authored-By 或任何署名。
+- React 元件測試一律用 `fireEvent`（`@testing-library/react`），不用 `userEvent`——`@testing-library/user-event` 不在這個 repo 的 `devDependencies` 裡。文字斷言用逐字 `.textContent` 比對（`const el = await screen.findByRole(...); expect(el.textContent).toBe(copy.xxx)`），不用 `toHaveTextContent`——jest-dom 只正規化收到的 DOM 文字，不正規化比對字串，對含字面 `\n` 的雙語文案（`bilingual()` 產生）永遠比不中。若計畫某個 task 的測試片段仍寫著 `userEvent` 或 `toHaveTextContent`，視為筆誤，一律照此規則改寫，不要照抄。
 - 測試指令一律 `npx vitest run <path>`。全套**不要**用裸 `npm test`——它會撈到 `.worktrees/quick-trip-creation`（無關分支）與需要本機 Postgres 的整合測試，兩者的失敗都不是回歸。全套一律用 `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`（本計畫開工前基準：43 files / 243 tests 全綠）。
 
 ## File Structure
@@ -87,14 +88,15 @@ it('shows an error notice when the help request cannot be sent at all', async ()
   vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
   render(<TripActions tripId="trip-1" initialState={initialState} />);
 
-  await userEvent.click(screen.getByRole('button', { name: copy.needHelp }));
-  await userEvent.click(screen.getByRole('button', { name: copy.confirmHelp }));
+  fireEvent.click(screen.getByRole('button', { name: copy.needHelp }));
+  fireEvent.click(screen.getByRole('button', { name: copy.confirmHelp }));
 
-  expect(await screen.findByRole('alert')).toHaveTextContent(copy.helpError);
+  const alert = await screen.findByRole('alert');
+  expect(alert.textContent).toBe(copy.helpError);
 });
 ```
 
-`initialState` 沿用該檔案既有的 fixture；若尚未抽出，複製檔案內既有測試使用的物件。
+`initialState` 沿用該檔案既有的 fixture；若尚未抽出，複製檔案內既有測試使用的物件。`fireEvent`（不是 `userEvent`——`@testing-library/user-event` 不在這個 repo 的依賴裡）與逐字 `.textContent` 比對（不是 `toHaveTextContent`——jest-dom 會正規化收到的文字但不會正規化比對字串，對含字面 `\n` 的雙語文案永遠比不中）都是這個測試檔既有的慣例，見同檔案 `helpConfirmation`／`checkInSuccess` 等既有斷言。
 
 - [ ] **Step 2: 執行測試確認失敗**
 
@@ -1356,8 +1358,7 @@ git commit -m "feat: allow hikers to revoke a guardian binding"
 
 ```tsx
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 vi.mock('@/app/LiffBootstrap', () => ({ LiffBootstrap: () => null }));
 
@@ -1390,7 +1391,7 @@ describe('guardians page', () => {
     }));
     render(<GuardiansContent />);
 
-    await userEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
 
     expect(await screen.findByRole('button', { name: copy.copyInviteLink })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: copy.shareInviteToLine })).not.toBeInTheDocument();
@@ -1405,13 +1406,14 @@ describe('guardians page', () => {
     }));
     render(<GuardiansContent />);
 
-    await userEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
-    await userEvent.click(await screen.findByRole('button', { name: copy.copyInviteLink }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.copyInviteLink }));
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       'https://liff.line.me/liff-1/guardian/accept?token=t',
     );
-    expect(await screen.findByRole('status')).toHaveTextContent(copy.inviteLinkCopied);
+    const status = await screen.findByRole('status');
+    expect(status.textContent).toBe(copy.inviteLinkCopied);
   });
 
   it('surfaces the pending invite limit', async () => {
@@ -1421,9 +1423,10 @@ describe('guardians page', () => {
         : new Response(JSON.stringify({ bindings }), { status: 200 })));
     render(<GuardiansContent />);
 
-    await userEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(copy.inviteLimitReached);
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(copy.inviteLimitReached);
   });
 
   it('removes a binding from the list after revoking it', async () => {
@@ -1435,7 +1438,7 @@ describe('guardians page', () => {
     render(<GuardiansContent />);
 
     expect(await screen.findByText(/小美/)).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: copy.revokeBinding }));
+    fireEvent.click(screen.getByRole('button', { name: copy.revokeBinding }));
 
     await waitFor(() => expect(screen.queryByText(/小美/)).not.toBeInTheDocument());
     expect(fetchMock).toHaveBeenCalledWith('/api/guardian-bindings/binding-1', { method: 'DELETE' });
@@ -1649,8 +1652,7 @@ git commit -m "feat: add guardian management page with link invites"
 
 ```tsx
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 vi.mock('@line/liff', () => ({
   default: {
@@ -1673,7 +1675,7 @@ describe('guardian accept page', () => {
 
   it('asks for a valid link when the token is missing', () => {
     render(<AcceptInvite />);
-    expect(screen.getByRole('alert')).toHaveTextContent(copy.inviteNotFound);
+    expect(screen.getByRole('alert').textContent).toBe(copy.inviteNotFound);
   });
 
   it.each([
@@ -1684,7 +1686,8 @@ describe('guardian accept page', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(inviteResponse(status)));
     render(<AcceptInvite token="invite-token" />);
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(message);
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(message);
     expect(screen.queryByRole('button', { name: copy.acceptInviteAction })).not.toBeInTheDocument();
   });
 
@@ -1692,7 +1695,8 @@ describe('guardian accept page', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 404 })));
     render(<AcceptInvite token="nope" />);
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(copy.inviteNotFound);
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(copy.inviteNotFound);
   });
 
   it('binds the guardian and confirms with the hiker name', async () => {
@@ -1701,9 +1705,10 @@ describe('guardian accept page', () => {
       .mockResolvedValueOnce(new Response(JSON.stringify({ inviterDisplayName: '阿山' }), { status: 200 })));
     render(<AcceptInvite token="invite-token" />);
 
-    await userEvent.click(await screen.findByRole('button', { name: copy.acceptInviteAction }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.acceptInviteAction }));
 
-    expect(await screen.findByRole('status')).toHaveTextContent(copy.acceptInviteSuccess('阿山'));
+    const status = await screen.findByRole('status');
+    expect(status.textContent).toBe(copy.acceptInviteSuccess('阿山'));
   });
 
   it('tells a returning guardian they are already bound', async () => {
@@ -1712,9 +1717,10 @@ describe('guardian accept page', () => {
       .mockResolvedValueOnce(new Response(JSON.stringify({ reason: 'already_bound' }), { status: 409 })));
     render(<AcceptInvite token="invite-token" />);
 
-    await userEvent.click(await screen.findByRole('button', { name: copy.acceptInviteAction }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.acceptInviteAction }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(copy.alreadyGuardian('阿山'));
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(copy.alreadyGuardian('阿山'));
   });
 });
 ```
