@@ -79,11 +79,16 @@ export function GuardiansContent() {
 
   const shareToLine = async () => {
     if (!invite) return;
-    const { default: liff } = await import('@line/liff');
-    const profile = await liff.getProfile();
-    await liff.shareTargetPicker([
-      { type: 'text', text: copy.inviteShareMessage(profile.displayName, invite.inviteUrl) },
-    ]);
+    try {
+      const { default: liff } = await import('@line/liff');
+      const profile = await liff.getProfile();
+      await liff.shareTargetPicker([
+        { type: 'text', text: copy.inviteShareMessage(profile.displayName, invite.inviteUrl) },
+      ]);
+    } catch (error) {
+      console.error('Guardian invite share failed', { error });
+      setNotice({ tone: 'error', text: copy.inviteCreateError });
+    }
   };
 
   const revoke = async (id: string) => {

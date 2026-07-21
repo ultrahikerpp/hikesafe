@@ -54,6 +54,13 @@ describe('guardian invites API', () => {
     expect((await POST(authenticated())).status).toBe(409);
   });
 
+  it('reports an unexpected creation error as a server error', async () => {
+    vi.mocked(verifySession).mockResolvedValue({ userId: 'hiker-1', lineUserId: 'U-hiker', expiresAt: new Date() });
+    vi.mocked(createGuardianInvite).mockRejectedValue(new Error('connection refused'));
+
+    expect((await POST(authenticated())).status).toBe(500);
+  });
+
   it('exposes the invite status to an unauthenticated holder of the token', async () => {
     vi.mocked(readGuardianInvite).mockResolvedValue({
       inviterDisplayName: '阿山', expiresAt: new Date('2026-07-22T00:00:00.000Z'), status: 'pending',

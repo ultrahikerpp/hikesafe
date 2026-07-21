@@ -26,6 +26,9 @@ export const POST = async (request: Request) => {
     }, { status: 201 });
   } catch (error) {
     console.error('Guardian invite creation failed', { userId: session.userId, error });
-    return NextResponse.json({ error: 'Too many pending guardian invites' }, { status: 409 });
+    if (error instanceof Error && error.message === 'Too many pending guardian invites') {
+      return NextResponse.json({ error: 'Too many pending guardian invites' }, { status: 409 });
+    }
+    return NextResponse.json({ error: 'Unable to create guardian invite' }, { status: 500 });
   }
 };

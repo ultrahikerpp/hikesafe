@@ -64,6 +64,24 @@ describe('guardians page', () => {
     expect(await screen.findByRole('button', { name: copy.shareInviteToLine })).toBeInTheDocument();
   });
 
+  it('shows an error notice when sharing to LINE fails', async () => {
+    vi.mocked(liff.isApiAvailable).mockReturnValue(true);
+    vi.mocked(liff.shareTargetPicker).mockRejectedValueOnce(new Error('share cancelled'));
+    vi.stubGlobal('fetch', respondWith({
+      'GET /api/guardian-bindings': { bindings },
+      'POST /api/guardian-invites': {
+        inviteUrl: 'https://liff.line.me/liff-1/guardian/accept?token=t', expiresAt: '2026-07-22T00:00:00.000Z',
+      },
+    }));
+    render(<GuardiansContent />);
+
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(copy.inviteCreateError);
+  });
+
   it('copies the invite link and confirms it', async () => {
     vi.stubGlobal('fetch', respondWith({
       'GET /api/guardian-bindings': { bindings },
