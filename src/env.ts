@@ -9,6 +9,7 @@ const schema = z.object({
   JOB_SECRET: z.string().min(32),
   GRANT_TOKEN_SECRET: z.string().min(32),
   NEXT_PUBLIC_LIFF_ID: z.string().min(1),
+  NEXT_PUBLIC_LINE_OA_URL: z.string().url().optional(),
 });
 
 export const parseEnv = (value: Record<string, string | undefined>) => schema.parse(value);

@@ -37,3 +37,17 @@ it('keeps the phase-1 action copy bilingual', () => {
   expect(copy.extendByMinutes(30)).toBe('+30 分鐘\n+30 minutes');
   expect(copy.finishAction).toBe('平安下山（結束行程）\nSafely down (finish trip)');
 });
+
+it('keeps the guardian invite copy bilingual', () => {
+  expect(copy.inviteGuardian).toBe('邀請留守人\nInvite a guardian');
+  expect(copy.copyInviteLink).toBe('複製邀請連結\nCopy invite link');
+  expect(copy.acceptInviteTitle('阿山')).toBe(
+    '阿山 邀請你擔任留守人\n阿山 invited you to be their guardian',
+  );
+  expect(copy.guardianBoundNotice('小美')).toBe(
+    '小美 已成為你的留守人。\n小美 is now your guardian.',
+  );
+  expect(copy.alreadyGuardian('阿山')).toBe(
+    '你已經是 阿山 的留守人。\nYou are already a guardian for 阿山.',
+  );
+});

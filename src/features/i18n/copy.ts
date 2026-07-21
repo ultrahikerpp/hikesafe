@@ -127,6 +127,37 @@ export const copy = {
   boundGroup: bilingual('已綁定群組', 'Bound group'),
   noActiveBindings: bilingual('尚無有效留守綁定，請先建立綁定碼。', 'There is no active guardian binding. Create a binding code first.'),
   createBindingCode: bilingual('建立留守綁定碼', 'Create guardian binding code'),
+  myGuardians: bilingual('我的留守人', 'My guardians'),
+  guardiansTitle: bilingual('留守人管理', 'Guardian management'),
+  noGuardianBindings: bilingual('尚未綁定任何留守人。', 'No guardian is bound yet.'),
+  inviteGuardian: bilingual('邀請留守人', 'Invite a guardian'),
+  shareInviteToLine: bilingual('分享到 LINE', 'Share to LINE'),
+  copyInviteLink: bilingual('複製邀請連結', 'Copy invite link'),
+  inviteLinkCopied: bilingual('邀請連結已複製。', 'The invite link was copied.'),
+  inviteCreateError: bilingual('無法建立邀請連結。', 'The invite link could not be created.'),
+  inviteLimitReached: bilingual(
+    '未使用的邀請太多，請等既有邀請被接受或過期後再試。',
+    'Too many unused invites. Wait until existing invites are accepted or expire.',
+  ),
+  revokeBinding: bilingual('撤銷', 'Revoke'),
+  revokeBindingError: bilingual('無法撤銷這個綁定。', 'The binding could not be revoked.'),
+  groupBindingSection: bilingual('群組綁定（進階）', 'Group binding (advanced)'),
+  acceptInviteAction: bilingual('成為留守人', 'Become a guardian'),
+  inviteNotFound: bilingual('找不到這個邀請。', 'This invite could not be found.'),
+  inviteExpired: bilingual(
+    '這個邀請已過期，請登山客重新邀請。',
+    'This invite has expired. Ask the hiker to send a new one.',
+  ),
+  inviteUsed: bilingual(
+    '這個邀請已被使用，請登山客重新邀請。',
+    'This invite was already used. Ask the hiker to send a new one.',
+  ),
+  inviteRevoked: bilingual('這個邀請已被取消。', 'This invite was cancelled.'),
+  acceptInviteError: bilingual('無法完成綁定，請稍後再試。', 'The binding could not be completed. Try again later.'),
+  addOfficialAccount: bilingual(
+    '請加入 HikeSafe 官方帳號好友，否則收不到警示通知。',
+    'Add the HikeSafe official account as a friend, otherwise you will not receive alerts.',
+  ),
   tripEmergencyDetails: bilingual('行程與緊急資料', 'Trip and emergency details'),
   vehicle: bilingual('交通工具', 'Vehicle'),
   equipment: bilingual('裝備（每行一項）', 'Equipment (one item per line)'),
@@ -241,6 +272,27 @@ export const copy = {
     const value = listValues(items);
     return bilingual(`檢查點：${value.chinese || '未提供'}`, `Checkpoints: ${value.english || 'Not provided'}`);
   },
+  inviteExpiresAt: (time: string) => bilingual(`邀請有效至 ${time}`, `Invite valid until ${time}`),
+  inviteShareMessage: (inviterName: string, url: string) => bilingual(
+    `${inviterName} 邀請你擔任登山留守人，點連結完成綁定：${url}`,
+    `${inviterName} invited you to be their hiking guardian. Open this link to accept: ${url}`,
+  ),
+  acceptInviteTitle: (inviterName: string) => bilingual(
+    `${inviterName} 邀請你擔任留守人`,
+    `${inviterName} invited you to be their guardian`,
+  ),
+  acceptInviteSuccess: (inviterName: string) => bilingual(
+    `你已成為 ${inviterName} 的留守人。`,
+    `You are now a guardian for ${inviterName}.`,
+  ),
+  alreadyGuardian: (inviterName: string) => bilingual(
+    `你已經是 ${inviterName} 的留守人。`,
+    `You are already a guardian for ${inviterName}.`,
+  ),
+  guardianBoundNotice: (guardianName: string) => bilingual(
+    `${guardianName} 已成為你的留守人。`,
+    `${guardianName} is now your guardian.`,
+  ),
   reportEvacuationPoints: (items: string[]) => {
     const value = listValues(items);
     return bilingual(
