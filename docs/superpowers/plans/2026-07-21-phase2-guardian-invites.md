@@ -19,7 +19,7 @@
 - 邀請效期 24 小時，寫入既有 `line_bindings.code_expires_at` 欄位。
 - 單一使用者未過期且未使用的邀請上限 10 條，以具名常數 `pendingInviteLimit` 表示。
 - commit 訊息格式 `<type>: <description>`，不加 Co-Authored-By 或任何署名。
-- 測試指令一律 `npx vitest run <path>`；全套為 `npm test`。
+- 測試指令一律 `npx vitest run <path>`。全套**不要**用裸 `npm test`——它會撈到 `.worktrees/quick-trip-creation`（無關分支）與需要本機 Postgres 的整合測試，兩者的失敗都不是回歸。全套一律用 `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`（本計畫開工前基準：43 files / 243 tests 全綠）。
 
 ## File Structure
 
@@ -29,6 +29,7 @@
 | --- | --- |
 | `app/trips/[tripId]/request-action.ts` | 包裝 fetch 的 throw 與 non-ok 兩條路徑，統一回 `{ ok, error }`（Task 0） |
 | `drizzle/0012_guardian_invites.sql` | `line_bindings` 加 `invite_token_hash` |
+| `src/db/transaction.ts` | `DatabaseHandle` 型別：root db handle 與 transaction handle 的聯集（Task 1b） |
 | `src/features/line/guardian-invites.ts` | 邀請建立／查詢／接受的 domain 邏輯與 repository 介面 |
 | `app/api/guardian-invites/route.ts` | `POST` 建立邀請 |
 | `app/api/guardian-invites/[token]/route.ts` | `GET` 查詢邀請狀態 |
@@ -45,6 +46,7 @@
 | --- | --- |
 | `app/trips/[tripId]/TripActions.tsx` | help／finish／extend 改用 `request-action` helper（Task 0） |
 | `src/db/schema.ts` | `lineBindings` 加 `inviteTokenHash` |
+| `src/features/trips/invites.ts` | repository 的 `any` 換成 `DatabaseHandle`，移除 `databaseTransaction(undefined)` 假值（Task 1b） |
 | `src/env.ts` | 加 `NEXT_PUBLIC_LINE_OA_URL`（optional） |
 | `src/features/i18n/copy.ts` | 新增邀請／撤銷／accept 文案 |
 | `app/trips/new/TripForm.tsx` | 【建立留守綁定碼】換成【邀請留守人】＋【複製連結】 |
@@ -52,13 +54,14 @@
 
 **測試**
 
-`tests/features/trip-actions.test.tsx`（修改）、`tests/features/schema.test.ts`（修改）、`tests/features/env.test.ts`（修改）、`tests/features/i18n.test.ts`（修改）、`tests/features/new-trip-page.test.tsx`（修改）、`tests/features/home.test.tsx`（修改）、`tests/features/guardian-invites.test.ts`（新增）、`tests/api/guardian-invites.test.ts`（新增）、`tests/api/guardian-invites-accept.test.ts`（新增）、`tests/api/guardian-bindings.test.ts`（修改）、`tests/features/guardians-page.test.tsx`（新增）、`tests/features/guardian-accept-page.test.tsx`（新增）
+`tests/features/trip-actions.test.tsx`（修改）、`tests/features/trip-invites.test.ts`（Task 1b 的重構基準，內容不改）、`tests/features/schema.test.ts`（修改）、`tests/features/env.test.ts`（修改）、`tests/features/i18n.test.ts`（修改）、`tests/features/new-trip-page.test.tsx`（修改）、`tests/features/home.test.tsx`（修改）、`tests/features/guardian-invites.test.ts`（新增）、`tests/api/guardian-invites.test.ts`（新增）、`tests/api/guardian-invites-accept.test.ts`（新增）、`tests/api/guardian-bindings.test.ts`（修改）、`tests/features/guardians-page.test.tsx`（新增）、`tests/features/guardian-accept-page.test.tsx`（新增）
 
 ## 實作者須知（避免踩到的三個坑）
 
 1. **accept 頁不可使用 `LiffBootstrap`。** `LiffBootstrap` 會 POST `/api/auth/line`，那會替留守人建立 `users` 列並發 session cookie。留守人不是 HikeSafe 使用者，只是一條 `line_bindings`。accept 頁必須自己做最小的 `liff.init` → `liff.login()` → `liff.getIDToken()`，不碰 `/api/auth/line`。`/guardians` 頁則相反，它是登山客本人，要用 `LiffBootstrap`。
 2. **接受成功後不清除 `invite_token_hash`。** 清掉之後 `GET /api/guardian-invites/{token}` 查不到列只能回 404，`status='used'` 永遠出不來。以 `boundAt` 判定已使用。
-3. **`createGuardianInvite` 用 throw、`acceptGuardianInvite` 用 discriminated result，這是刻意的。** 前者只有一種失敗（超過上限），與既有 `createTripInvite` 同風格；後者有五種失敗原因要對映不同 HTTP 狀態碼，用 result 才不會靠字串比對錯誤訊息。不要為了「一致」把其中一邊改掉。
+3. **不要用 `...databaseTransaction(undefined)` 建 `databaseRepository`。** 那是 Task 1b 移除掉的舊寫法：它把 repository 方法綁在 `undefined` 上，只有在所有公開函式都包在 `transaction()` 裡時才碰巧不炸。`readGuardianInvite` 是不包交易的讀取路徑，照抄舊 pattern 會在正式環境拋 TypeError（單元測試用 fake repository，抓不到這個 bug）。一律用 Task 1b 建立的 `repositoryFor(database: DatabaseHandle)` ＋ 非交易方法委派給 `transaction` 的寫法。
+4. **`createGuardianInvite` 用 throw、`acceptGuardianInvite` 用 discriminated result，這是刻意的。** 前者只有一種失敗（超過上限），與既有 `createTripInvite` 同風格；後者有五種失敗原因要對映不同 HTTP 狀態碼，用 result 才不會靠字串比對錯誤訊息。不要為了「一致」把其中一邊改掉。
 
 ---
 
@@ -263,6 +266,123 @@ git commit -m "feat: add guardian invite token hash column"
 
 ---
 
+### Task 1b: drizzle repository 的共用型別
+
+**Files:**
+- Create: `src/db/transaction.ts`
+- Modify: `src/features/trips/invites.ts:48-91`
+- Test: `tests/features/trip-invites.test.ts`
+
+**Interfaces:**
+- Consumes: `src/db/schema`
+- Produces: `type DatabaseHandle`（`src/db/transaction.ts`）——root db handle 與 transaction handle 的聯集，repository 查詢函式收這個型別就能在交易內外共用。
+
+現有 `src/features/trips/invites.ts:56` 寫 `function databaseTransaction(database: any)`，並用 `...databaseTransaction(undefined)` 建立 `databaseRepository`。那個 `undefined` 是為了滿足型別而塞的假值：只有在**所有**公開函式都包在 `repository.transaction()` 裡時才碰巧安全，因為那些展開出來的方法永遠不會真的被呼叫。這個隱形前提很脆——Task 2 的 `readGuardianInvite` 就是一個不需要交易的讀取路徑，照抄這個 pattern 會直接呼叫到綁在 `undefined` 上的方法而拋 TypeError。
+
+本 task 把型別補正，讓那個假值在編譯期就不可能存在，並改用「非交易方法一律委派給 `transaction`」的統一寫法。
+
+下面 `DatabaseHandle` 的定義已用 `npx tsc --noEmit` 對 `select/from/where/for('update')/limit`、`insert/values`、`update/set/where/returning` 三組實際用法驗證過，drizzle-orm 0.45.2 下編譯乾淨。
+
+- [ ] **Step 1: 建立型別檔**
+
+`src/db/transaction.ts`：
+
+```ts
+import type { ExtractTablesWithRelations } from 'drizzle-orm';
+import type { PostgresJsDatabase, PostgresJsTransaction } from 'drizzle-orm/postgres-js';
+
+import type * as schema from './schema';
+
+type Schema = typeof schema;
+
+/**
+ * Either the root database handle or a transaction handle. Repository helpers
+ * accept both so the same query code runs inside and outside a transaction.
+ */
+export type DatabaseHandle =
+  | PostgresJsDatabase<Schema>
+  | PostgresJsTransaction<Schema, ExtractTablesWithRelations<Schema>>;
+```
+
+- [ ] **Step 2: 執行既有測試建立基準**
+
+Run: `npx vitest run tests/features/trip-invites.test.ts`
+Expected: PASS（2 個測試）。這是重構前的綠燈基準——本 task 不改行為，測試自始至終都該是綠的。
+
+- [ ] **Step 3: 改寫 invites.ts 的 repository**
+
+`src/features/trips/invites.ts` 的 `databaseRepository` 與 `databaseTransaction`（第 48–91 行）整段換成：
+
+```ts
+const repositoryFor = (database: DatabaseHandle): TripInviteRepository => ({
+  transaction: async (operation) => operation(repositoryFor(database)),
+  async isDraftOwner(tripId, userId) {
+    const [{ and, eq }, { trips }] = await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
+    const [trip] = await database.select({ id: trips.id }).from(trips).where(and(eq(trips.id, tripId), eq(trips.ownerUserId, userId), eq(trips.status, 'draft'))).limit(1);
+    return Boolean(trip);
+  },
+  async insertInvite(value) {
+    const [{ tripInvites }] = await Promise.all([import('@/src/db/schema')]);
+    await database.insert(tripInvites).values(value);
+  },
+  async consumeInvite({ tokenHash, userId, now }) {
+    const [{ and, eq, gt, isNull }, { tripInvites, trips }] = await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
+    const [candidate] = await database.select({ id: tripInvites.id, tripId: tripInvites.tripId }).from(tripInvites)
+      .innerJoin(trips, eq(trips.id, tripInvites.tripId))
+      .where(and(eq(tripInvites.tokenHash, tokenHash), gt(tripInvites.expiresAt, now), isNull(tripInvites.acceptedAt), eq(trips.status, 'draft'))).for('update').limit(1);
+    if (!candidate) return undefined;
+    const [invite] = await database.update(tripInvites).set({ acceptedByUserId: userId, acceptedAt: now })
+      .where(and(eq(tripInvites.id, candidate.id), isNull(tripInvites.acceptedAt))).returning({ tripId: tripInvites.tripId });
+    return invite?.tripId;
+  },
+  async addMember({ tripId, userId }) {
+    const [{ tripMembers }] = await Promise.all([import('@/src/db/schema')]);
+    const [member] = await database.insert(tripMembers).values({ tripId, userId, role: 'member' }).onConflictDoNothing().returning({ id: tripMembers.id });
+    if (!member) throw new Error('Already a trip member');
+  },
+  async designateDeputy({ tripId, userId }) {
+    const [{ and, eq, sql }, { tripMembers }] = await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
+    const [member] = await database.select({ id: tripMembers.id }).from(tripMembers).where(and(eq(tripMembers.tripId, tripId), eq(tripMembers.userId, userId))).limit(1);
+    if (!member) throw new Error('Trip membership is required');
+    await database.update(tripMembers).set({ role: 'member' }).where(and(eq(tripMembers.tripId, tripId), sql`${tripMembers.role} = 'deputy'`));
+    await database.update(tripMembers).set({ role: 'deputy' }).where(eq(tripMembers.id, member.id));
+  },
+});
+
+const databaseRepository: TripInviteRepository = {
+  transaction: async (operation) => {
+    const { db } = await import('@/src/db/client');
+    return db.transaction(async (transaction) => operation(repositoryFor(transaction)));
+  },
+  isDraftOwner: (tripId, userId) => databaseRepository.transaction((repository) => repository.isDraftOwner(tripId, userId)),
+  insertInvite: (input) => databaseRepository.transaction((repository) => repository.insertInvite(input)),
+  consumeInvite: (input) => databaseRepository.transaction((repository) => repository.consumeInvite(input)),
+  addMember: (input) => databaseRepository.transaction((repository) => repository.addMember(input)),
+  designateDeputy: (input) => databaseRepository.transaction((repository) => repository.designateDeputy(input)),
+};
+```
+
+檔案頂部加 `import type { DatabaseHandle } from '@/src/db/transaction';`。查詢邏輯逐行沒有改動，只換了外層組裝方式與 `database` 的型別。
+
+- [ ] **Step 4: 執行測試確認仍然通過**
+
+Run: `npx vitest run tests/features/trip-invites.test.ts`
+Expected: PASS，仍是 2 個測試。行為未變，測試不需修改——若測試變紅，是重構寫錯了，不要改測試。
+
+- [ ] **Step 5: 型別檢查**
+
+Run: `npx tsc --noEmit`
+Expected: 無錯誤，且 `src/features/trips/invites.ts` 內不再有 `any`
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/db/transaction.ts src/features/trips/invites.ts
+git commit -m "refactor: type drizzle repository handles instead of any"
+```
+
+---
+
 ### Task 2: 邀請 domain 邏輯
 
 **Files:**
@@ -435,7 +555,7 @@ export interface GuardianInviteRepository {
   transaction<T>(operation: (repository: GuardianInviteRepository) => Promise<T>): Promise<T>;
   countPendingInvites(input: { userId: string; now: Date }): Promise<number>;
   insertInvite(input: { userId: string; tokenHash: string; expiresAt: Date }): Promise<void>;
-  findInvite(tokenHash: string): Promise<GuardianInviteRow | undefined>;
+  findInvite(tokenHash: string, lock?: boolean): Promise<GuardianInviteRow | undefined>;
   hasActiveBinding(input: { userId: string; lineUserId: string }): Promise<boolean>;
   bindInvite(input: { id: string; lineUserId: string; displayName: string; now: Date }): Promise<string | undefined>;
 }
@@ -479,7 +599,7 @@ export const acceptGuardianInvite = async (
     { token: string; lineUserId: string; displayName: string; now: Date },
   repository: GuardianInviteRepository = databaseRepository,
 ): Promise<AcceptGuardianInviteResult> => repository.transaction(async (transaction) => {
-  const row = await transaction.findInvite(hash(token));
+  const row = await transaction.findInvite(hash(token), true);
   if (!row) return { ok: false, reason: 'not_found' };
 
   const status = statusOf(row, now);
@@ -501,20 +621,12 @@ export const acceptGuardianInvite = async (
 
 - [ ] **Step 4: 實作資料庫 repository**
 
-接在同一個檔案後面，形狀照抄 `src/features/trips/invites.ts:48-91`：
+接在同一個檔案後面，形狀照抄 Task 1b 改造後的 `src/features/trips/invites.ts`（**不是**改造前那版——舊版的 `...databaseTransaction(undefined)` 會讓 `readGuardianInvite` 這種不包交易的讀取路徑打到 `undefined.select()`）。檔案頂部加 `import type { DatabaseHandle } from '@/src/db/transaction';`：
 
 ```ts
-const databaseRepository: GuardianInviteRepository = {
-  ...databaseTransaction(undefined),
-  transaction: async (operation) => {
-    const { db } = await import('@/src/db/client');
-    return db.transaction(async (transaction) => operation(databaseTransaction(transaction)));
-  },
-};
-
-function databaseTransaction(database: any): GuardianInviteRepository {
+const repositoryFor = (database: DatabaseHandle): GuardianInviteRepository => {
   return {
-    transaction: async (operation) => operation(databaseTransaction(database)),
+    transaction: async (operation) => operation(repositoryFor(database)),
     async countPendingInvites({ userId, now }) {
       const [{ and, eq, gt, isNotNull, isNull }, { lineBindings }] =
         await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
@@ -533,17 +645,18 @@ function databaseTransaction(database: any): GuardianInviteRepository {
         userId, inviteTokenHash: tokenHash, codeExpiresAt: expiresAt,
       });
     },
-    async findInvite(tokenHash) {
+    async findInvite(tokenHash, lock = false) {
       const [{ eq }, { lineBindings, users }] =
         await Promise.all([import('drizzle-orm'), import('@/src/db/schema')]);
-      const [row] = await database.select({
+      const query = database.select({
         id: lineBindings.id, userId: lineBindings.userId,
         inviterDisplayName: users.displayName, inviterLineUserId: users.lineUserId,
         expiresAt: lineBindings.codeExpiresAt, boundAt: lineBindings.boundAt,
         revokedAt: lineBindings.revokedAt,
       }).from(lineBindings)
         .innerJoin(users, eq(lineBindings.userId, users.id))
-        .where(eq(lineBindings.inviteTokenHash, tokenHash)).for('update').limit(1);
+        .where(eq(lineBindings.inviteTokenHash, tokenHash));
+      const [row] = await (lock ? query.for('update') : query).limit(1);
       return row;
     },
     async hasActiveBinding({ userId, lineUserId }) {
@@ -572,10 +685,25 @@ function databaseTransaction(database: any): GuardianInviteRepository {
       return row?.id;
     },
   };
-}
+};
+
+const databaseRepository: GuardianInviteRepository = {
+  transaction: async (operation) => {
+    const { db } = await import('@/src/db/client');
+    return db.transaction(async (transaction) => operation(repositoryFor(transaction)));
+  },
+  countPendingInvites: (input) => databaseRepository.transaction((repository) => repository.countPendingInvites(input)),
+  insertInvite: (input) => databaseRepository.transaction((repository) => repository.insertInvite(input)),
+  findInvite: (tokenHash, lock) => databaseRepository.transaction((repository) => repository.findInvite(tokenHash, lock)),
+  hasActiveBinding: (input) => databaseRepository.transaction((repository) => repository.hasActiveBinding(input)),
+  bindInvite: (input) => databaseRepository.transaction((repository) => repository.bindInvite(input)),
+};
 ```
 
-`bindInvite` 刻意不寫 `inviteTokenHash: null`——保留雜湊才能在接受後回報 `used`。
+兩個刻意的設計，不要「順手改掉」：
+
+- `bindInvite` 不寫 `inviteTokenHash: null`——保留雜湊才能在接受後回報 `used`。
+- `findInvite` 的 `lock` 預設 false。只有 `acceptGuardianInvite` 傳 `true`（它接著要寫入，需要鎖列）；`readGuardianInvite` 是公開端點 `GET /api/guardian-invites/{token}` 的讀取路徑，不該對同一 token 的並行請求上 `FOR UPDATE` 鎖而互相排隊。
 
 - [ ] **Step 5: 執行測試確認通過**
 
@@ -1820,7 +1948,7 @@ Expected: PASS
 
 - [ ] **Step 6: 跑全套測試**
 
-Run: `npm test`
+Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: 全綠。若 `tests/features/quick-trip-form.test.tsx` 或 `tests/features/i18n.test.ts` 因移除 `createBindingCode` 的表單用法而失敗，修正測試對表單的預期，**不要**把 `copy.createBindingCode` 鍵刪掉——`/guardians` 進階區塊仍在用。
 
 - [ ] **Step 7: Commit**
@@ -1834,12 +1962,12 @@ git commit -m "feat: replace the trip form binding code with guardian invite lin
 
 ## 完工驗證
 
-- [ ] `npm test` 全綠，貼出實際輸出。
+- [ ] `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"` 全綠，貼出實際輸出（基準 43 files / 243 tests，本計畫應只增不減）。
 - [ ] `npx vitest run --coverage tests/features/guardian-invites.test.ts tests/api/guardian-invites.test.ts tests/api/guardian-invites-accept.test.ts` 對 `src/features/line/guardian-invites.ts` 與三支 route 的覆蓋率 ≥80%。
-- [ ] `npx tsc --noEmit` 無錯誤。
+- [ ] `npx tsc --noEmit` 無錯誤，且 `grep -n "database: any" src/features` 無命中。
 - [ ] `npm run build` 成功（確認兩個新頁面能靜態分析通過）。
 - [ ] `grep -rn "console.log" app src` 無新增命中。
-- [ ] 人工確認：`git log --oneline` 有 10 個 commit，Task 0 的修正是獨立的第一個。
+- [ ] 人工確認：`git log --oneline` 有 11 個 commit（Task 0、1、1b、2–9），Task 0 的修正是獨立的第一個。
 
 ## 部署前的營運步驟（由操作者在 LINE console 執行，不屬於本計畫的程式工作）
 
