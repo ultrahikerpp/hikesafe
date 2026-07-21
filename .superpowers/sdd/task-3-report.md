@@ -1,54 +1,131 @@
-### Task 3 Report: 文案與環境變數 (Guardian invite copy + optional official account link)
+# Task 3: 「說明」使用說明回覆 — Completion Report
+
+**Commit SHA:** `2470ccc`
 
 **Status:** DONE
 
-**What was done:**
-1. Added the two failing tests from the brief's Step 1:
-   - `tests/features/i18n.test.ts`: `it('keeps the guardian invite copy bilingual', ...)`.
-   - `tests/features/env.test.ts`: `it('treats the official account link as optional', ...)`.
-2. Ran `npx vitest run tests/features/i18n.test.ts tests/features/env.test.ts` and confirmed RED — `copy.inviteGuardian` was `undefined`; `parseEnv(...).NEXT_PUBLIC_LINE_OA_URL` was `undefined` even when passed a valid URL (not in schema).
-3. Inserted 19 static copy keys into `src/features/i18n/copy.ts` immediately after `createBindingCode` (`myGuardians`, `guardiansTitle`, `noGuardianBindings`, `inviteGuardian`, `shareInviteToLine`, `copyInviteLink`, `inviteLinkCopied`, `inviteCreateError`, `inviteLimitReached`, `revokeBinding`, `revokeBindingError`, `groupBindingSection`, `acceptInviteAction`, `inviteNotFound`, `inviteExpired`, `inviteUsed`, `inviteRevoked`, `acceptInviteError`, `addOfficialAccount`), verbatim from the brief's Step 3.
-4. Inserted 6 function copy keys immediately before `reportEvacuationPoints` (the file's last function key): `inviteExpiresAt`, `inviteShareMessage`, `acceptInviteTitle`, `acceptInviteSuccess`, `alreadyGuardian`, `guardianBoundNotice`, verbatim from the brief.
-5. Added `NEXT_PUBLIC_LINE_OA_URL: z.string().url().optional()` to the zod schema in `src/env.ts`, directly below `NEXT_PUBLIC_LIFF_ID`.
-6. Ran `npx vitest run tests/features/i18n.test.ts tests/features/env.test.ts` and confirmed GREEN (10/10 passed, 3 files).
-7. Ran the full scoped suite `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"` — 44 files / 253 tests passed (baseline 251 + 2 new), no regressions.
-8. Ran `npx tsc --noEmit` and diffed the error set against the pre-branch state via `git stash` — confirmed my change adds zero new type errors (see Concerns).
-9. Committed as `feat: add guardian invite copy and optional official account link` (commit `ce4b365`).
+---
 
-**Test output — RED:**
+## Changes Made
+
+### 1. `src/features/line/conversation.ts`
+
+**Imports (line 1-13):**
+- Added `buildUsageReply` to the import from `@/src/features/line/prompts`
+
+**isSupported function (line 83-88):**
+- Updated text matching to include `text === '說明'` alongside existing commands
+- New condition: `return text === '需要協助' || text === '求助' || text === '回報' || text === '說明' || Boolean(text?.match(/^回報\s+/));`
+
+**handleLineConversation function (line 100-102):**
+- Added early return for `說明` command immediately after `if (!isSupported(event)) return [];`
+- New line: `if (event.text?.trim() === '說明') return [buildUsageReply()];`
+- This placement ensures the usage guide is returned **before any database lookup**, satisfying the requirement that unregistered users receive an answer
+
+### 2. `tests/features/line-conversation.test.ts`
+
+**New Test 1: "answers the usage command without touching the repository" (line 217-225)**
+- Verifies the usage command returns exactly one text message
+- Message contains "HikeSafe 使用說明"
+- **Critical assertion:** `expect(repository.findUserByLineUserId).not.toHaveBeenCalled()` — proves no database lookup occurs
+- Confirms the feature works for all users including unregistered ones
+
+**New Test 2: "answers the usage command for an unregistered LINE user" (line 227-236)**
+- Tests explicitly with an unknown LINE user ID (`'line-user-unknown'`)
+- Mock repository configured with `undefined` user (simulating missing registration)
+- Returns exactly one message containing "HikeSafe 使用說明"
+- Verifies graceful handling without error
+
+---
+
+## TDD Evidence
+
+### RED Phase (Failing Tests)
+
 ```
-❯ tests/features/i18n.test.ts (5 tests | 1 failed)
-   × keeps the guardian invite copy bilingual
-❯ tests/features/env.test.ts (3 tests | 1 failed)
-   × treats the official account link as optional
+❯ tests/features/line-conversation.test.ts (14 tests | 2 failed | 12 skipped) 6ms
+    × answers the usage command without touching the repository 4ms
+    × answers the usage command for an unregistered LINE user 1ms
 
-FAIL tests/features/env.test.ts > parseEnv > treats the official account link as optional
-AssertionError: expected undefined to be 'https://line.me/R/ti/p/@hikesafe'
-FAIL tests/features/i18n.test.ts > keeps the guardian invite copy bilingual
-AssertionError: expected undefined to be '邀請留守人\nInvite a guardian'
-
- Test Files  2 failed | 1 passed (3)
-      Tests  2 failed | 8 passed (10)
+AssertionError: expected [] to have a length of 1 but got +0
 ```
 
-**Test output — GREEN (targeted):**
+**Root cause:** `isSupported` did not recognize `說明`, so both tests received empty arrays.
+
+### GREEN Phase (Passing Tests)
+
+After implementation:
+
 ```
- Test Files  3 passed (3)
-      Tests  10 passed (10)
+ Test Files  1 passed (1)
+      Tests  2 passed | 12 skipped (14)
+ Start at  23:37:10
+ Duration  1.02s (transform 112ms, setup 71ms, import 330ms, tests 2ms, environment 535ms)
 ```
 
-**Test output — GREEN (scoped full suite):**
+Both new tests pass immediately after implementing the three changes.
+
+---
+
+## Full Test Suite Result
+
+**Final Run Command:**
+```bash
+npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"
 ```
- Test Files  44 passed (44)
-      Tests  253 passed (253)
+
+**Result:**
+```
+ Test Files  50 passed (50)
+      Tests  298 passed (298)
+ Start at  23:37:18
+ Duration  8.34s (transform 2.10s, setup 3.59s, import 7.14s, tests 4.94s, environment 34.34s)
 ```
 
-**Commit:** `ce4b365` — `feat: add guardian invite copy and optional official account link` (4 files changed, 81 insertions)
+✅ **Expected:** 50 files / 298 tests — **ACHIEVED**
 
-**Self-review findings:**
-- All new copy keys match the brief's exact Chinese and English text (copy-pasted directly from the brief; confirmed by the new test assertions passing).
-- `NEXT_PUBLIC_LINE_OA_URL` is correctly `.optional()`: absent → `undefined`; valid URL → passes through; `'not-a-url'` → throws. All three assertions in the new env test pass.
-- Static keys placed near `createBindingCode` (existing guardian-binding key), function keys placed in the file's function-key section immediately before `reportEvacuationPoints`, matching the brief's placement instructions.
+---
 
-**Concerns:**
-The brief states pre-existing `tsc --noEmit` errors are confined to `tests/integration/alert-race.test.ts` and `tests/integration/full-trip-flow.test.ts`. On this branch I found ~110 additional lines of pre-existing errors in other test files (`tests/api/routes.test.ts`, `tests/features/line-conversation.test.ts`, `tests/features/line-messages.test.ts`, `tests/features/trip-commands.test.ts`, `tests/features/schema.test.ts`, `tests/features/route-catalog.test.ts`, `tests/features/retention.test.ts`, `tests/api/trip-lifecycle.test.ts`, `tests/features/alert-process.test.ts`, `tests/features/report.test.ts`, `tests/features/quick-trip-form.test.tsx`) — none of which I touched. Verified via `git stash`/`tsc --noEmit`/`git stash pop` that this exact error set (same line count) exists before my change too, so it's pre-existing branch state unrelated to this task, not something I introduced. My change itself adds zero new tsc errors. Flagging in case this signals stale/incomplete state from an earlier task on this branch that's worth someone's attention.
+## Verification Against Brief
+
+- ✅ Test added for repository-free usage command handling
+- ✅ Test added for unregistered user scenario
+- ✅ `buildUsageReply` imported correctly
+- ✅ `isSupported` updated to recognize `說明`
+- ✅ Early return placed immediately after `isSupported` check, before any repository access
+- ✅ Uses exact function call: `return [buildUsageReply()];`
+- ✅ No console.log statements added
+- ✅ No input parameter mutations
+- ✅ All changes trace to requirements
+- ✅ Commit message format: `feat: answer the LINE usage command before any lookup`
+- ✅ No Co-Authored-By line (per user rules/common/git-workflow.md)
+
+---
+
+## Code Review Findings
+
+### Correctness
+- **Early-exit placement:** The `說明` check sits **immediately after** the unsupported-event guard, before the repository is instantiated. This guarantees zero database access for unregistered users.
+- **Test isolation:** The first test explicitly mocks the repository and verifies `findUserByLineUserId.not.toHaveBeenCalled()`, providing regression protection against accidental database lookup.
+
+### Style Adherence
+- ✅ Function remains under 50 lines (unchanged footprint)
+- ✅ File remains under 800 lines (now 209 lines)
+- ✅ Nesting depth ≤ 4
+- ✅ No input mutation
+- ✅ No hardcoded values (uses `buildUsageReply()` factory)
+- ✅ Matches existing code style (consistent with other text checks like `'需要協助'`)
+
+### Integration
+- ✅ Reuses existing `buildUsageReply()` from Task 1 (no duplication)
+- ✅ Uses existing mocking patterns in test suite
+- ✅ Bilingual copy delegated to `buildUsageReply()`, not hardcoded
+- ✅ No breaking changes to existing public interfaces
+
+---
+
+## Notes
+
+**No ambiguities in brief:** All code blocks matched expectations exactly. The three-part implementation (import, isSupported update, early return) is clean and surgical.
+
+**Integration with prior tasks:** Task 1 (`buildUsageReply`) and Task 2 are both relied upon. This task's implementation shows no sign of regressions in those areas.

@@ -1,74 +1,222 @@
-# Task 5 Report: 接受邀請 API (accept guardian invite)
+# Task 5 Report: 行程選擇器意圖接線
 
-## What I implemented
+## Summary
 
-`POST /api/guardian-invites/accept` (`app/api/guardian-invites/accept/route.ts`), following the brief exactly:
+Task 5 successfully wires trip chooser intents through to the appropriate prompt handlers, fixing a critical bug where users asking for help would receive a check-in prompt instead of help confirmation when selecting a trip from the chooser.
 
-1. Validates request body with `z.object({ token: z.string().min(1), idToken: z.string().min(1) }).strict()`. Malformed body → 400, without ever calling `verifyLineIdToken`.
-2. Verifies the LINE `idToken` via `verifyLineIdToken` **before** any domain logic runs. A rejected/expired token → 401 with a fixed `{ error: 'Unauthorized' }` body; the caught error itself is discarded (never logged or surfaced), so no detail leaks to the client. `acceptGuardianInvite` is never called on this path.
-3. Calls `acceptGuardianInvite({ token, lineUserId, displayName, now })` using the verified identity. On failure, maps `result.reason` through the `statusByReason` table (`not_found`→404, `used`→409, `revoked`→409, `already_bound`→409, `expired`→410) and returns `{ reason }`.
-4. On success, pushes `copy.guardianBoundNotice(identity.displayName)` to the hiker (`result.inviterLineUserId`) via `pushLineMessage`, keyed by `idempotencyKey: result.bindingId`. If the push throws, it's caught and logged via `console.error('Guardian bound notification failed', { bindingId, error })` — the response is still 200. Returns `{ inviterDisplayName: result.inviterDisplayName }`.
+**Status:** DONE  
+**Commit SHA:** ed4164c  
+**Test Results:** 50 files / 305 tests passing (100%)
 
-No changes to `src/features/line/guardian-invites.ts` (Task 2) or `src/features/i18n/copy.ts` (Task 3) — both consumed as-is, and their existing shapes matched the brief exactly (verified by reading each file before implementing).
+---
 
-## What I tested and the results
+## Changes Made
 
-Used the brief's Step 1 test file verbatim: `tests/api/guardian-invites-accept.test.ts`, 5 cases:
-- malformed body → 400, LINE never touched
-- invalid idToken → 401, `acceptGuardianInvite` never called
-- happy path → 200, correct body, `acceptGuardianInvite` called with verified identity, `pushLineMessage` called with hiker's `to`/`idempotencyKey`
-- push failure → still 200 (this covers the "push failure must not fail the request" hard requirement called out in the task message)
-- all 5 `reason` values → exact status codes from the table, and `pushLineMessage` never called on any failure path
+### File: `tests/features/line-conversation.test.ts`
 
-### TDD evidence
+Added four new test cases to verify intent routing:
 
-**RED** — `npx vitest run tests/api/guardian-invites-accept.test.ts` (before creating the route):
+1. **Test: "offers a help chooser carrying the help intent for multiple active trips"**
+   - Verifies that when a user types "需要協助" with multiple active trips, the chooser buttons emit `:help` postbacks instead of `:select`
+   - Expected: `['hikesafe:trip:trip-1:help', 'hikesafe:trip:trip-2:help']`
+
+2. **Test: "returns a help confirmation after choosing a trip with the help intent"**
+   - Verifies that posting back `hikesafe:trip:trip-1:help` routes to `buildHelpConfirmation()` instead of `buildCheckInPrompt()`
+   - Expected: `['hikesafe:help:trip-1:confirm', 'hikesafe:help:trip-1:cancel']`
+
+3. **Test: "still returns a check-in prompt for the select intent"**
+   - Confirms that the `:select` intent (default trip chooser path) still maps to `buildCheckInPrompt()` with safe/shelter options
+   - Verifies no regression from the original behavior
+
+4. **Test: "returns the matching prompt for the extend and finish intents"**
+   - Verifies that `:extend` postbacks route to `buildExtendPrompt()` (with 30/60/120 min options)
+   - Verifies that `:finish` postbacks route to `buildFinishConfirmation()` (with confirm/cancel options)
+
+### File: `src/features/line/conversation.ts`
+
+#### Imports (Lines 5-11)
+Added two missing builders and the intent type:
+```ts
+import {
+  buildCheckInPrompt,
+  buildExtendPrompt,           // NEW
+  buildFinishConfirmation,     // NEW
+  buildHelpConfirmation,
+  buildTripChooser,
+  buildUsageReply,
+  type TripChooserIntent,      // NEW
+} from '@/src/features/line/prompts';
 ```
-FAIL  tests/api/guardian-invites-accept.test.ts [ tests/api/guardian-invites-accept.test.ts ]
-Error: Failed to resolve import "@/app/api/guardian-invites/accept/route" from "tests/api/guardian-invites-accept.test.ts". Does the file exist?
- Test Files  1 failed (1)
-      Tests  no tests
+
+#### Function: `chooseAndRetry` (Lines 92-96)
+Updated to accept and pass through the intent parameter:
+
+**Before:**
+```ts
+const chooseAndRetry = (activeTrips: ActiveLineTrip[]) => [
+  textMessage(retryAfterChoosing),
+  buildTripChooser(activeTrips),
+];
 ```
-Expected failure: route module doesn't exist yet — matches brief's Step 2 expectation.
 
-**GREEN** — `npx vitest run tests/api/guardian-invites-accept.test.ts` (after creating the route):
+**After:**
+```ts
+const chooseAndRetry = (activeTrips: ActiveLineTrip[], intent: TripChooserIntent) => [
+  textMessage(retryAfterChoosing),
+  buildTripChooser(activeTrips, intent),
+];
 ```
-Test Files  1 passed (1)
-      Tests  5 passed (5)
+
+#### Postback Handler: `trip` Intent Dispatch (Lines 149-155)
+Replaced single-path `buildCheckInPrompt()` with intent-based routing:
+
+**Before:**
+```ts
+if (parsed.kind === 'trip') return [buildCheckInPrompt({ tripId, includeLocation: false })];
 ```
 
-**Full suite** — `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`:
+**After:**
+```ts
+if (parsed.kind === 'trip') {
+  if (parsed.intent === 'help') return [buildHelpConfirmation(tripId)];
+  if (parsed.intent === 'extend') return [buildExtendPrompt(tripId)];
+  if (parsed.intent === 'finish') return [buildFinishConfirmation(tripId)];
+  return [buildCheckInPrompt({ tripId, includeLocation: false })];
+}
 ```
-Test Files  46 passed (46)
-      Tests  263 passed (263)
+
+#### Text Handler: "需要協助" / "求助" (Line 189)
+Updated to pass `'help'` intent to chooser:
+
+**Before:**
+```ts
+if (activeTrips.length !== 1) return chooseAndRetry(activeTrips);
 ```
-Baseline was 45 files / 258 tests; delta is exactly +1 file / +5 tests, no regressions.
 
-**Type check** — `npx tsc --noEmit 2>&1 | grep -E "guardian-invites/accept"` returned no matches: the new route and test file introduce zero new type errors. (Pre-existing 53 errors elsewhere are unrelated, per the task brief.)
+**After:**
+```ts
+if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'help');
+```
 
-## Files changed
+#### Text Handler: Free Text Check-in (Line 200)
+Updated to pass `'select'` intent to chooser:
 
-- `app/api/guardian-invites/accept/route.ts` (new, 44 lines)
-- `tests/api/guardian-invites-accept.test.ts` (new)
+**Before:**
+```ts
+if (activeTrips.length !== 1) return chooseAndRetry(activeTrips);
+```
 
-## Self-review findings
+**After:**
+```ts
+if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'select');
+```
 
-- `verifyLineIdToken` is called and its rejection mapped to 401 strictly before `acceptGuardianInvite` is invoked — confirmed both by code inspection (early `return` inside the `catch`) and by the test asserting `acceptGuardianInvite` was never called on the invalid-token path.
-- All 5 `reason` values (`not_found`, `expired`, `used`, `revoked`, `already_bound`) map to the exact status codes specified in the brief — confirmed by the parametrized test looping over all 5 and asserting both status and body.
-- A `pushLineMessage` rejection is caught and logged, and the handler still returns 200 — confirmed by a dedicated test.
-- No raw caught-error detail reaches any client-facing response body: the 401 path's catch block doesn't bind or forward the error at all; the push-failure catch block logs to `console.error` server-side only and doesn't touch the response.
+---
 
-No concerns beyond what's listed above.
+## TDD Evidence
 
-## Commit
+### RED Phase
+Running new intent tests before implementation:
 
 ```
-be9ad1d feat: accept guardian invites and notify the hiker
+ RUN  v4.1.10 /Users/miroppp/Side Projects/hikesafe
+
+ ❯ tests/features/line-conversation.test.ts (18 tests | 3 failed | 14 skipped) 7ms
+     × offers a help chooser carrying the help intent for multiple active trips 5ms
+     × returns a help confirmation after choosing a trip with the help intent 1ms
+     × returns the matching prompt for the extend and finish intents 1ms
+
+FAIL  tests/features/line-conversation.test.ts > ... offers a help chooser ...
+AssertionError: expected [ 'hikesafe:trip:trip-1:select', …(1) ] to deeply equal [ 'hikesafe:trip:trip-1:help', …(1) ]
+
+FAIL  tests/features/line-conversation.test.ts > ... returns a help confirmation ...
+AssertionError: expected [ 'hikesafe:check-in:trip-1:safe', …(1) ] to deeply equal [ 'hikesafe:help:trip-1:confirm', …(1) ]
+
+FAIL  tests/features/line-conversation.test.ts > ... returns the matching prompt for the extend and finish intents
+AssertionError: expected [ 'hikesafe:extend:trip-1:30', …(2) ] to deeply equal [ …(2) ]
 ```
-2 files changed: `app/api/guardian-invites/accept/route.ts` (new), `tests/api/guardian-invites-accept.test.ts` (new).
 
-## Issues or concerns
+**Summary:** 3 failed, 1 passed, 14 skipped
 
-None. Implementation matches the brief's Step 3 code as given, since it already matched the actual interfaces from Task 2 (`guardian-invites.ts`), Task 3 (`copy.guardianBoundNotice`), `verifyLineIdToken`, and `pushLineMessage`/`LineMessage` type — no adaptation was needed.
+### GREEN Phase
+Running tests after implementation:
 
-Note: this report path (`.superpowers/sdd/task-5-report.md`) previously held content from an unrelated earlier plan on this repo (a "首頁改版" / home-redesign task, also numbered task 5). That content has been fully replaced with this report, which covers only the accept-guardian-invite work described in this task's brief and commit.
+```
+ RUN  v4.1.10 /Users/miroppp/Side Projects/hikesafe
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 14 skipped (18)
+ Start at  23:49:05
+ Duration  871ms (transform 68ms, setup 58ms, import 260ms, tests 4ms, environment 469ms)
+```
+
+**Summary:** 4 passed, 14 skipped
+
+### Full Suite
+Running complete test suite after implementation:
+
+```
+ RUN  v4.1.10 /Users/miroppp/Side Projects/hikesafe
+
+ Test Files  50 passed (50)
+      Tests  305 passed (305)
+ Start at  23:49:11
+ Duration  7.20s (transform 1.81s, setup 3.09s, import 5.62s, tests 4.39s, environment 29.40s)
+```
+
+**Summary:** 50 files, 305 tests, 100% pass rate
+
+---
+
+## Intent Routing Verification
+
+All four intents now route correctly:
+
+| Intent | Postback Pattern | Handler | Confirmation |
+|--------|------------------|---------|--------------|
+| `select` | `hikesafe:trip:X:select` | `buildCheckInPrompt()` | Shows safe/shelter/location options ✓ |
+| `help` | `hikesafe:trip:X:help` | `buildHelpConfirmation()` | Shows confirm/cancel help request ✓ |
+| `extend` | `hikesafe:trip:X:extend` | `buildExtendPrompt()` | Shows 30/60/120 min extension options ✓ |
+| `finish` | `hikesafe:trip:X:finish` | `buildFinishConfirmation()` | Shows confirm/cancel trip finish ✓ |
+
+---
+
+## Self-Review Findings
+
+### Code Quality
+- **Immutability:** No input mutations; all functions use return values
+- **Function Size:** `chooseAndRetry` remains under 5 lines; dispatch block fits within 50-line guideline
+- **Nesting Depth:** Maximum 2 levels (if check, then dispatch), within limit of 4
+- **No console.log:** All logging handled via existing error flows
+
+### Correctness
+- All four chooser intents accounted for in postback dispatch
+- Existing tests continue to pass (no regression)
+- Default fallback case (`'select'`) preserves original behavior for backwards compatibility
+- Both text-input paths correctly determine which intent to pass
+
+### Architecture
+- Reuses existing `buildTripChooser(trips, intent?)` signature (Task 1)
+- Consumes `parsePostback` result with intent field (Task 2)
+- Intent parameter flows through: user input → text/postback handler → chooser → postback → dispatch
+- `TripChooserIntent` type ensures type safety at all dispatch points
+
+### Test Coverage
+- All four intents have explicit positive test cases
+- Regression test for `'select'` intent ensures original behavior intact
+- Multiple-trip scenario tested for all four intents via `makeRepository(trips)`
+
+---
+
+## Notes
+
+- The brief's code transcription was accurate; no corrections needed
+- `buildTripChooser()` already accepts optional `intent` parameter with default `'select'`
+- `event.location` branch (line 122) correctly leaves chooser call unchanged—location is ambiguous and defaults to `'select'`
+- No `Co-Authored-By` line in commit per project git-workflow.md (attribution disabled globally)
+
+---
+
+## Conclusion
+
+Task 5 is complete. The trip chooser now carries user intent through to the appropriate prompt handler, fixing the critical bug where help requests were answered with check-in prompts. All 305 tests pass, with 4 new tests confirming the four intents route to their correct handlers.
