@@ -4,9 +4,12 @@ import { routeVersions, tripMembers, trips, users } from '@/src/db/schema';
 import { copy, bilingual } from '@/src/features/i18n/copy';
 import {
   buildCheckInPrompt,
+  buildExtendPrompt,
+  buildFinishConfirmation,
   buildHelpConfirmation,
   buildTripChooser,
   buildUsageReply,
+  type TripChooserIntent,
 } from '@/src/features/line/prompts';
 import { parsePostback } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
@@ -89,9 +92,9 @@ const isSupported = (event: LineConversationEvent) => {
     || Boolean(text?.match(/^回報\s+/));
 };
 
-const chooseAndRetry = (activeTrips: ActiveLineTrip[]) => [
+const chooseAndRetry = (activeTrips: ActiveLineTrip[], intent: TripChooserIntent) => [
   textMessage(retryAfterChoosing),
-  buildTripChooser(activeTrips),
+  buildTripChooser(activeTrips, intent),
 ];
 
 export const handleLineConversation = async (
@@ -147,7 +150,12 @@ export const handleLineConversation = async (
       return [textMessage(unavailableTrip)];
     }
     const { tripId } = parsed;
-    if (parsed.kind === 'trip') return [buildCheckInPrompt({ tripId, includeLocation: false })];
+    if (parsed.kind === 'trip') {
+      if (parsed.intent === 'help') return [buildHelpConfirmation(tripId)];
+      if (parsed.intent === 'extend') return [buildExtendPrompt(tripId)];
+      if (parsed.intent === 'finish') return [buildFinishConfirmation(tripId)];
+      return [buildCheckInPrompt({ tripId, includeLocation: false })];
+    }
     if (parsed.kind === 'help' && parsed.action === 'cancel') return [];
 
     if (parsed.kind === 'help') {
@@ -183,7 +191,7 @@ export const handleLineConversation = async (
 
   const text = event.text?.trim();
   if (text === '需要協助' || text === '求助') {
-    if (activeTrips.length !== 1) return chooseAndRetry(activeTrips);
+    if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'help');
     return [buildHelpConfirmation(activeTrips[0].id)];
   }
   if (text === '回報') {
@@ -194,7 +202,7 @@ export const handleLineConversation = async (
 
   const message = text?.match(/^回報\s+([\s\S]+)$/)?.[1].trim();
   if (!message) return [];
-  if (activeTrips.length !== 1) return chooseAndRetry(activeTrips);
+  if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'select');
   try {
     await recordCheckIn({
       tripId: activeTrips[0].id,

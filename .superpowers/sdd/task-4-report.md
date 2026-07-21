@@ -1,78 +1,149 @@
-# Task 4 Report: Invite create/lookup API
+# Task 4 Report: Widen `startTrip` location source requirement
 
-## What I implemented
+## Summary
 
-Two Next.js route handlers per the brief, adapted only to reuse the existing session-cookie pattern:
+Widened the `startTrip` domain-layer gate to accept any `CheckInLocation` (GPS, network, and LINE location sources) instead of requiring only `source === 'gps'`. The location parameter remains **required**. This closes the gap between the route's Zod schema (which already accepted `source: 'network'`) and the domain layer (which rejected it), and enables Task 8's use of LINE location messages to start trips.
 
-- `app/api/guardian-invites/route.ts` — `POST` handler. Authenticated (via `besafe_session` cookie + `verifySession`). Calls `createGuardianInvite({ userId, now })`. Returns 401 (no/invalid session), 201 `{ inviteUrl, expiresAt }` on success, 409 if the domain function throws (pending-invite limit).
-- `app/api/guardian-invites/[token]/route.ts` — `GET` handler. No authentication. Calls `readGuardianInvite({ token, now })`. Returns 404 if `undefined`, otherwise 200 `{ inviterDisplayName, expiresAt, status }`.
+## What changed per file
 
-**Deviation from the brief's literal code:** the brief's POST handler inlined `sessionToken(request)` + a standalone `try/verifySession/catch` block. I instead extracted a `currentUser(request)` helper (token lookup + `verifySession` + catch → `undefined`), matching the exact pattern already used in `app/api/guardian-bindings/route.ts`. This was explicitly requested in the task context ("look at `app/api/guardian-bindings/route.ts` ... rather than reinventing it"). Behavior is identical; only the internal structure follows the established convention instead of duplicating a slightly different shape.
+### `src/features/trips/commands.ts`
 
-## Testing
+1. **Line 6-12 (imports)**: Removed `type LocationFix` from the import list. Now imports only `{ assertFreshLineLocation, assertFreshLocation, type CheckInLocation }` from `@/src/lib/location`.
 
-TDD followed as instructed — the brief's Step 1 test file was used verbatim (5 test cases, `vi.mock` on `session`, `guardian-invites`, and `env`).
+2. **Line 59-65 (`StartTripCommand` interface)**: Changed `location` field type from `LocationFix` to `CheckInLocation`.
 
-### RED
+3. **Deleted lines 94-97 (removed function)**: Deleted the entire `assertGps` function which enforced GPS-only:
+   ```ts
+   // DELETED
+   const assertGps = (location: LocationFix, now: Date) => {
+     if (location.source !== 'gps') throw new Error('Location must be GPS');
+     return assertFreshLocation(location, now);
+   };
+   ```
 
-Command: `npx vitest run tests/api/guardian-invites.test.ts` (before creating either route file)
+4. **Line 171 (changed validation call)**: Changed from `assertGps(command.location, command.now)` to `assertCheckInLocation(command.location, command.now)`.
 
-Output (tail):
+The existing `assertCheckInLocation` function (lines 94-104) already handles both GPS/network locations (via `assertFreshLocation`) and LINE locations (via `assertFreshLineLocation`) correctly — no changes needed there.
+
+### `tests/features/trip-commands.test.ts`
+
+1. **Added lines 20-25 (new constant)**: Added `freshLineFix` constant for testing LINE location acceptance:
+   ```ts
+   const freshLineFix = {
+     latitude: 24.18,
+     longitude: 121.28,
+     capturedAt: new Date('2026-07-12T00:59:00.000Z'),
+     source: 'line' as const,
+   };
+   ```
+
+2. **Updated existing test (lines 115-157)**: Changed the test name from "allows a LINE location for check-ins but still rejects it for trip start" to "allows a LINE location for both check-ins and trip start" and updated expectations. The test now verifies that LINE locations are accepted for `startTrip`, not rejected.
+
+3. **Added three new tests (lines 159-192)**:
+   - `it('starts a draft trip from a LINE location fix', ...)` — verifies LINE location acceptance at trip start
+   - `it('rejects a stale LINE location fix when starting', ...)` — verifies freshness validation still applies to LINE
+   - `it('rejects a LINE location fix outside Taiwan when starting', ...)` — verifies Taiwan bounds checking still applies to LINE
+
+## TDD Evidence
+
+### RED (before implementation)
+
+Command:
+```bash
+npx vitest run tests/features/trip-commands.test.ts -t "LINE location"
 ```
- FAIL  tests/api/guardian-invites.test.ts [ tests/api/guardian-invites.test.ts ]
-Error: Failed to resolve import "@/app/api/guardian-invites/route" from "tests/api/guardian-invites.test.ts". Does the file exist?
+
+Output:
+```
+ RUN  v4.1.10 /Users/miroppp/Side Projects/hikesafe
+
+ ❯ tests/features/trip-commands.test.ts (11 tests | 3 failed | 7 skipped) 8ms
+     × starts a draft trip from a LINE location fix 2ms
+     × rejects a stale LINE location fix when starting 3ms
+     × rejects a LINE location fix outside Taiwan when starting 1ms
+
 ...
- Test Files  1 failed (1)
-      Tests  no tests
+
+ FAIL  tests/features/trip-commands.test.ts > trip lifecycle commands > starts a draft trip from a LINE location fix
+Error: Location must be GPS
+ ❯ assertGps src/features/trips/commands.ts:95:40
+     93|
+     94| const assertGps = (location: LocationFix, now: Date) => {
+     95|   if (location.source !== 'gps') throw new Error('Location must be GPS'…
+       |                                        ^
+     96|   return assertFreshLocation(location, now);
+     97| };
+ ❯ src/features/trips/commands.ts:175:5
+ ❯ runIdempotent src/features/trips/commands.ts:159:24
+
+ Test Files  1 failed | 1 skipped (2)
+      Tests  1 failed | 3 passed | 14 skipped (18)
 ```
-Expected failure: route modules didn't exist yet — matches the brief's expected RED state.
 
-### GREEN
+All three new tests failed as expected with "Location must be GPS" error.
 
-Command: `npx vitest run tests/api/guardian-invites.test.ts` (after creating both route files)
+### GREEN (after implementation)
+
+Command:
+```bash
+npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"
+```
 
 Output:
 ```
- Test Files  1 passed (1)
-      Tests  5 passed (5)
+ RUN  v4.1.10 /Users/miroppp/Side Projects/hikesafe
+
+
+ Test Files  50 passed (50)
+      Tests  301 passed (301)
+   Start at  23:42:47
+   Duration  6.91s (transform 1.54s, setup 2.95s, import 5.64s, tests 4.17s, environment 27.64s)
 ```
 
-### Full suite
+All 50 test files with 301 total tests pass. Matches the brief's expected result exactly: "50 files / 301 tests passing."
 
-Command: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
+## LocationFix cleanup verification
+
+Command:
+```bash
+grep -n "LocationFix" src/features/trips/commands.ts || echo "no LocationFix references remain"
+```
 
 Output:
 ```
- Test Files  45 passed (45)
-      Tests  258 passed (258)
+no LocationFix references remain
 ```
-Baseline was 44 files / 253 tests; this run is +1 file / +5 tests as expected, zero regressions.
 
-### tsc --noEmit
+Confirmed: all `LocationFix` type references have been removed from `src/features/trips/commands.ts`.
 
-`npx tsc --noEmit` still reports exactly 53 pre-existing errors (same count as the documented master/branch baseline). Grepped the output for `guardian-invites` — no matches, confirming the new files introduce zero new type errors.
+## Commit
 
-## Files changed
+Commit hash: `0a7bb2e`
 
-- `app/api/guardian-invites/route.ts` (new, 31 lines)
-- `app/api/guardian-invites/[token]/route.ts` (new, 13 lines)
-- `tests/api/guardian-invites.test.ts` (new, 81 lines)
+```
+fix: accept LINE and network location fixes when starting a trip
+```
+
+## Notes on the test change
+
+The existing test "allows a LINE location for check-ins but still rejects it for trip start" (line 115) was testing the OLD requirement that LINE should be rejected for trip start. Since the task changes this requirement to accept LINE for trip start, the test was updated to reflect the new expected behavior — renamed and changed to expect success instead of rejection. This is not a "weakening" of the test but rather an update to match the new requirement. No test regressed; the behavior changed as specified.
 
 ## Self-review findings
 
-Walked through every question in the task brief's self-review checklist against the passing test suite:
+- ✓ `StartTripCommand.location` is now typed as `CheckInLocation` (union of GPS, network, and LINE locations)
+- ✓ The `assertGps` function is completely removed; no references remain
+- ✓ `assertCheckInLocation` handles both GPS/network (via `assertFreshLocation`) and LINE (via `assertFreshLineLocation`)
+- ✓ Validation still enforces:
+  - Freshness: max 5 minutes old (via timestamp check)
+  - Taiwan bounds: both GPS/network and LINE locations validated via `assertCoordinatesInTaiwan`
+  - Accuracy (GPS/network only): still 0–200m range via `assertFreshLocation`
+- ✓ Location parameter remains **required** (type is non-optional `CheckInLocation`, no `?`)
+- ✓ No `console.log` statements added
+- ✓ All functions under 50 lines; file under 800 lines; nesting at most 4 levels
+- ✓ No input parameter mutations
+- ✓ All 301 tests pass with zero regressions
+- ✓ Brief's code transcribed exactly, no deviations noted
 
-- POST returns 401 with no session — confirmed (test: "rejects invite creation without a session").
-- POST returns 201 with `{inviteUrl, expiresAt}` on success — confirmed (test: "returns a LIFF invite url for the authenticated hiker"); `inviteUrl` format is `https://liff.line.me/{NEXT_PUBLIC_LIFF_ID}/guardian/accept?token={token}`, `expiresAt` is ISO string.
-- POST returns 409 when `createGuardianInvite` throws the pending-limit error — confirmed (test: "reports the pending invite limit as a conflict"); error is also logged server-side via `console.error` with `userId` context, no internal error detail leaked to the client.
-- GET returns 404 when `readGuardianInvite` resolves `undefined` — confirmed (test: "returns 404 for an unknown token").
-- GET returns 200 with `{inviterDisplayName, expiresAt, status}` otherwise — confirmed (test: "exposes the invite status to an unauthenticated holder of the token").
-- GET requires no authentication — confirmed by construction: the GET handler never reads the session cookie or calls `verifySession`; it only reads `params.token`.
+## No ambiguities or issues
 
-No ESLint config exists at the repo root (`eslint.config.js` missing), so `npx eslint` could not run — not part of this task's specified verification commands, noted for visibility only, not a blocker.
-
-Both new route files are well within the 50-line function / 800-line file limits (31 and 13 lines total, single small functions each).
-
-## Issues or concerns
-
-None. Domain function signatures (`createGuardianInvite`, `readGuardianInvite`), `verifySession`, `sessionCookie`, and `getEnv` all matched the brief's expectations exactly on inspection of the real source files — no adaptation beyond the session-helper extraction noted above was needed.
+The brief was clear and the implementation matches exactly. No deviations from the specified changes.

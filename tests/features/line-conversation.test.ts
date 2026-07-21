@@ -234,4 +234,49 @@ describe('handleLineConversation', () => {
     expect(messages).toHaveLength(1);
     expect(messages[0].text).toContain('HikeSafe 使用說明');
   });
+
+  it('offers a help chooser carrying the help intent for multiple active trips', async () => {
+    const messages = await handleLineConversation(event({ text: '需要協助' }), { repository: makeRepository(trips) });
+
+    expect(messages).toHaveLength(2);
+    expect(messages[1].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:trip:trip-1:help', 'hikesafe:trip:trip-2:help']);
+  });
+
+  it('returns a help confirmation after choosing a trip with the help intent', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:trip:trip-1:help' }),
+      { repository: makeRepository(trips) },
+    );
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:help:trip-1:confirm', 'hikesafe:help:trip-1:cancel']);
+  });
+
+  it('still returns a check-in prompt for the select intent', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:trip:trip-1:select' }),
+      { repository: makeRepository(trips) },
+    );
+
+    expect(messages[0].quickReply?.items.some(({ action }) =>
+      action.type === 'postback' && action.data === 'hikesafe:check-in:trip-1:safe')).toBe(true);
+  });
+
+  it('returns the matching prompt for the extend and finish intents', async () => {
+    const extend = await handleLineConversation(
+      event({ postbackData: 'hikesafe:trip:trip-1:extend' }),
+      { repository: makeRepository(trips) },
+    );
+    expect(extend[0].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:extend:trip-1:30', 'hikesafe:extend:trip-1:60', 'hikesafe:extend:trip-1:120']);
+
+    const finish = await handleLineConversation(
+      event({ postbackData: 'hikesafe:trip:trip-1:finish' }),
+      { repository: makeRepository(trips) },
+    );
+    expect(finish[0].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:finish:trip-1:confirm', 'hikesafe:finish:trip-1:cancel']);
+  });
 });
