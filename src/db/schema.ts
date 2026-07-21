@@ -207,6 +207,7 @@ export const lineBindings = pgTable('line_bindings', {
   sourceId: text('source_id'),
   displayName: text('display_name'),
   bindingCode: text('binding_code').unique(),
+  inviteTokenHash: text('invite_token_hash').unique(),
   codeExpiresAt: timestamp('code_expires_at', { withTimezone: true }),
   boundAt: timestamp('bound_at', { withTimezone: true }),
   revokedAt: timestamp('revoked_at', { withTimezone: true }),

@@ -187,6 +187,21 @@ describe('database schema', () => {
       ]),
     );
   });
+
+  it('stores only a hash of the guardian invite token', () => {
+    const columns = getTableConfig(lineBindings).columns;
+    const inviteToken = columns.find((column) => column.name === 'invite_token_hash');
+
+    expect(inviteToken).toBeDefined();
+    expect(inviteToken?.notNull).toBe(false);
+    expect(inviteToken?.isUnique).toBe(true);
+    expect(columns.map((column) => column.name)).not.toContain('invite_token');
+  });
+
+  it('ships a migration that adds the guardian invite column', () => {
+    const migration = readFileSync('drizzle/0012_guardian_invites.sql', 'utf8');
+    expect(migration).toMatch(/ALTER TABLE line_bindings\s+ADD COLUMN invite_token_hash text UNIQUE/i);
+  });
 });
 
 describe('initial migration contract', () => {
