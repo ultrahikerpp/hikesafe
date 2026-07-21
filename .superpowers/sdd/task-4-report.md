@@ -1,25 +1,78 @@
-# Task 4 Recovery Report
+# Task 4 Report: Invite create/lookup API
 
-Status: DONE_WITH_CONCERNS
+## What I implemented
 
-## Delivered
+Two Next.js route handlers per the brief, adapted only to reuse the existing session-cookie pattern:
 
-- LINE ID-token verification posts the token to LINE, rejects invalid responses, an unexpected audience, and expired claims, and returns a minimal `LineIdentity`.
-- Sessions are HS256 JWTs containing only the internal user ID, LINE user ID, and expiry; the auth route accepts a strict `{ idToken }` body and sets an httpOnly, secure, `sameSite=lax` cookie.
-- Binding codes are six uppercase alphanumeric characters, expire after 10 minutes, and are consumed atomically only by the LINE user who owns the code.
-- The webhook verifies `x-line-signature` over the raw request body before JSON parsing, accepts `user`, `group`, and `room` sources, stores the webhook source ID, and replies with `已綁定 BeSafe 留守通知`.
+- `app/api/guardian-invites/route.ts` — `POST` handler. Authenticated (via `besafe_session` cookie + `verifySession`). Calls `createGuardianInvite({ userId, now })`. Returns 401 (no/invalid session), 201 `{ inviteUrl, expiresAt }` on success, 409 if the domain function throws (pending-invite limit).
+- `app/api/guardian-invites/[token]/route.ts` — `GET` handler. No authentication. Calls `readGuardianInvite({ token, now })`. Returns 404 if `undefined`, otherwise 200 `{ inviterDisplayName, expiresAt, status }`.
 
-## Verification (Node 24.18.0)
+**Deviation from the brief's literal code:** the brief's POST handler inlined `sessionToken(request)` + a standalone `try/verifySession/catch` block. I instead extracted a `currentUser(request)` helper (token lookup + `verifySession` + catch → `undefined`), matching the exact pattern already used in `app/api/guardian-bindings/route.ts`. This was explicitly requested in the task context ("look at `app/api/guardian-bindings/route.ts` ... rather than reinventing it"). Behavior is identical; only the internal structure follows the established convention instead of duplicating a slightly different shape.
 
-| Command | Result |
-| --- | --- |
-| `npm test -- tests/features/line-auth.test.ts tests/integration/line-binding.test.ts` | PASS — 2 files, 15 tests |
-| `npm test` | PASS — 11 files, 58 tests |
-| `npm run build` | PASS — Next.js production build |
-| `npx tsc --noEmit` | FAIL — 8 pre-existing test typing errors in route-catalog/import/schema tests, outside Task 4; the production build's TypeScript phase passes. |
+## Testing
 
-`git diff --check` is clean. Self-review found no Task 4 defects in the inherited implementation.
+TDD followed as instructed — the brief's Step 1 test file was used verbatim (5 test cases, `vi.mock` on `session`, `guardian-invites`, and `env`).
 
-## TDD provenance concern
+### RED
 
-Task 4's source and tests were already present as untracked files when recovery began. The first observed focused test run passed, so it is not possible to prove that the inherited tests were written and observed failing before the inherited implementation. No Task 4 behavior was modified during recovery; therefore there was no new production-code change for which a RED cycle could be run. This is the reason for `DONE_WITH_CONCERNS` rather than an unqualified completion status.
+Command: `npx vitest run tests/api/guardian-invites.test.ts` (before creating either route file)
+
+Output (tail):
+```
+ FAIL  tests/api/guardian-invites.test.ts [ tests/api/guardian-invites.test.ts ]
+Error: Failed to resolve import "@/app/api/guardian-invites/route" from "tests/api/guardian-invites.test.ts". Does the file exist?
+...
+ Test Files  1 failed (1)
+      Tests  no tests
+```
+Expected failure: route modules didn't exist yet — matches the brief's expected RED state.
+
+### GREEN
+
+Command: `npx vitest run tests/api/guardian-invites.test.ts` (after creating both route files)
+
+Output:
+```
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+```
+
+### Full suite
+
+Command: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
+
+Output:
+```
+ Test Files  45 passed (45)
+      Tests  258 passed (258)
+```
+Baseline was 44 files / 253 tests; this run is +1 file / +5 tests as expected, zero regressions.
+
+### tsc --noEmit
+
+`npx tsc --noEmit` still reports exactly 53 pre-existing errors (same count as the documented master/branch baseline). Grepped the output for `guardian-invites` — no matches, confirming the new files introduce zero new type errors.
+
+## Files changed
+
+- `app/api/guardian-invites/route.ts` (new, 31 lines)
+- `app/api/guardian-invites/[token]/route.ts` (new, 13 lines)
+- `tests/api/guardian-invites.test.ts` (new, 81 lines)
+
+## Self-review findings
+
+Walked through every question in the task brief's self-review checklist against the passing test suite:
+
+- POST returns 401 with no session — confirmed (test: "rejects invite creation without a session").
+- POST returns 201 with `{inviteUrl, expiresAt}` on success — confirmed (test: "returns a LIFF invite url for the authenticated hiker"); `inviteUrl` format is `https://liff.line.me/{NEXT_PUBLIC_LIFF_ID}/guardian/accept?token={token}`, `expiresAt` is ISO string.
+- POST returns 409 when `createGuardianInvite` throws the pending-limit error — confirmed (test: "reports the pending invite limit as a conflict"); error is also logged server-side via `console.error` with `userId` context, no internal error detail leaked to the client.
+- GET returns 404 when `readGuardianInvite` resolves `undefined` — confirmed (test: "returns 404 for an unknown token").
+- GET returns 200 with `{inviterDisplayName, expiresAt, status}` otherwise — confirmed (test: "exposes the invite status to an unauthenticated holder of the token").
+- GET requires no authentication — confirmed by construction: the GET handler never reads the session cookie or calls `verifySession`; it only reads `params.token`.
+
+No ESLint config exists at the repo root (`eslint.config.js` missing), so `npx eslint` could not run — not part of this task's specified verification commands, noted for visibility only, not a blocker.
+
+Both new route files are well within the 50-line function / 800-line file limits (31 and 13 lines total, single small functions each).
+
+## Issues or concerns
+
+None. Domain function signatures (`createGuardianInvite`, `readGuardianInvite`), `verifySession`, `sessionCookie`, and `getEnv` all matched the brief's expectations exactly on inspection of the real source files — no adaptation beyond the session-helper extraction noted above was needed.

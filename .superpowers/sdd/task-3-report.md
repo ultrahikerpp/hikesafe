@@ -1,45 +1,54 @@
-# Task 3: Validate and import designations
+### Task 3 Report: 文案與環境變數 (Guardian invite copy + optional official account link)
 
-## Outcome
+**Status:** DONE
 
-Route imports now accept only canonical Small Hundred Peak designation keys in the form `taiwan_small_hundred_peak:001` through `taiwan_small_hundred_peak:100`. The official Small Hundred Peak source is validated by its numeric identities, never by mountain name.
+**What was done:**
+1. Added the two failing tests from the brief's Step 1:
+   - `tests/features/i18n.test.ts`: `it('keeps the guardian invite copy bilingual', ...)`.
+   - `tests/features/env.test.ts`: `it('treats the official account link as optional', ...)`.
+2. Ran `npx vitest run tests/features/i18n.test.ts tests/features/env.test.ts` and confirmed RED — `copy.inviteGuardian` was `undefined`; `parseEnv(...).NEXT_PUBLIC_LINE_OA_URL` was `undefined` even when passed a valid URL (not in schema).
+3. Inserted 19 static copy keys into `src/features/i18n/copy.ts` immediately after `createBindingCode` (`myGuardians`, `guardiansTitle`, `noGuardianBindings`, `inviteGuardian`, `shareInviteToLine`, `copyInviteLink`, `inviteLinkCopied`, `inviteCreateError`, `inviteLimitReached`, `revokeBinding`, `revokeBindingError`, `groupBindingSection`, `acceptInviteAction`, `inviteNotFound`, `inviteExpired`, `inviteUsed`, `inviteRevoked`, `acceptInviteError`, `addOfficialAccount`), verbatim from the brief's Step 3.
+4. Inserted 6 function copy keys immediately before `reportEvacuationPoints` (the file's last function key): `inviteExpiresAt`, `inviteShareMessage`, `acceptInviteTitle`, `acceptInviteSuccess`, `alreadyGuardian`, `guardianBoundNotice`, verbatim from the brief.
+5. Added `NEXT_PUBLIC_LINE_OA_URL: z.string().url().optional()` to the zod schema in `src/env.ts`, directly below `NEXT_PUBLIC_LIFF_ID`.
+6. Ran `npx vitest run tests/features/i18n.test.ts tests/features/env.test.ts` and confirmed GREEN (10/10 passed, 3 files).
+7. Ran the full scoped suite `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"` — 44 files / 253 tests passed (baseline 251 + 2 new), no regressions.
+8. Ran `npx tsc --noEmit` and diffed the error set against the pre-branch state via `git stash` — confirmed my change adds zero new type errors (see Concerns).
+9. Committed as `feat: add guardian invite copy and optional official account link` (commit `ce4b365`).
 
-## Changes
+**Test output — RED:**
+```
+❯ tests/features/i18n.test.ts (5 tests | 1 failed)
+   × keeps the guardian invite copy bilingual
+❯ tests/features/env.test.ts (3 tests | 1 failed)
+   × treats the official account link as optional
 
-- Added nullable elevation gain and elevation difference fields, optional designation arrays, reusable ordered-place validation, and empty evacuation-point support to `RouteInput`.
-- Loaded `small-hundred-peaks.json`; its official numbers must be exactly 1–100 once each before deriving canonical designation keys.
-- Added launch-catalog reporting and explicit missing, duplicate, and unexpected designation errors. A Small Hundred Peak route can also be a suburban route.
-- Mapped designations and both nullable elevation fields through active-version reads and inserts.
-- Updated fixtures and tests for null ascent, nullable elevation difference validation, empty evacuation points, missing/duplicate designation rejection, and overlapping suburban/Small Hundred Peak counts.
+FAIL tests/features/env.test.ts > parseEnv > treats the official account link as optional
+AssertionError: expected undefined to be 'https://line.me/R/ti/p/@hikesafe'
+FAIL tests/features/i18n.test.ts > keeps the guardian invite copy bilingual
+AssertionError: expected undefined to be '邀請留守人\nInvite a guardian'
 
-## Verification
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 8 passed (10)
+```
 
-- `npm test -- tests/features/route-import.test.ts` — 13 passed.
-- `npm test` — passed (exit 0).
-- `npm run build` — passed.
+**Test output — GREEN (targeted):**
+```
+ Test Files  3 passed (3)
+      Tests  10 passed (10)
+```
 
-## Scope and staging
+**Test output — GREEN (scoped full suite):**
+```
+ Test Files  44 passed (44)
+      Tests  253 passed (253)
+```
 
-Only `src/features/routes/import.ts`, `tests/features/route-import.test.ts`, and `tests/fixtures/routes.ts` are staged for this task. Pre-existing 100-suburban route changes remain unstaged and were not included.
+**Commit:** `ce4b365` — `feat: add guardian invite copy and optional official account link` (4 files changed, 81 insertions)
 
-## Commit
+**Self-review findings:**
+- All new copy keys match the brief's exact Chinese and English text (copy-pasted directly from the brief; confirmed by the new test assertions passing).
+- `NEXT_PUBLIC_LINE_OA_URL` is correctly `.optional()`: absent → `undefined`; valid URL → passes through; `'not-a-url'` → throws. All three assertions in the new env test pass.
+- Static keys placed near `createBindingCode` (existing guardian-binding key), function keys placed in the file's function-key section immediately before `reportEvacuationPoints`, matching the brief's placement instructions.
 
-`ed3f3f1 feat: validate official route designations`
-
-## Review follow-up (2026-07-14)
-
-### Actions
-
-- Added the required 100-route suburban baseline in `data/routes/suburban-routes.json`, loaded it as the exact `requiredSuburbanRouteNames` fixture, and raised the catalog gate from 30 to 100 routes.
-- Kept the baseline assertion in the focused import test so the clean checkout verifies the 100-entry fixture alongside the 100 designation keys.
-- Preserved schema validation and added pre-schema string designation counting. This reports an explicit unexpected Small Hundred Peak designation even when the designation format causes `routeInputSchema` to fail.
-- Added the regression case for `taiwan_small_hundred_peak:101`, asserting both `Catalog schema validation failed` and the explicit unexpected-designation error.
-
-### Verification
-
-- Red: `npm test -- tests/features/route-import.test.ts` — 1 failed, 13 passed; the new assertion was absent from the report as expected.
-- Green: `npm test -- tests/features/route-import.test.ts` — 14 passed, 0 failed.
-
-### Scope
-
-- Staged only the 100-suburban baseline and Task 3 review-fix files. `data/routes/sources.json`, documentation, `.DS_Store` files, and other unrelated working-tree changes remain unstaged.
+**Concerns:**
+The brief states pre-existing `tsc --noEmit` errors are confined to `tests/integration/alert-race.test.ts` and `tests/integration/full-trip-flow.test.ts`. On this branch I found ~110 additional lines of pre-existing errors in other test files (`tests/api/routes.test.ts`, `tests/features/line-conversation.test.ts`, `tests/features/line-messages.test.ts`, `tests/features/trip-commands.test.ts`, `tests/features/schema.test.ts`, `tests/features/route-catalog.test.ts`, `tests/features/retention.test.ts`, `tests/api/trip-lifecycle.test.ts`, `tests/features/alert-process.test.ts`, `tests/features/report.test.ts`, `tests/features/quick-trip-form.test.tsx`) — none of which I touched. Verified via `git stash`/`tsc --noEmit`/`git stash pop` that this exact error set (same line count) exists before my change too, so it's pre-existing branch state unrelated to this task, not something I introduced. My change itself adds zero new tsc errors. Flagging in case this signals stale/incomplete state from an earlier task on this branch that's worth someone's attention.
