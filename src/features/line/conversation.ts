@@ -13,7 +13,7 @@ import {
 } from '@/src/features/line/prompts';
 import { parsePostback } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
-import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
 import type { LineLocationFix } from '@/src/lib/location';
 
 export interface ActiveLineTrip {
@@ -89,6 +89,7 @@ const isSupported = (event: LineConversationEvent) => {
   if (event.postbackData) return parsePostback(event.postbackData) !== undefined;
   const text = event.text?.trim();
   return text === '需要協助' || text === '求助' || text === '回報' || text === '說明' || text === '延長'
+    || text === '平安下山' || text === '結束行程'
     || Boolean(text?.match(/^回報\s+/));
 };
 
@@ -190,6 +191,21 @@ export const handleLineConversation = async (
       }
     }
 
+    if (parsed.kind === 'finish') {
+      if (parsed.action === 'cancel') return [];
+      try {
+        await finishTrip({
+          tripId,
+          userId: user.id,
+          idempotencyKey: event.eventId,
+          now: event.now,
+        });
+        return [textMessage(copy.tripFinished)];
+      } catch {
+        return [textMessage(copy.tripFinishError)];
+      }
+    }
+
     if (parsed.kind !== 'check-in') return [textMessage(unavailableTrip)];
 
     try {
@@ -215,6 +231,11 @@ export const handleLineConversation = async (
     if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
     if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'extend');
     return [buildExtendPrompt(activeTrips[0].id)];
+  }
+  if (text === '平安下山' || text === '結束行程') {
+    if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
+    if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'finish');
+    return [buildFinishConfirmation(activeTrips[0].id)];
   }
   if (text === '回報') {
     return activeTrips.length === 1

@@ -6,10 +6,11 @@ import {
   type ActiveLineTrip,
   type LineConversationRepository,
 } from '@/src/features/line/conversation';
-import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip, recordCheckIn, requestHelp } from '@/src/features/trips/commands';
 
 vi.mock('@/src/features/trips/commands', () => ({
   extendTrip: vi.fn(),
+  finishTrip: vi.fn(),
   recordCheckIn: vi.fn(),
   requestHelp: vi.fn(),
 }));
@@ -38,6 +39,7 @@ const event = (overrides: Partial<Parameters<typeof handleLineConversation>[0]> 
 describe('handleLineConversation', () => {
   beforeEach(() => {
     vi.mocked(extendTrip).mockReset();
+    vi.mocked(finishTrip).mockReset();
     vi.mocked(recordCheckIn).mockReset();
     vi.mocked(requestHelp).mockReset();
   });
@@ -310,6 +312,59 @@ describe('handleLineConversation', () => {
     );
 
     expect(messages).toEqual([{ type: 'text', text: copy.finishTimeExtensionError }]);
+  });
+
+  it('asks for confirmation before finishing one active trip', async () => {
+    for (const text of ['平安下山', '結束行程']) {
+      const messages = await handleLineConversation(event({ text }), { repository: makeRepository() });
+
+      expect(messages).toHaveLength(1);
+      expect(messages[0].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+        .toEqual(['hikesafe:finish:trip-1:confirm', 'hikesafe:finish:trip-1:cancel']);
+    }
+  });
+
+  it('offers a finish-intent chooser for multiple active trips', async () => {
+    const messages = await handleLineConversation(event({ text: '平安下山' }), { repository: makeRepository(trips) });
+
+    expect(messages[1].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
+      .toEqual(['hikesafe:trip:trip-1:finish', 'hikesafe:trip:trip-2:finish']);
+  });
+
+  it('finishes the trip on confirmation without a location', async () => {
+    vi.mocked(finishTrip).mockResolvedValue({ tripId: 'trip-1' } as never);
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:finish:trip-1:confirm' }),
+      { repository: makeRepository() },
+    );
+
+    expect(finishTrip).toHaveBeenCalledWith(expect.objectContaining({
+      tripId: 'trip-1', userId: 'user-1', idempotencyKey: 'line-event-1', now,
+    }));
+    expect(vi.mocked(finishTrip).mock.calls[0][0]).not.toHaveProperty('location');
+    expect(messages).toEqual([{ type: 'text', text: copy.tripFinished }]);
+  });
+
+  it('stays silent when the user cancels finishing', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:finish:trip-1:cancel' }),
+      { repository: makeRepository() },
+    );
+
+    expect(messages).toEqual([]);
+    expect(finishTrip).not.toHaveBeenCalled();
+  });
+
+  it('reports a finish failure with the shared bilingual error copy', async () => {
+    vi.mocked(finishTrip).mockRejectedValue(new Error('Trip is not active'));
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:finish:trip-1:confirm' }),
+      { repository: makeRepository() },
+    );
+
+    expect(messages).toEqual([{ type: 'text', text: copy.tripFinishError }]);
   });
 
   it('returns the matching prompt for the extend and finish intents', async () => {
