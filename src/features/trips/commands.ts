@@ -8,7 +8,6 @@ import {
   assertFreshLineLocation,
   assertFreshLocation,
   type CheckInLocation,
-  type LocationFix,
 } from '@/src/lib/location';
 
 interface TripSnapshot {
@@ -59,7 +58,7 @@ export interface TripCommandsRepository extends TripCommandsTransaction {
 export interface StartTripCommand {
   tripId: string;
   userId: string;
-  location: LocationFix;
+  location: CheckInLocation;
   idempotencyKey: string;
   now: Date;
 }
@@ -90,11 +89,6 @@ export interface FinishTripCommand {
   now: Date;
 }
 export interface HelpTripCommand extends FinishTripCommand {}
-
-const assertGps = (location: LocationFix, now: Date) => {
-  if (location.source !== 'gps') throw new Error('Location must be GPS');
-  return assertFreshLocation(location, now);
-};
 
 const assertCheckInLocation = (location: CheckInLocation, now: Date) => {
   if (location.source === 'line') {
@@ -172,7 +166,7 @@ export const startTrip = async (
     tripId: command.tripId, location: command.location,
   }, async () => {
     assertStatus(trip, 'draft');
-    assertGps(command.location, command.now);
+    assertCheckInLocation(command.location, command.now);
     const roles = await transaction.listMembershipRoles(trip.id);
     if (roles.length > 1 && !roles.includes('deputy')) throw new Error('Multi-person trips require a deputy before start');
     await transaction.activateTrip({ tripId: trip.id, startedAt: command.now });

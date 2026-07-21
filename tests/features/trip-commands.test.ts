@@ -18,6 +18,13 @@ const freshGps = {
   source: 'gps' as const,
 };
 
+const freshLineFix = {
+  latitude: 24.18,
+  longitude: 121.28,
+  capturedAt: new Date('2026-07-12T00:59:00.000Z'),
+  source: 'line' as const,
+};
+
 const makeRepository = (): TripCommandsRepository & {
   trip: any;
   checkIns: any[];
@@ -112,7 +119,7 @@ describe('trip lifecycle commands', () => {
     ]);
   });
 
-  it('allows a LINE location for check-ins but still rejects it for trip start', async () => {
+  it('allows a LINE location for both check-ins and trip start', async () => {
     const repository = makeRepository();
     repository.trip.status = 'active';
     await recordCheckIn({
@@ -138,9 +145,10 @@ describe('trip lifecycle commands', () => {
       }),
     ]);
 
-    await expect(startTrip({
+    const startRepository = makeRepository();
+    const result = await startTrip({
       tripId: 'trip-1',
-      userId: 'member-1',
+      userId: 'leader-1',
       location: {
         latitude: 23.47,
         longitude: 120.95,
@@ -149,7 +157,39 @@ describe('trip lifecycle commands', () => {
       },
       idempotencyKey: 'start-line-1',
       now,
-    }, makeRepository())).rejects.toThrow(/GPS/);
+    }, startRepository);
+    expect(result).toMatchObject({ tripId: 'trip-1', status: 'active' });
+  });
+
+  it('starts a draft trip from a LINE location fix', async () => {
+    const repository = makeRepository();
+
+    const result = await startTrip({
+      tripId: 'trip-1', userId: 'leader-1', location: freshLineFix, idempotencyKey: 'start-line-1', now,
+    }, repository);
+
+    expect(result).toMatchObject({ tripId: 'trip-1', status: 'active' });
+    expect(repository.trip).toMatchObject({ status: 'active', startedAt: now });
+  });
+
+  it('rejects a stale LINE location fix when starting', async () => {
+    await expect(startTrip({
+      tripId: 'trip-1',
+      userId: 'leader-1',
+      location: { ...freshLineFix, capturedAt: new Date('2026-07-12T00:54:59.000Z') },
+      idempotencyKey: 'start-line-stale',
+      now,
+    }, makeRepository())).rejects.toThrow('Location is stale');
+  });
+
+  it('rejects a LINE location fix outside Taiwan when starting', async () => {
+    await expect(startTrip({
+      tripId: 'trip-1',
+      userId: 'leader-1',
+      location: { ...freshLineFix, latitude: 35.68, longitude: 139.77 },
+      idempotencyKey: 'start-line-abroad',
+      now,
+    }, makeRepository())).rejects.toThrow('Location coordinates are outside Taiwan');
   });
 
   it('allows only leader or deputy to extend and atomically replaces unsent alerts', async () => {
