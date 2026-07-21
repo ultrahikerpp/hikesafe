@@ -15,6 +15,7 @@ import {
 import type { ActiveTripInitialState } from '@/src/features/trips/active-trip';
 import { copy } from '@/src/features/i18n/copy';
 import { formatElapsed, formatTime } from '@/src/lib/format-time';
+import { requestAction } from './request-action';
 
 export { formatElapsed, formatTime };
 
@@ -105,17 +106,14 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     if (!Number.isFinite(minutes) || minutes <= 0) return;
     setBusy(true);
     try {
-      const response = await fetch(`/api/trips/${tripId}/extend`, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          plannedFinishAt: new Date(Date.now() + minutes * 60_000).toISOString(),
-          idempotencyKey: crypto.randomUUID(),
-        }),
+      const { ok } = await requestAction(`/api/trips/${tripId}/extend`, {
+        plannedFinishAt: new Date(Date.now() + minutes * 60_000).toISOString(),
+        idempotencyKey: crypto.randomUUID(),
       });
-      setNotice(response.ok
+      setNotice(ok
         ? { tone: 'success', text: copy.finishTimeExtended }
         : { tone: 'error', text: copy.finishTimeExtensionError });
-      setOpenAction(undefined);
+      if (ok) setOpenAction(undefined);
     } finally {
       setBusy(false);
     }
@@ -125,14 +123,13 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     setBusy(true);
     try {
       const location = await captureLocation();
-      const response = await fetch(`/api/trips/${tripId}/finish`, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ location, idempotencyKey: crypto.randomUUID() }),
+      const { ok } = await requestAction(`/api/trips/${tripId}/finish`, {
+        location, idempotencyKey: crypto.randomUUID(),
       });
-      setNotice(response.ok
+      setNotice(ok
         ? { tone: 'success', text: copy.tripFinished }
         : { tone: 'error', text: copy.tripFinishError });
-      setOpenAction(undefined);
+      if (ok) setOpenAction(undefined);
     } finally {
       setBusy(false);
     }
@@ -142,19 +139,15 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     setBusy(true);
     try {
       const location = await captureLocation();
-      const response = await fetch(`/api/trips/${tripId}/help`, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          message: helpMessage.trim() || undefined,
-          location,
-          idempotencyKey: crypto.randomUUID(),
-        }),
+      const { ok } = await requestAction(`/api/trips/${tripId}/help`, {
+        message: helpMessage.trim() || undefined,
+        location,
+        idempotencyKey: crypto.randomUUID(),
       });
-      setNotice(response.ok
+      setNotice(ok
         ? { tone: 'success', text: copy.helpConfirmation() }
         : { tone: 'error', text: copy.helpError });
-      setOpenAction(undefined);
-      setHelpMessage('');
+      if (ok) { setOpenAction(undefined); setHelpMessage(''); }
     } finally {
       setBusy(false);
     }

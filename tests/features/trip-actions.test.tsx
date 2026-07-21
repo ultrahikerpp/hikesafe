@@ -115,4 +115,15 @@ describe('TripActions', () => {
     expect(url).toBe('/api/trips/trip-1/help');
     expect(JSON.parse(String(init.body)).message).toBe('腳扭傷');
   });
+
+  it('shows an error notice when the help request cannot be sent at all', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+    render(<TripActions tripId="trip-1" initialState={initialState} />);
+
+    fireEvent.click(screen.getByRole('button', { name: copy.needHelp }));
+    fireEvent.click(screen.getByRole('button', { name: copy.confirmHelp }));
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(copy.helpError);
+  });
 });
