@@ -214,4 +214,24 @@ describe('handleLineConversation', () => {
     expect(output).not.toContain('postgres');
     expect(output).not.toContain('secret');
   });
+
+  it('answers the usage command without touching the repository', async () => {
+    const repository = makeRepository();
+    const messages = await handleLineConversation(event({ text: '說明' }), { repository });
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0].type).toBe('text');
+    expect(messages[0].text).toContain('HikeSafe 使用說明');
+    expect(repository.findUserByLineUserId).not.toHaveBeenCalled();
+  });
+
+  it('answers the usage command for an unregistered LINE user', async () => {
+    const messages = await handleLineConversation(
+      event({ text: '說明', lineUserId: 'line-user-unknown' }),
+      { repository: makeRepository(trips.slice(0, 1), undefined) },
+    );
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0].text).toContain('HikeSafe 使用說明');
+  });
 });

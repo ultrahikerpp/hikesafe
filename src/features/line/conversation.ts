@@ -6,6 +6,7 @@ import {
   buildCheckInPrompt,
   buildHelpConfirmation,
   buildTripChooser,
+  buildUsageReply,
 } from '@/src/features/line/prompts';
 import { parsePostback } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
@@ -84,7 +85,8 @@ const isSupported = (event: LineConversationEvent) => {
   if (event.location) return true;
   if (event.postbackData) return parsePostback(event.postbackData) !== undefined;
   const text = event.text?.trim();
-  return text === '需要協助' || text === '求助' || text === '回報' || Boolean(text?.match(/^回報\s+/));
+  return text === '需要協助' || text === '求助' || text === '回報' || text === '說明'
+    || Boolean(text?.match(/^回報\s+/));
 };
 
 const chooseAndRetry = (activeTrips: ActiveLineTrip[]) => [
@@ -97,6 +99,8 @@ export const handleLineConversation = async (
   dependencies: { repository?: LineConversationRepository } = {},
 ): Promise<LineMessage[]> => {
   if (!isSupported(event)) return [];
+
+  if (event.text?.trim() === '說明') return [buildUsageReply()];
 
   const repository = dependencies.repository ?? databaseRepository;
   let user: { id: string } | undefined;
