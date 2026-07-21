@@ -5,7 +5,8 @@ import { createHmac } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { handleLineWebhook } from '@/app/api/line/webhook/route';
-import { buildCheckInPrompt, type LineMessage } from '@/src/features/line/messages';
+import { buildCheckInPrompt } from '@/src/features/line/prompts';
+import type { LineMessage } from '@/src/features/line/messages';
 
 const now = new Date('2026-07-18T04:00:00.000Z');
 const secret = 'channel-secret';

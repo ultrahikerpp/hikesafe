@@ -6,8 +6,8 @@ import {
   buildCheckInPrompt,
   buildHelpConfirmation,
   buildTripChooser,
-  type LineMessage,
-} from '@/src/features/line/messages';
+} from '@/src/features/line/prompts';
+import type { LineMessage } from '@/src/features/line/messages';
 import { recordCheckIn, requestHelp } from '@/src/features/trips/commands';
 import type { LineLocationFix } from '@/src/lib/location';
 

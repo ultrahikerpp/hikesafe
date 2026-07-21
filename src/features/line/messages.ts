@@ -27,11 +27,6 @@ export type LineMessage =
   | { type: 'text'; text: string; quickReply?: LineQuickReply }
   | { type: 'flex'; altText: string; contents: Record<string, unknown> };
 
-export interface LineTripChoice {
-  id: string;
-  routeName: string;
-}
-
 const formatTime = (value: Date) => {
   const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
@@ -56,51 +51,6 @@ const locationDetails = (trip: AlertMessageTrip) => [
     ? [bilingual('位置精度：LINE 未提供', 'Location accuracy: Not provided by LINE')]
     : []),
 ];
-
-const postback = (label: string, data: string): LineQuickReplyAction => ({ type: 'postback', label, data });
-const conciseLabel = (label: string) => Array.from(label).slice(0, 20).join('');
-
-export const buildCheckInPrompt = ({ tripId, includeLocation }: { tripId: string; includeLocation: boolean }): LineMessage => ({
-  type: 'text',
-  text: bilingual('請選擇回報內容', 'Choose a check-in'),
-  quickReply: {
-    items: [
-      ...(includeLocation ? [{ type: 'action' as const, action: { type: 'location' as const, label: bilingual('📍 傳送位置', 'Send location') } }] : []),
-      { type: 'action', action: postback(bilingual('✅ 平安', 'Safe'), `hikesafe:check-in:${tripId}:safe`) },
-      { type: 'action', action: postback(bilingual('🏠 已到山屋', 'At shelter'), `hikesafe:check-in:${tripId}:shelter`) },
-    ],
-  },
-});
-
-export const buildTripChooser = (trips: LineTripChoice[]): LineMessage => {
-  if (trips.length > 13) {
-    return {
-      type: 'text',
-      text: bilingual(
-        '行程數量超過 LINE 可顯示的選項，請開啟 HikeSafe 網頁選擇行程。',
-        'There are too many trips to show in LINE. Open HikeSafe on the web to choose a trip.',
-      ),
-    };
-  }
-  return {
-    type: 'text',
-    text: bilingual('請選擇要回報的行程', 'Choose a trip to check in'),
-    quickReply: {
-      items: trips.map((trip) => ({ type: 'action', action: postback(conciseLabel(trip.routeName), `hikesafe:trip:${trip.id}:select`) })),
-    },
-  };
-};
-
-export const buildHelpConfirmation = (tripId: string): LineMessage => ({
-  type: 'text',
-  text: bilingual('需要協助？確認後會通知留守人。', 'Need help? Confirm to notify guardians.'),
-  quickReply: {
-    items: [
-      { type: 'action', action: postback(bilingual('確認求助', 'Confirm'), `hikesafe:help:${tripId}:confirm`) },
-      { type: 'action', action: postback(bilingual('取消', 'Cancel'), `hikesafe:help:${tripId}:cancel`) },
-    ],
-  },
-});
 
 const card = (
   color: string,
