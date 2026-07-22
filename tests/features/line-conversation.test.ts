@@ -249,6 +249,10 @@ describe('handleLineConversation', () => {
     expect(messages).toHaveLength(2);
     expect(messages[1].quickReply?.items.map(({ action }) => action.type === 'postback' ? action.data : undefined))
       .toEqual(['hikesafe:trip:trip-1:help', 'hikesafe:trip:trip-2:help']);
+    // The lead-in must reflect the help intent, not tell a hiker seeking help to "retry your check-in".
+    expect(messages[0].text).toContain('求助');
+    expect(messages[0].text).not.toContain('重新回報');
+    expect(messages[0].text).not.toContain('retry your check-in');
   });
 
   it('returns a help confirmation after choosing a trip with the help intent', async () => {

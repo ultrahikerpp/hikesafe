@@ -44,10 +44,24 @@ const unavailableTrip = bilingual(
   '無法回報：此行程不在你的進行中行程內。',
   'Check-in not available: this is not one of your active trips.',
 );
-const retryAfterChoosing = bilingual(
-  '你有多個進行中的行程，請選擇行程後重新回報。',
-  'You have multiple active trips. Choose one, then retry your check-in.',
-);
+const chooseFirst: Record<TripChooserIntent, string> = {
+  select: bilingual(
+    '你有多個進行中的行程，請選擇行程後重新回報。',
+    'You have multiple active trips. Choose one, then retry your check-in.',
+  ),
+  help: bilingual(
+    '你有多個進行中的行程，請選擇要求助的行程。',
+    'You have multiple active trips. Choose the one that needs help.',
+  ),
+  extend: bilingual(
+    '你有多個進行中的行程，請選擇要延長的行程。',
+    'You have multiple active trips. Choose the one to extend.',
+  ),
+  finish: bilingual(
+    '你有多個進行中的行程，請選擇要結束的行程。',
+    'You have multiple active trips. Choose the one to finish.',
+  ),
+};
 const ambiguousLocation = bilingual(
   '無法判斷位置屬於哪個進行中的行程，請改用行程頁面回報位置。',
   'We cannot determine which active trip this location belongs to. Use the trip page to report it.',
@@ -113,7 +127,7 @@ const isSupported = (event: LineConversationEvent) => {
 };
 
 const chooseAndRetry = (activeTrips: ActiveLineTrip[], intent: TripChooserIntent) => [
-  textMessage(retryAfterChoosing),
+  textMessage(chooseFirst[intent]),
   buildTripChooser(activeTrips, intent),
 ];
 
