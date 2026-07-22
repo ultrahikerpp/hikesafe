@@ -20,6 +20,8 @@ const requestSchema = z.object({
   idempotencyKey: z.string().uuid(),
 }).strict();
 
+const SUMMARY_PUSH_BUDGET_MS = 3000;
+
 const sessionToken = (request: Request) =>
   request.headers.get('cookie')?.split(';').map((part) => part.trim())
     .find((part) => part.startsWith(`${sessionCookie.name}=`))
@@ -57,8 +59,14 @@ export const handleCreateTrip = async (request: Request) => {
         ...parsed.data.members,
       ],
     });
-    await pushTripSummary({ tripId: result.tripId, ownerUserId: session.userId })
+    // Best-effort: notify the owner, but never let a slow or stalled LINE push hold the
+    // creation response open — the trip is already durably created.
+    const summaryPush = pushTripSummary({ tripId: result.tripId, ownerUserId: session.userId })
       .catch((error) => console.error('Trip summary push failed', { tripId: result.tripId, error }));
+    await Promise.race([
+      summaryPush,
+      new Promise((resolve) => { setTimeout(resolve, SUMMARY_PUSH_BUDGET_MS).unref?.(); }),
+    ]);
     return NextResponse.json({ tripId: result.tripId }, { status: 201 });
   } catch (error) {
     return NextResponse.json({

@@ -189,4 +189,29 @@ describe('POST /api/trips', () => {
 
     expect(response.status).toBe(201);
   });
+
+  it('returns 201 without waiting out a stalled summary push', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: '11111111-1111-4111-8111-111111111112',
+      lineUserId: 'line-owner-1',
+      expiresAt: new Date('2026-08-01T00:00:00Z'),
+    });
+    vi.mocked(createTrip).mockResolvedValue({ tripId: 'trip-1', viewerGrants: [] });
+    // Push that never settles — simulates a stalled LINE endpoint.
+    vi.mocked(pushTripSummary).mockReturnValue(new Promise<void>(() => {}));
+
+    vi.useFakeTimers();
+    try {
+      const responsePromise = handleCreateTrip(new Request('http://localhost/api/trips', {
+        method: 'POST',
+        headers: { cookie: 'besafe_session=session-token' },
+        body: JSON.stringify(payload),
+      }));
+      await vi.advanceTimersByTimeAsync(3000);
+      const response = await responsePromise;
+      expect(response.status).toBe(201);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

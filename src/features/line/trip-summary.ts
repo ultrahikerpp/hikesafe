@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { getEnv } from '@/src/env';
 import { bilingual } from '@/src/features/i18n/copy';
@@ -76,6 +76,7 @@ const databaseRepository: TripSummaryRepository = {
       plannedFinishAt: trips.plannedFinishAt,
     }).from(trips)
       .innerJoin(routeVersions, eq(routeVersions.id, trips.routeVersionId))
+      .innerJoin(tripMembers, and(eq(tripMembers.tripId, trips.id), eq(tripMembers.userId, ownerUserId)))
       .where(eq(trips.id, tripId)).limit(1);
     if (!trip) return undefined;
 
