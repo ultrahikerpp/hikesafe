@@ -126,4 +126,34 @@ describe('TripActions', () => {
     const alert = await screen.findByRole('alert');
     expect(alert.textContent).toBe(copy.helpError);
   });
+
+  it('extends from the planned finish time rather than from now', async () => {
+    const fetchMock = okFetch();
+    vi.stubGlobal('fetch', fetchMock);
+    render(<TripActions tripId="trip-1" initialState={initialState} />);
+
+    fireEvent.click(screen.getByRole('button', { name: copy.extendFinishTime }));
+    fireEvent.click(screen.getByRole('button', { name: copy.extendByMinutes(30) }));
+    await screen.findByText((_, element) => element?.textContent === copy.finishTimeExtended);
+
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string) as { plannedFinishAt: string };
+    expect(body.plannedFinishAt).toBe('2026-07-12T05:30:00.000Z');
+  });
+
+  it('bases a second extension on the already extended finish time', async () => {
+    const fetchMock = okFetch();
+    vi.stubGlobal('fetch', fetchMock);
+    render(<TripActions tripId="trip-1" initialState={initialState} />);
+
+    fireEvent.click(screen.getByRole('button', { name: copy.extendFinishTime }));
+    fireEvent.click(screen.getByRole('button', { name: copy.extendByMinutes(30) }));
+    await screen.findByText((_, element) => element?.textContent === copy.finishTimeExtended);
+
+    fireEvent.click(screen.getByRole('button', { name: copy.extendFinishTime }));
+    fireEvent.click(screen.getByRole('button', { name: copy.extendByMinutes(60) }));
+    await screen.findByText((_, element) => element?.textContent === copy.finishTimeExtended);
+
+    const body = JSON.parse(fetchMock.mock.calls[1][1].body as string) as { plannedFinishAt: string };
+    expect(body.plannedFinishAt).toBe('2026-07-12T06:30:00.000Z');
+  });
 });

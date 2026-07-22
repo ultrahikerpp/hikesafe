@@ -43,6 +43,7 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
   const [lastSuccessfulCheckInAt, setLastSuccessfulCheckInAt] = useState(initialState.lastSuccessfulCheckInAt);
   const [gpsFreshness, setGpsFreshness] = useState(initialState.gpsFreshness);
   const [pendingQueueCount, setPendingQueueCount] = useState(initialState.pendingQueueCount);
+  const [plannedFinishAt, setPlannedFinishAt] = useState(initialState.plannedFinishAt);
   const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string }>();
   const [openAction, setOpenAction] = useState<OpenAction>();
   const [customMessage, setCustomMessage] = useState('');
@@ -105,15 +106,19 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
   const extend = async (minutes: number) => {
     if (!Number.isFinite(minutes) || minutes <= 0) return;
     setBusy(true);
+    const next = new Date(new Date(plannedFinishAt).getTime() + minutes * 60_000).toISOString();
     try {
       const { ok } = await requestAction(`/api/trips/${tripId}/extend`, {
-        plannedFinishAt: new Date(Date.now() + minutes * 60_000).toISOString(),
+        plannedFinishAt: next,
         idempotencyKey: crypto.randomUUID(),
       });
       setNotice(ok
         ? { tone: 'success', text: copy.finishTimeExtended }
         : { tone: 'error', text: copy.finishTimeExtensionError });
-      if (ok) setOpenAction(undefined);
+      if (ok) {
+        setPlannedFinishAt(next);
+        setOpenAction(undefined);
+      }
     } finally {
       setBusy(false);
     }
@@ -158,7 +163,7 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
     <Card>
       <dl className="status-list">
         <div><dt>{copy.elapsedTimeLabel}</dt><dd>{formatElapsed(initialState.startedAt, initialState.now)}</dd></div>
-        <div><dt>{copy.plannedFinish}</dt><dd>{formatTime(initialState.plannedFinishAt)}</dd></div>
+        <div><dt>{copy.plannedFinish}</dt><dd>{formatTime(plannedFinishAt)}</dd></div>
         <div><dt>{copy.lastSuccessfulCheckIn}</dt><dd>{formatTime(lastSuccessfulCheckInAt)}</dd></div>
         <div><dt>{copy.currentGps}</dt><dd>{gpsFreshness}</dd></div>
         <div><dt>{copy.pendingReports}</dt><dd>{copy.reportCount(pendingQueueCount)}</dd></div>
