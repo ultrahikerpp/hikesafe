@@ -12,7 +12,7 @@ import {
   buildUsageReply,
   type TripChooserIntent,
 } from '@/src/features/line/prompts';
-import { parsePostback } from '@/src/features/line/postback';
+import { parsePostback, type ExtendMinutes } from '@/src/features/line/postback';
 import type { LineMessage } from '@/src/features/line/messages';
 import { extendTrip, finishTrip, recordCheckIn, requestHelp, startTrip } from '@/src/features/trips/commands';
 import type { LineLocationFix } from '@/src/lib/location';
@@ -151,6 +151,7 @@ const startDraftTrip = async (
     const message = error instanceof Error ? error.message : '';
     if (message === 'Multi-person trips require a deputy before start') return [textMessage(deputyRequired)];
     if (message.startsWith('Location')) return [textMessage(locationUnusable)];
+    console.error('LINE start trip failed', { tripId, error });
     return [textMessage(startError)];
   }
 };
@@ -181,7 +182,8 @@ const handleLocationMessage = async (
         now,
       });
       return [textMessage(copy.checkInSuccess())];
-    } catch {
+    } catch (error) {
+      console.error('LINE location check-in failed', { tripId: activeTrips[0].id, error });
       return [textMessage(checkInError)];
     }
   }
@@ -218,14 +220,17 @@ const handleHelpPostback = async (
   try {
     await requestHelp({ tripId, userId, message: helpMessage, idempotencyKey: eventId, now });
     return [textMessage(copy.helpConfirmation())];
-  } catch {
+  } catch (error) {
+    console.error('LINE help request failed', { tripId, error });
     return [textMessage(copy.helpError)];
   }
 };
 
+const notManager = 'Only leader or deputy may extend or finish';
+
 const handleExtendPostback = async (
   tripId: string,
-  minutes: 30 | 60 | 120,
+  minutes: ExtendMinutes,
   activeTrips: ActiveLineTrip[],
   userId: string,
   eventId: string,
@@ -242,7 +247,9 @@ const handleExtendPostback = async (
       now,
     });
     return [textMessage(copy.finishTimeExtended)];
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === notManager) return [textMessage(copy.tripManagerRequired)];
+    console.error('LINE extend trip failed', { tripId, error });
     return [textMessage(copy.finishTimeExtensionError)];
   }
 };
@@ -258,7 +265,9 @@ const handleFinishPostback = async (
   try {
     await finishTrip({ tripId, userId, idempotencyKey: eventId, now });
     return [textMessage(copy.tripFinished)];
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === notManager) return [textMessage(copy.tripManagerRequired)];
+    console.error('LINE finish trip failed', { tripId, error });
     return [textMessage(copy.tripFinishError)];
   }
 };
@@ -279,7 +288,8 @@ const handleCheckInPostback = async (
       now,
     });
     return [textMessage(copy.checkInSuccess())];
-  } catch {
+  } catch (error) {
+    console.error('LINE check-in postback failed', { tripId, error });
     return [textMessage(checkInError)];
   }
 };
@@ -348,7 +358,8 @@ const handleTextTrigger = async (
       now,
     });
     return [textMessage(copy.checkInSuccess())];
-  } catch {
+  } catch (error) {
+    console.error('LINE text check-in failed', { tripId: activeTrips[0].id, error });
     return [textMessage(checkInError)];
   }
 };
@@ -374,7 +385,8 @@ export const handleLineConversation = async (
       repository.listActiveTripsForMember(user.id),
       repository.listDraftTripsForMember(user.id),
     ]);
-  } catch {
+  } catch (error) {
+    console.error('LINE conversation lookup failed', { lineUserId: event.lineUserId, error });
     return [textMessage(conversationError)];
   }
 

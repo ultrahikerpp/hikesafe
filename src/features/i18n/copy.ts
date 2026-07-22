@@ -69,6 +69,10 @@ export const copy = {
   finishConfirmation: bilingual('確認全隊已安全下山？', 'Confirm everyone is safely down?'),
   tripFinished: bilingual('行程已結束', 'Trip ended'),
   tripFinishError: bilingual('無法結束行程', 'The trip could not be ended'),
+  tripManagerRequired: bilingual(
+    '只有領隊或副領隊可以延長或結束行程。',
+    'Only the leader or deputy can extend or finish the trip.',
+  ),
   helpPrompt: bilingual('求助內容（可在無定位時只送文字）', 'Help message (text can be sent without a location)'),
   helpError: bilingual('無法建立求助通知。', 'The help notification could not be created.'),
   activeTripLabel: bilingual('進行中行程', 'Active trip'),

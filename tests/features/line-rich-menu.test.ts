@@ -52,7 +52,7 @@ describe('buildRichMenuPayload', () => {
   });
 
   it('keeps every action label within the 20 character limit', () => {
-    const { areas } = buildRichMenuPayload('liff-id') as { areas: Array<{ action: { label: string } }> };
+    const { areas } = buildRichMenuPayload('liff-id') as { areas: Array<{ action: Record<string, string> }> };
     for (const { action } of areas) expect(Array.from(action.label).length).toBeLessThanOrEqual(20);
   });
 });

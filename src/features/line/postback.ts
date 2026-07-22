@@ -1,18 +1,21 @@
 import type { TripChooserIntent } from '@/src/features/line/prompts';
 
+export const EXTEND_OPTION_MINUTES = [30, 60, 120] as const;
+export type ExtendMinutes = (typeof EXTEND_OPTION_MINUTES)[number];
+
 export type ParsedPostback =
   | { kind: 'check-in'; tripId: string; message: 'safe' | 'shelter' }
   | { kind: 'help'; tripId: string; action: 'confirm' | 'cancel' }
   | { kind: 'trip'; tripId: string; intent: TripChooserIntent }
   | { kind: 'start'; tripId: string; action: 'confirm' | 'cancel' }
-  | { kind: 'extend'; tripId: string; minutes: 30 | 60 | 120 }
+  | { kind: 'extend'; tripId: string; minutes: ExtendMinutes }
   | { kind: 'finish'; tripId: string; action: 'confirm' | 'cancel' };
 
 const checkInPattern = /^hikesafe:check-in:([^:]+):(safe|shelter)$/;
 const helpPattern = /^hikesafe:help:([^:]+):(confirm|cancel)$/;
 const tripPattern = /^hikesafe:trip:([^:]+):(select|extend|finish|help)$/;
 const startPattern = /^hikesafe:start:([^:]+):(confirm|cancel)$/;
-const extendPattern = /^hikesafe:extend:([^:]+):(30|60|120)$/;
+const extendPattern = new RegExp(`^hikesafe:extend:([^:]+):(${EXTEND_OPTION_MINUTES.join('|')})$`);
 const finishPattern = /^hikesafe:finish:([^:]+):(confirm|cancel)$/;
 
 export const parsePostback = (data: string): ParsedPostback | undefined => {
@@ -29,7 +32,7 @@ export const parsePostback = (data: string): ParsedPostback | undefined => {
   if (start) return { kind: 'start', tripId: start[1], action: start[2] as 'confirm' | 'cancel' };
 
   const extend = extendPattern.exec(data);
-  if (extend) return { kind: 'extend', tripId: extend[1], minutes: Number(extend[2]) as 30 | 60 | 120 };
+  if (extend) return { kind: 'extend', tripId: extend[1], minutes: Number(extend[2]) as ExtendMinutes };
 
   const finish = finishPattern.exec(data);
   if (finish) return { kind: 'finish', tripId: finish[1], action: finish[2] as 'confirm' | 'cancel' };

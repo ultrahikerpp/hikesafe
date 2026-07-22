@@ -6,6 +6,7 @@ import {
   type ActiveLineTrip,
   type LineConversationRepository,
 } from '@/src/features/line/conversation';
+import { buildStartLocationPrompt } from '@/src/features/line/prompts';
 import { extendTrip, finishTrip, recordCheckIn, requestHelp, startTrip } from '@/src/features/trips/commands';
 
 vi.mock('@/src/features/trips/commands', () => ({
@@ -40,7 +41,10 @@ const event = (overrides: Partial<Parameters<typeof handleLineConversation>[0]> 
 });
 
 describe('handleLineConversation', () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
   beforeEach(() => {
+    consoleError.mockClear();
     vi.mocked(extendTrip).mockReset();
     vi.mocked(finishTrip).mockReset();
     vi.mocked(recordCheckIn).mockReset();
@@ -322,6 +326,27 @@ describe('handleLineConversation', () => {
     expect(messages).toEqual([{ type: 'text', text: copy.finishTimeExtensionError }]);
   });
 
+  it('rejects an extend postback for a trip that is not one of the sender active trips', async () => {
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:extend:trip-999:60' }),
+      { repository: makeRepository() },
+    );
+
+    expect(extendTrip).not.toHaveBeenCalled();
+    expect(messages[0].text).toContain('此行程不在你的進行中行程內');
+  });
+
+  it('tells a non-manager why extending is not allowed instead of a generic error', async () => {
+    vi.mocked(extendTrip).mockRejectedValue(new Error('Only leader or deputy may extend or finish'));
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:extend:trip-1:30' }),
+      { repository: makeRepository() },
+    );
+
+    expect(messages).toEqual([{ type: 'text', text: copy.tripManagerRequired }]);
+  });
+
   it('asks for confirmation before finishing one active trip', async () => {
     for (const text of ['平安下山', '結束行程']) {
       const messages = await handleLineConversation(event({ text }), { repository: makeRepository() });
@@ -375,6 +400,34 @@ describe('handleLineConversation', () => {
     expect(messages).toEqual([{ type: 'text', text: copy.tripFinishError }]);
   });
 
+  it('tells a non-manager why finishing is not allowed instead of a generic error', async () => {
+    vi.mocked(finishTrip).mockRejectedValue(new Error('Only leader or deputy may extend or finish'));
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:finish:trip-1:confirm' }),
+      { repository: makeRepository() },
+    );
+
+    expect(messages).toEqual([{ type: 'text', text: copy.tripManagerRequired }]);
+  });
+
+  it('logs the underlying error server-side when a command unexpectedly fails', async () => {
+    vi.mocked(requestHelp).mockRejectedValue(new Error('postgres password=secret exploded'));
+
+    const messages = await handleLineConversation(
+      event({ postbackData: 'hikesafe:help:trip-1:confirm' }),
+      { repository: makeRepository() },
+    );
+
+    // User sees only the friendly copy…
+    expect(messages).toEqual([{ type: 'text', text: copy.helpError }]);
+    // …while the real cause is logged for the server operator, not swallowed.
+    expect(consoleError).toHaveBeenCalledWith('LINE help request failed', expect.objectContaining({
+      tripId: 'trip-1',
+      error: expect.any(Error),
+    }));
+  });
+
   it('returns the matching prompt for the extend and finish intents', async () => {
     const extend = await handleLineConversation(
       event({ postbackData: 'hikesafe:trip:trip-1:extend' }),
@@ -400,10 +453,9 @@ describe('handleLineConversation', () => {
       { repository: makeRepository([], { id: 'user-1' }, [draft]) },
     );
 
-    expect(messages).toHaveLength(1);
-    expect(messages[0].quickReply?.items).toEqual([
-      { type: 'action', action: { type: 'location', label: bilingual('📍 傳送位置', 'Send location') } },
-    ]);
+    // The location prompt's internal structure is owned by buildStartLocationPrompt's own test;
+    // here we only assert the confirm postback routes to exactly that prompt.
+    expect(messages).toEqual([buildStartLocationPrompt()]);
   });
 
   it('rejects a start postback for a trip that is not one of the user drafts', async () => {

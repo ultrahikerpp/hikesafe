@@ -1,5 +1,6 @@
 import { bilingual } from '@/src/features/i18n/copy';
 import type { LineMessage, LineQuickReplyAction } from '@/src/features/line/messages';
+import { EXTEND_OPTION_MINUTES } from '@/src/features/line/postback';
 
 export interface LineTripChoice {
   id: string;
@@ -90,7 +91,7 @@ export const buildExtendPrompt = (tripId: string): LineMessage => ({
   type: 'text',
   text: bilingual('要延長多久？時間會加在原本的預計下山時間上。', 'How long to extend? The time is added to the current planned finish.'),
   quickReply: {
-    items: [30, 60, 120].map((minutes) => ({
+    items: EXTEND_OPTION_MINUTES.map((minutes) => ({
       type: 'action',
       action: postback(bilingual(`+${minutes} 分`, `+${minutes} min`), `hikesafe:extend:${tripId}:${minutes}`),
     })),
