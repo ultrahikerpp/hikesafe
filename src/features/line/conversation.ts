@@ -120,15 +120,17 @@ const chooseAndRetry = (activeTrips: ActiveLineTrip[], intent: TripChooserIntent
 const startDraftTrip = async (
   tripId: string,
   userId: string,
-  event: LineConversationEvent & { location: LineLocationFix },
+  location: LineLocationFix,
+  eventId: string,
+  now: Date,
 ): Promise<LineMessage[]> => {
   try {
     await startTrip({
       tripId,
       userId,
-      location: event.location,
-      idempotencyKey: event.eventId,
-      now: event.now,
+      location,
+      idempotencyKey: eventId,
+      now,
     });
     return [textMessage(tripStarted)];
   } catch (error) {
@@ -139,145 +141,164 @@ const startDraftTrip = async (
   }
 };
 
-export const handleLineConversation = async (
-  event: LineConversationEvent,
-  dependencies: { repository?: LineConversationRepository } = {},
+const handleLocationMessage = async (
+  location: LineLocationFix,
+  userId: string,
+  eventId: string,
+  now: Date,
+  activeTrips: ActiveLineTrip[],
+  draftTrips: ActiveLineTrip[],
 ): Promise<LineMessage[]> => {
-  if (!isSupported(event)) return [];
-
-  if (event.text?.trim() === '說明') return [buildUsageReply()];
-
-  const repository = dependencies.repository ?? databaseRepository;
-  let user: { id: string } | undefined;
-  let activeTrips: ActiveLineTrip[];
-  let draftTrips: ActiveLineTrip[];
-  try {
-    user = await repository.findUserByLineUserId(event.lineUserId);
-    if (!user) {
-      return [textMessage(copy.authenticationError('使用 LINE 回報', 'using LINE check-ins'))];
-    }
-    [activeTrips, draftTrips] = await Promise.all([
-      repository.listActiveTripsForMember(user.id),
-      repository.listDraftTripsForMember(user.id),
-    ]);
-  } catch {
-    return [textMessage(conversationError)];
+  if (activeTrips.length > 1) {
+    return [textMessage(ambiguousLocation), buildTripChooser(activeTrips, 'select')];
   }
-
-  if (event.location) {
-    if (activeTrips.length > 1) {
-      return [textMessage(ambiguousLocation), buildTripChooser(activeTrips, 'select')];
-    }
-    if (activeTrips.length === 1) {
-      try {
-        await recordCheckIn({
-          tripId: activeTrips[0].id,
-          userId: user.id,
-          location: {
-            latitude: event.location.latitude,
-            longitude: event.location.longitude,
-            capturedAt: event.now,
-            source: 'line',
-          },
-          idempotencyKey: event.eventId,
-          now: event.now,
-        });
-        return [textMessage(copy.checkInSuccess())];
-      } catch {
-        return [textMessage(checkInError)];
-      }
-    }
-    if (draftTrips.length > 1) return [textMessage(multipleDrafts)];
-    if (draftTrips.length === 0) return [textMessage(copy.noActiveTrip)];
-    return startDraftTrip(draftTrips[0].id, user.id, event as LineConversationEvent & { location: LineLocationFix });
-  }
-
-  const postbackData = event.postbackData;
-  if (postbackData) {
-    const parsed = parsePostback(postbackData);
-    if (!parsed) return [textMessage(unavailableTrip)];
-    const { tripId } = parsed;
-
-    if (parsed.kind === 'start') {
-      if (!draftTrips.some((trip) => trip.id === tripId)) return [textMessage(unavailableTrip)];
-      if (parsed.action === 'cancel') return [];
-      return [buildStartLocationPrompt()];
-    }
-
-    if (!activeTrips.some((trip) => trip.id === tripId)) return [textMessage(unavailableTrip)];
-
-    if (parsed.kind === 'trip') {
-      if (parsed.intent === 'help') return [buildHelpConfirmation(tripId)];
-      if (parsed.intent === 'extend') return [buildExtendPrompt(tripId)];
-      if (parsed.intent === 'finish') return [buildFinishConfirmation(tripId)];
-      return [buildCheckInPrompt({ tripId, includeLocation: false })];
-    }
-    if (parsed.kind === 'help' && parsed.action === 'cancel') return [];
-
-    if (parsed.kind === 'help') {
-      try {
-        await requestHelp({
-          tripId,
-          userId: user.id,
-          message: helpMessage,
-          idempotencyKey: event.eventId,
-          now: event.now,
-        });
-        return [textMessage(copy.helpConfirmation())];
-      } catch {
-        return [textMessage(copy.helpError)];
-      }
-    }
-
-    if (parsed.kind === 'extend') {
-      const trip = activeTrips.find((item) => item.id === tripId);
-      if (!trip) return [textMessage(unavailableTrip)];
-      try {
-        await extendTrip({
-          tripId,
-          userId: user.id,
-          plannedFinishAt: new Date(trip.plannedFinishAt.getTime() + parsed.minutes * 60_000),
-          idempotencyKey: event.eventId,
-          now: event.now,
-        });
-        return [textMessage(copy.finishTimeExtended)];
-      } catch {
-        return [textMessage(copy.finishTimeExtensionError)];
-      }
-    }
-
-    if (parsed.kind === 'finish') {
-      if (parsed.action === 'cancel') return [];
-      try {
-        await finishTrip({
-          tripId,
-          userId: user.id,
-          idempotencyKey: event.eventId,
-          now: event.now,
-        });
-        return [textMessage(copy.tripFinished)];
-      } catch {
-        return [textMessage(copy.tripFinishError)];
-      }
-    }
-
-    if (parsed.kind !== 'check-in') return [textMessage(unavailableTrip)];
-
+  if (activeTrips.length === 1) {
     try {
       await recordCheckIn({
-        tripId,
-        userId: user.id,
-        message: parsed.message === 'safe' ? safeMessage : shelterMessage,
-        idempotencyKey: event.eventId,
-        now: event.now,
+        tripId: activeTrips[0].id,
+        userId,
+        location: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          capturedAt: now,
+          source: 'line',
+        },
+        idempotencyKey: eventId,
+        now,
       });
       return [textMessage(copy.checkInSuccess())];
     } catch {
       return [textMessage(checkInError)];
     }
   }
+  if (draftTrips.length > 1) return [textMessage(multipleDrafts)];
+  if (draftTrips.length === 0) return [textMessage(copy.noActiveTrip)];
+  return startDraftTrip(draftTrips[0].id, userId, location, eventId, now);
+};
 
-  const text = event.text?.trim();
+const handleStartPostback = (
+  draftTrips: ActiveLineTrip[],
+  tripId: string,
+  action: 'confirm' | 'cancel',
+): LineMessage[] => {
+  if (!draftTrips.some((trip) => trip.id === tripId)) return [textMessage(unavailableTrip)];
+  if (action === 'cancel') return [];
+  return [buildStartLocationPrompt()];
+};
+
+const handleTripPostback = (tripId: string, intent: TripChooserIntent): LineMessage[] => {
+  if (intent === 'help') return [buildHelpConfirmation(tripId)];
+  if (intent === 'extend') return [buildExtendPrompt(tripId)];
+  if (intent === 'finish') return [buildFinishConfirmation(tripId)];
+  return [buildCheckInPrompt({ tripId, includeLocation: false })];
+};
+
+const handleHelpPostback = async (
+  tripId: string,
+  action: 'confirm' | 'cancel',
+  userId: string,
+  eventId: string,
+  now: Date,
+): Promise<LineMessage[]> => {
+  if (action === 'cancel') return [];
+  try {
+    await requestHelp({ tripId, userId, message: helpMessage, idempotencyKey: eventId, now });
+    return [textMessage(copy.helpConfirmation())];
+  } catch {
+    return [textMessage(copy.helpError)];
+  }
+};
+
+const handleExtendPostback = async (
+  tripId: string,
+  minutes: 30 | 60 | 120,
+  activeTrips: ActiveLineTrip[],
+  userId: string,
+  eventId: string,
+  now: Date,
+): Promise<LineMessage[]> => {
+  const trip = activeTrips.find((item) => item.id === tripId);
+  if (!trip) return [textMessage(unavailableTrip)];
+  try {
+    await extendTrip({
+      tripId,
+      userId,
+      plannedFinishAt: new Date(trip.plannedFinishAt.getTime() + minutes * 60_000),
+      idempotencyKey: eventId,
+      now,
+    });
+    return [textMessage(copy.finishTimeExtended)];
+  } catch {
+    return [textMessage(copy.finishTimeExtensionError)];
+  }
+};
+
+const handleFinishPostback = async (
+  tripId: string,
+  action: 'confirm' | 'cancel',
+  userId: string,
+  eventId: string,
+  now: Date,
+): Promise<LineMessage[]> => {
+  if (action === 'cancel') return [];
+  try {
+    await finishTrip({ tripId, userId, idempotencyKey: eventId, now });
+    return [textMessage(copy.tripFinished)];
+  } catch {
+    return [textMessage(copy.tripFinishError)];
+  }
+};
+
+const handleCheckInPostback = async (
+  tripId: string,
+  message: 'safe' | 'shelter',
+  userId: string,
+  eventId: string,
+  now: Date,
+): Promise<LineMessage[]> => {
+  try {
+    await recordCheckIn({
+      tripId,
+      userId,
+      message: message === 'safe' ? safeMessage : shelterMessage,
+      idempotencyKey: eventId,
+      now,
+    });
+    return [textMessage(copy.checkInSuccess())];
+  } catch {
+    return [textMessage(checkInError)];
+  }
+};
+
+const handlePostback = async (
+  postbackData: string,
+  userId: string,
+  eventId: string,
+  now: Date,
+  activeTrips: ActiveLineTrip[],
+  draftTrips: ActiveLineTrip[],
+): Promise<LineMessage[]> => {
+  const parsed = parsePostback(postbackData);
+  if (!parsed) return [textMessage(unavailableTrip)];
+  const { tripId } = parsed;
+
+  if (parsed.kind === 'start') return handleStartPostback(draftTrips, tripId, parsed.action);
+  if (!activeTrips.some((trip) => trip.id === tripId)) return [textMessage(unavailableTrip)];
+
+  if (parsed.kind === 'trip') return handleTripPostback(tripId, parsed.intent);
+  if (parsed.kind === 'help') return handleHelpPostback(tripId, parsed.action, userId, eventId, now);
+  if (parsed.kind === 'extend') return handleExtendPostback(tripId, parsed.minutes, activeTrips, userId, eventId, now);
+  if (parsed.kind === 'finish') return handleFinishPostback(tripId, parsed.action, userId, eventId, now);
+  return handleCheckInPostback(tripId, parsed.message, userId, eventId, now);
+};
+
+const handleTextTrigger = async (
+  text: string | undefined,
+  userId: string,
+  eventId: string,
+  now: Date,
+  activeTrips: ActiveLineTrip[],
+): Promise<LineMessage[]> => {
   if (text === '需要協助' || text === '求助') {
     if (activeTrips.length === 0) return [textMessage(copy.noActiveTrip)];
     if (activeTrips.length !== 1) return chooseAndRetry(activeTrips, 'help');
@@ -307,13 +328,49 @@ export const handleLineConversation = async (
   try {
     await recordCheckIn({
       tripId: activeTrips[0].id,
-      userId: user.id,
+      userId,
       message,
-      idempotencyKey: event.eventId,
-      now: event.now,
+      idempotencyKey: eventId,
+      now,
     });
     return [textMessage(copy.checkInSuccess())];
   } catch {
     return [textMessage(checkInError)];
   }
+};
+
+export const handleLineConversation = async (
+  event: LineConversationEvent,
+  dependencies: { repository?: LineConversationRepository } = {},
+): Promise<LineMessage[]> => {
+  if (!isSupported(event)) return [];
+
+  if (event.text?.trim() === '說明') return [buildUsageReply()];
+
+  const repository = dependencies.repository ?? databaseRepository;
+  let user: { id: string } | undefined;
+  let activeTrips: ActiveLineTrip[];
+  let draftTrips: ActiveLineTrip[];
+  try {
+    user = await repository.findUserByLineUserId(event.lineUserId);
+    if (!user) {
+      return [textMessage(copy.authenticationError('使用 LINE 回報', 'using LINE check-ins'))];
+    }
+    [activeTrips, draftTrips] = await Promise.all([
+      repository.listActiveTripsForMember(user.id),
+      repository.listDraftTripsForMember(user.id),
+    ]);
+  } catch {
+    return [textMessage(conversationError)];
+  }
+
+  if (event.location) {
+    return handleLocationMessage(event.location, user.id, event.eventId, event.now, activeTrips, draftTrips);
+  }
+
+  if (event.postbackData) {
+    return handlePostback(event.postbackData, user.id, event.eventId, event.now, activeTrips, draftTrips);
+  }
+
+  return handleTextTrigger(event.text?.trim(), user.id, event.eventId, event.now, activeTrips);
 };
