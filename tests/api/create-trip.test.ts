@@ -5,9 +5,11 @@ vi.mock('@/src/features/auth/session', () => ({
   sessionCookie: { name: 'besafe_session' },
 }));
 vi.mock('@/src/features/trips/service', () => ({ createTrip: vi.fn() }));
+vi.mock('@/src/features/line/trip-summary', () => ({ pushTripSummary: vi.fn() }));
 
 import { POST, handleCreateTrip } from '@/app/api/trips/route';
 import { verifySession } from '@/src/features/auth/session';
+import { pushTripSummary } from '@/src/features/line/trip-summary';
 import { createTrip } from '@/src/features/trips/service';
 
 const payload = {
@@ -27,6 +29,8 @@ describe('POST /api/trips', () => {
   beforeEach(() => {
     vi.mocked(verifySession).mockReset();
     vi.mocked(createTrip).mockReset();
+    vi.mocked(pushTripSummary).mockReset();
+    vi.mocked(pushTripSummary).mockResolvedValue(undefined);
   });
 
   it('requires a LINE session', async () => {
@@ -144,5 +148,45 @@ describe('POST /api/trips', () => {
 
     expect(response.status).toBe(400);
     expect(createTrip).toHaveBeenCalledTimes(1);
+  });
+
+  it('pushes the trip summary card to the owner after creation', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: '11111111-1111-4111-8111-111111111112',
+      lineUserId: 'line-owner-1',
+      expiresAt: new Date('2026-08-01T00:00:00Z'),
+    });
+    vi.mocked(createTrip).mockResolvedValue({ tripId: 'trip-1', viewerGrants: [] });
+    vi.mocked(pushTripSummary).mockResolvedValue(undefined);
+
+    const response = await handleCreateTrip(new Request('http://localhost/api/trips', {
+      method: 'POST',
+      headers: { cookie: 'besafe_session=session-token' },
+      body: JSON.stringify(payload),
+    }));
+
+    expect(response.status).toBe(201);
+    expect(pushTripSummary).toHaveBeenCalledWith({
+      tripId: 'trip-1',
+      ownerUserId: '11111111-1111-4111-8111-111111111112',
+    });
+  });
+
+  it('still returns 201 when the summary push rejects', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: '11111111-1111-4111-8111-111111111112',
+      lineUserId: 'line-owner-1',
+      expiresAt: new Date('2026-08-01T00:00:00Z'),
+    });
+    vi.mocked(createTrip).mockResolvedValue({ tripId: 'trip-1', viewerGrants: [] });
+    vi.mocked(pushTripSummary).mockRejectedValue(new Error('unexpected'));
+
+    const response = await handleCreateTrip(new Request('http://localhost/api/trips', {
+      method: 'POST',
+      headers: { cookie: 'besafe_session=session-token' },
+      body: JSON.stringify(payload),
+    }));
+
+    expect(response.status).toBe(201);
   });
 });

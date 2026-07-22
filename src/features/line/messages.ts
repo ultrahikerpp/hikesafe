@@ -27,7 +27,7 @@ export type LineMessage =
   | { type: 'text'; text: string; quickReply?: LineQuickReply }
   | { type: 'flex'; altText: string; contents: Record<string, unknown> };
 
-const formatTime = (value: Date) => {
+export const formatTime = (value: Date) => {
   const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
   }).formatToParts(value);

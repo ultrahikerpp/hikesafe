@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { sessionCookie, verifySession } from '@/src/features/auth/session';
+import { pushTripSummary } from '@/src/features/line/trip-summary';
 import { createTrip } from '@/src/features/trips/service';
 
 const requestSchema = z.object({
@@ -56,6 +57,8 @@ export const handleCreateTrip = async (request: Request) => {
         ...parsed.data.members,
       ],
     });
+    await pushTripSummary({ tripId: result.tripId, ownerUserId: session.userId })
+      .catch((error) => console.error('Trip summary push failed', { tripId: result.tripId, error }));
     return NextResponse.json({ tripId: result.tripId }, { status: 201 });
   } catch (error) {
     return NextResponse.json({
