@@ -5,7 +5,7 @@ import { copy } from '@/src/features/i18n/copy';
 
 export interface ActiveTripInitialState {
   startedAt?: string;
-  plannedFinishAt?: string;
+  plannedFinishAt: string;
   lastSuccessfulCheckInAt?: string;
   gpsFreshness: string;
   now: string;
