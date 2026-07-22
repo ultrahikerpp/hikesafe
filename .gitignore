@@ -10,3 +10,4 @@ tsconfig.tsbuildinfo
 .vercel
 data/routes/raw/
 coverage/
+scripts/line/out/

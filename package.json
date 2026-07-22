@@ -18,7 +18,8 @@
     "routes:scrape:isports": "tsx scripts/scrape/small100-isports.ts",
     "routes:scrape:biji": "tsx scripts/scrape/small100-biji.ts",
     "routes:scrape:hiker": "tsx scripts/scrape/small100-hiker.ts",
-    "db:migrate": "tsx scripts/migrate.ts"
+    "db:migrate": "tsx scripts/migrate.ts",
+    "line:rich-menu": "tsx scripts/line/setup-rich-menu.ts"
   },
   "keywords": [],
   "author": "",
@@ -48,6 +49,7 @@
     "eslint-config-next": "^16.2.10",
     "jsdom": "^29.1.1",
     "msw": "^2.15.0",
+    "sharp": "^0.35.3",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"
