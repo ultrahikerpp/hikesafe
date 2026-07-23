@@ -4,13 +4,14 @@ HikeSafe records an active hiking trip, accepts explicit GPS or text-only check-
 
 ## Local setup
 
-Use Node 24.x and copy `.env.example` to `.env.local`. `src/env.ts` currently defines eight variables (the Task 9 brief says seven, but the source of truth contains eight):
+Use Node 24.x and copy `.env.example` to `.env.local`. `src/env.ts` defines nine variables — eight required and one optional:
 
 - `DATABASE_URL`: PostgreSQL connection URL.
 - `LINE_CHANNEL_ID` and `LINE_CHANNEL_SECRET`: LINE Login channel values.
 - `LINE_CHANNEL_ACCESS_TOKEN`: Messaging API channel token.
 - `SESSION_SECRET`, `JOB_SECRET`, and `GRANT_TOKEN_SECRET`: independently generated secrets of at least 32 characters.
 - `NEXT_PUBLIC_LIFF_ID`: LIFF application ID.
+- `NEXT_PUBLIC_LINE_OA_URL` (optional): LINE Official Account URL. When set, guardian invite acceptance shows an "add Official Account" button; the button is hidden when it is unset.
 
 Apply migrations before creating trips; `npm run db:migrate` is repeatable and records a checksum for each applied file. Import only a verified route catalog after `npm run routes:verify` succeeds.
 
@@ -28,13 +29,13 @@ For a local development fixture, inject the repository dependencies used by the 
 1. Create a LINE Login channel and set its LIFF endpoint to the deployed HTTPS application URL.
 2. Create a Messaging API channel, issue its access token, and add the Official Account to every intended guardian group. Group or room delivery does not grant precise viewer access; bind an individual guardian for that.
 3. Register the webhook URL as `https://<host>/api/line/webhook` and verify its signature with `LINE_CHANNEL_SECRET`.
-4. Set the eight variables above in Vercel, apply migrations, then deploy.
+4. Set the eight required variables above in Vercel (plus optional `NEXT_PUBLIC_LINE_OA_URL`), apply migrations, then deploy.
 5. Authorize the alert job at `GET /api/jobs/alerts` with `Authorization: Bearer <JOB_SECRET>` on a frequent schedule. Authorize `GET /api/jobs/retention` with the same header daily.
 6. Test LINE Login, a guardian binding, and a Messaging API push in the deployed environment before allowing real trips.
 
 ## Operational checks and limitations
 
-- The route catalog is **not production route-selection ready** until `npm run routes:verify` reports the required catalog with zero missing sources. At present this gate is blocked, so do not claim a formal catalog is usable or deploy route selection.
+- The route catalog now passes `npm run routes:verify` (`Catalog valid`, zero missing sources, zero duplicate slugs), so route selection is no longer gated on it. Two non-blocking coverage warnings remain: 96 of 100 small hundred peaks are catalogued (official designations 040, 041, 064, and 087 are still missing), and some required suburban routes are not yet present. Re-run `npm run routes:verify` after any catalog change and treat a non-zero exit (any error, including missing sources) as a hard block.
 - Run alert processing after the planned finish time, +60 minutes, and +120 minutes. Verify the job receives its bearer secret, and investigate any delivery that reaches `manual_review` after the retry window.
 - Run retention daily. It redacts precise GPS only after a finished trip is older than 90 days and has no unresolved alerts or deliveries.
 - GPS is collected only during explicit start, check-in, and finish actions. A text-only check-in is marked as unavailable location, never as a current GPS fix.
