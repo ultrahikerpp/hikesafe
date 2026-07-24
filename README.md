@@ -30,7 +30,7 @@ For a local development fixture, inject the repository dependencies used by the 
 2. Create a Messaging API channel, issue its access token, and add the Official Account to every intended guardian group. Group or room delivery does not grant precise viewer access; bind an individual guardian for that.
 3. Register the webhook URL as `https://<host>/api/line/webhook` and verify its signature with `LINE_CHANNEL_SECRET`.
 4. Set the eight required variables above in Vercel (plus optional `NEXT_PUBLIC_LINE_OA_URL`), apply migrations, then deploy.
-5. Authorize the alert job at `GET /api/jobs/alerts` with `Authorization: Bearer <JOB_SECRET>` on a frequent schedule. Authorize `GET /api/jobs/retention` with the same header daily.
+5. Authorize the alert job at `GET /api/jobs/alerts` with `Authorization: Bearer <JOB_SECRET>` on a frequent schedule. Authorize `GET /api/jobs/retention` with the same header daily. The every-minute alerts schedule runs on Supabase pg_cron and is defined in `docs/supabase-cron-setup.sql` — re-apply that file after any database rebuild, since the schedule is not part of the migrations. Retention runs on Vercel Cron (`vercel.ts`).
 6. Test LINE Login, a guardian binding, and a Messaging API push in the deployed environment before allowing real trips.
 
 ## Operational checks and limitations
