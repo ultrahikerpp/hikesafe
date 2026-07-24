@@ -138,6 +138,10 @@ export const copy = {
   shareInviteToLine: bilingual('分享到 LINE', 'Share to LINE'),
   copyInviteLink: bilingual('複製邀請連結', 'Copy invite link'),
   inviteLinkCopied: bilingual('邀請連結已複製。', 'The invite link was copied.'),
+  shareUnavailableCopied: bilingual(
+    '此裝置無法開啟 LINE 分享，已複製邀請連結，請貼給留守人。',
+    'LINE sharing is unavailable here; the invite link was copied — paste it to your guardian.',
+  ),
   inviteCreateError: bilingual('無法建立邀請連結。', 'The invite link could not be created.'),
   inviteLimitReached: bilingual(
     '未使用的邀請太多，請等既有邀請被接受或過期後再試。',

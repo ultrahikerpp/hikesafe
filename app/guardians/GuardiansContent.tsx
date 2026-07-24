@@ -9,6 +9,7 @@ import { Chip } from '@/app/components/Chip';
 import { Notice } from '@/app/components/Notice';
 import { copy } from '@/src/features/i18n/copy';
 import { formatTime } from '@/src/lib/format-time';
+import { shareInviteLink } from '@/src/lib/share-invite';
 
 interface GuardianBinding {
   id: string;
@@ -20,17 +21,9 @@ interface GuardianBinding {
 
 interface Invite { inviteUrl: string; expiresAt: string }
 
-const shareAvailable = async () => {
-  try {
-    const { default: liff } = await import('@line/liff');
-    return liff.isApiAvailable('shareTargetPicker');
-  } catch { return false; }
-};
-
 export function GuardiansContent() {
   const [bindings, setBindings] = useState<GuardianBinding[]>([]);
   const [invite, setInvite] = useState<Invite>();
-  const [canShare, setCanShare] = useState(false);
   const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string }>();
   const [busy, setBusy] = useState(false);
   const [bindingCode, setBindingCode] = useState('');
@@ -49,7 +42,6 @@ export function GuardiansContent() {
       setNotice({ tone: 'error', text: copy.authenticationError('讀取留守人清單', 'loading your guardian list') });
     });
   }, [refresh]);
-  useEffect(() => { void shareAvailable().then(setCanShare); }, []);
 
   const createInvite = async () => {
     setBusy(true);
@@ -79,16 +71,9 @@ export function GuardiansContent() {
 
   const shareToLine = async () => {
     if (!invite) return;
-    try {
-      const { default: liff } = await import('@line/liff');
-      const profile = await liff.getProfile();
-      await liff.shareTargetPicker([
-        { type: 'text', text: copy.inviteShareMessage(profile.displayName, invite.inviteUrl) },
-      ]);
-    } catch (error) {
-      console.error('Guardian invite share failed', { error });
-      setNotice({ tone: 'error', text: copy.inviteCreateError });
-    }
+    const inviteUrl = invite.inviteUrl;
+    const result = await shareInviteLink(inviteUrl, (name) => copy.inviteShareMessage(name, inviteUrl));
+    setNotice(result === 'copied' ? { tone: 'success', text: copy.shareUnavailableCopied } : undefined);
   };
 
   const revoke = async (id: string) => {
@@ -130,10 +115,8 @@ export function GuardiansContent() {
       <Button disabled={busy} onClick={() => void createInvite()}>{copy.inviteGuardian}</Button>
       {invite && <>
         <p className="source-note">{copy.inviteExpiresAt(formatTime(invite.expiresAt))}</p>
-        {canShare && <Button variant="secondary" onClick={() => void shareToLine()}>
-          {copy.shareInviteToLine}
-        </Button>}
-        <Button variant="secondary" onClick={() => void copyLink()}>{copy.copyInviteLink}</Button>
+        <Button variant="secondary" onClick={() => void shareToLine()}>{copy.shareInviteToLine}</Button>
+        <Button variant="ghost" onClick={() => void copyLink()}>{copy.copyInviteLink}</Button>
       </>}
     </Card>
 

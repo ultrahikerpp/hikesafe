@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { copy } from '@/src/features/i18n/copy';
+import { shareInviteLink } from '@/src/lib/share-invite';
 
 import { Button } from '@/app/components/Button';
 import { Card } from '@/app/components/Card';
@@ -48,6 +49,7 @@ export function TripForm() {
   const [bindings, setBindings] = useState<GuardianBinding[]>([]);
   const [guardianBindingIds, setGuardianBindingIds] = useState<string[]>([]);
   const [inviteUrl, setInviteUrl] = useState('');
+  const [inviteShareNote, setInviteShareNote] = useState('');
   const [vehicle, setVehicle] = useState('');
   const [equipment, setEquipment] = useState('');
   const [leaderPhone, setLeaderPhone] = useState('');
@@ -165,10 +167,23 @@ export function TripForm() {
       if (response.status === 409) { setError(copy.inviteLimitReached); return; }
       if (!response.ok) { setError(copy.inviteCreateError); return; }
       setInviteUrl((await response.json() as { inviteUrl: string }).inviteUrl);
+      setInviteShareNote('');
     } catch (requestError) {
       console.error('Guardian invite request failed', { error: requestError });
       setError(copy.inviteCreateError);
     }
+  };
+
+  const shareInvite = async () => {
+    if (!inviteUrl) return;
+    const result = await shareInviteLink(inviteUrl, (name) => copy.inviteShareMessage(name, inviteUrl));
+    setInviteShareNote(result === 'copied' ? copy.shareUnavailableCopied : '');
+  };
+
+  const copyInvite = async () => {
+    if (!inviteUrl) return;
+    await navigator.clipboard.writeText(inviteUrl);
+    setInviteShareNote(copy.inviteLinkCopied);
   };
 
   const missing = missingQuickTripFields({
@@ -276,10 +291,11 @@ export function TripForm() {
       </label>)}
       {activeBindings.length === 0 && <p className="source-note">{copy.noActiveBindings}</p>}
       <Button variant="secondary" onClick={() => void inviteGuardian()}>{copy.inviteGuardian}</Button>
-      {inviteUrl && <Button variant="ghost" onClick={() => void (async () => {
-        await navigator.clipboard.writeText(inviteUrl);
-        setError('');
-      })()}>{copy.copyInviteLink}</Button>}
+      {inviteUrl && <>
+        <Button variant="secondary" onClick={() => void shareInvite()}>{copy.shareInviteToLine}</Button>
+        <Button variant="ghost" onClick={() => void copyInvite()}>{copy.copyInviteLink}</Button>
+        {inviteShareNote && <p className="source-note" role="status">{inviteShareNote}</p>}
+      </>}
     </Card>
 
     <details className="card">

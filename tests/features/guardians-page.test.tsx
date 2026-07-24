@@ -4,7 +4,6 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 vi.mock('@/app/LiffBootstrap', () => ({ LiffBootstrap: () => null }));
 vi.mock('@line/liff', () => ({
   default: {
-    isApiAvailable: vi.fn(() => false),
     getProfile: vi.fn(async () => ({ userId: 'U-guardian-self', displayName: '小美' })),
     shareTargetPicker: vi.fn(async () => undefined),
   },
@@ -18,6 +17,8 @@ const bindings = [
   { id: 'binding-1', sourceType: 'user', displayName: '小美', sourceId: 'U-guardian', boundAt: '2026-07-20T00:00:00.000Z' },
 ];
 
+const inviteUrl = 'https://liff.line.me/liff-1/guardian/accept?token=t';
+
 const respondWith = (routes: Record<string, unknown>) => vi.fn(async (url: string, init?: RequestInit) => {
   const key = `${init?.method ?? 'GET'} ${url}`;
   if (!(key in routes)) return new Response(null, { status: 500 });
@@ -25,78 +26,64 @@ const respondWith = (routes: Record<string, unknown>) => vi.fn(async (url: strin
   return new Response(body === null ? null : JSON.stringify(body), { status: body === null ? 204 : 200 });
 });
 
+const invitingFetch = () => respondWith({
+  'GET /api/guardian-bindings': { bindings },
+  'POST /api/guardian-invites': { inviteUrl, expiresAt: '2026-07-22T00:00:00.000Z' },
+});
+
 describe('guardians page', () => {
   beforeEach(() => {
     vi.unstubAllGlobals();
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
-    vi.mocked(liff.isApiAvailable).mockReturnValue(false);
+    vi.mocked(liff.shareTargetPicker).mockResolvedValue(undefined);
   });
 
   afterEach(cleanup);
 
-  it('offers only the copy button when LINE sharing is unavailable', async () => {
-    vi.stubGlobal('fetch', respondWith({
-      'GET /api/guardian-bindings': { bindings },
-      'POST /api/guardian-invites': {
-        inviteUrl: 'https://liff.line.me/liff-1/guardian/accept?token=t', expiresAt: '2026-07-22T00:00:00.000Z',
-      },
-    }));
-    render(<GuardiansContent />);
-
-    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
-
-    expect(await screen.findByRole('button', { name: copy.copyInviteLink })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: copy.shareInviteToLine })).not.toBeInTheDocument();
-  });
-
-  it('offers the share button when LINE sharing is available', async () => {
-    vi.mocked(liff.isApiAvailable).mockReturnValue(true);
-    vi.stubGlobal('fetch', respondWith({
-      'GET /api/guardian-bindings': { bindings },
-      'POST /api/guardian-invites': {
-        inviteUrl: 'https://liff.line.me/liff-1/guardian/accept?token=t', expiresAt: '2026-07-22T00:00:00.000Z',
-      },
-    }));
+  it('always offers the share button once an invite exists', async () => {
+    vi.stubGlobal('fetch', invitingFetch());
     render(<GuardiansContent />);
 
     fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
 
     expect(await screen.findByRole('button', { name: copy.shareInviteToLine })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: copy.copyInviteLink })).toBeInTheDocument();
   });
 
-  it('shows an error notice when sharing to LINE fails', async () => {
-    vi.mocked(liff.isApiAvailable).mockReturnValue(true);
-    vi.mocked(liff.shareTargetPicker).mockRejectedValueOnce(new Error('share cancelled'));
-    vi.stubGlobal('fetch', respondWith({
-      'GET /api/guardian-bindings': { bindings },
-      'POST /api/guardian-invites': {
-        inviteUrl: 'https://liff.line.me/liff-1/guardian/accept?token=t', expiresAt: '2026-07-22T00:00:00.000Z',
-      },
-    }));
+  it('shares the invite through the LINE target picker without copying', async () => {
+    vi.stubGlobal('fetch', invitingFetch());
     render(<GuardiansContent />);
 
     fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
     fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
 
-    const alert = await screen.findByRole('alert');
-    expect(alert.textContent).toBe(copy.inviteCreateError);
+    await waitFor(() => expect(liff.shareTargetPicker).toHaveBeenCalledWith([
+      { type: 'text', text: copy.inviteShareMessage('小美', inviteUrl) },
+    ]));
+    expect(navigator.clipboard.writeText).not.toHaveBeenCalled();
+  });
+
+  it('falls back to copying the link when LINE sharing is unavailable', async () => {
+    vi.mocked(liff.shareTargetPicker).mockRejectedValueOnce(new Error('shareTargetPicker not available'));
+    vi.stubGlobal('fetch', invitingFetch());
+    render(<GuardiansContent />);
+
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
+
+    await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledWith(inviteUrl));
+    const status = await screen.findByRole('status');
+    expect(status.textContent).toBe(copy.shareUnavailableCopied);
   });
 
   it('copies the invite link and confirms it', async () => {
-    vi.stubGlobal('fetch', respondWith({
-      'GET /api/guardian-bindings': { bindings },
-      'POST /api/guardian-invites': {
-        inviteUrl: 'https://liff.line.me/liff-1/guardian/accept?token=t', expiresAt: '2026-07-22T00:00:00.000Z',
-      },
-    }));
+    vi.stubGlobal('fetch', invitingFetch());
     render(<GuardiansContent />);
 
     fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
     fireEvent.click(await screen.findByRole('button', { name: copy.copyInviteLink }));
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      'https://liff.line.me/liff-1/guardian/accept?token=t',
-    );
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(inviteUrl);
     const status = await screen.findByRole('status');
     expect(status.textContent).toBe(copy.inviteLinkCopied);
   });
