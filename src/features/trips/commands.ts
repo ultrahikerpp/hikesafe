@@ -43,7 +43,7 @@ export interface TripCommandsTransaction {
   reserveIdempotency(input: { userId: string; key: string; requestHash: string }): Promise<IdempotencyReservation>;
   saveIdempotencyResponse(input: { userId: string; key: string; result: unknown }): Promise<void>;
   activateTrip(input: { tripId: string; startedAt: Date }): Promise<void>;
-  createLifecycleNotification(input: { tripId: string; kind: 'started' | 'extended' | 'help' | 'finished'; dueAt: Date }): Promise<void>;
+  createLifecycleNotification(input: { tripId: string; kind: 'started' | 'extended' | 'help' | 'finished' | 'check_in'; dueAt: Date }): Promise<void>;
   insertCheckIn(input: Omit<StoredCheckIn, 'id'>): Promise<StoredCheckIn>;
   replaceUnsentAlertSchedule(input: { tripId: string; plannedFinishAt: Date }): Promise<void>;
   finishTrip(input: { tripId: string; finishedAt: Date }): Promise<void>;
@@ -187,7 +187,9 @@ export const recordCheckIn = async (
     tripId: command.tripId, message: command.message, location: command.location,
   }, async () => {
     assertStatus(trip, 'active');
-    return transaction.insertCheckIn(checkInValues(command));
+    const checkIn = await transaction.insertCheckIn(checkInValues(command));
+    await transaction.createLifecycleNotification({ tripId: trip.id, kind: 'check_in', dueAt: command.now });
+    return checkIn;
   });
 });
 

@@ -242,7 +242,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
       if (deadline <= now) return { outcome: 'expired' as const };
       let messages = delivery.message as LineMessage[] | null;
       if (!messages) {
-        const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, locationStatus: checkIns.locationStatus, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationCapturedAt: checkIns.locationCapturedAt, locationSource: checkIns.locationSource }).from(checkIns).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
+        const [lastCheckIn] = await transaction.select({ createdAt: checkIns.createdAt, userName: users.displayName, message: checkIns.message, locationStatus: checkIns.locationStatus, latitude: checkIns.latitude, longitude: checkIns.longitude, accuracyMeters: checkIns.accuracyMeters, locationCapturedAt: checkIns.locationCapturedAt, locationSource: checkIns.locationSource }).from(checkIns).innerJoin(users, eq(users.id, checkIns.userId)).where(eq(checkIns.tripId, delivery.tripId)).orderBy(desc(checkIns.createdAt)).limit(1);
         const members = await transaction.select({ name: users.displayName }).from(tripMembers).innerJoin(users, eq(users.id, tripMembers.userId)).where(eq(tripMembers.tripId, delivery.tripId));
         const location = toEmergencyReportLocation(lastCheckIn);
         const report = buildEmergencyReport({
@@ -252,7 +252,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
           vehicle: delivery.vehicle, equipment: delivery.equipment as string[],
           checkpoints: delivery.checkpoints as string[], evacuationPoints: delivery.evacuationPoints as string[],
         });
-        const trip: AlertMessageTrip = { id: delivery.tripId, routeName: delivery.routeName, plannedFinishAt: delivery.plannedFinishAt, team: members.map((member) => member.name), lastCheckInAt: lastCheckIn?.createdAt ?? null, lastLocationStatus: lastCheckIn?.locationStatus ?? 'unavailable', lastLocationAccuracyMeters: lastCheckIn?.accuracyMeters ?? null, lastLocationSource: lastCheckIn?.locationSource ?? null, leaderPhone: delivery.leaderPhone,
+        const trip: AlertMessageTrip = { id: delivery.tripId, routeName: delivery.routeName, plannedFinishAt: delivery.plannedFinishAt, team: members.map((member) => member.name), lastCheckInAt: lastCheckIn?.createdAt ?? null, lastCheckInBy: lastCheckIn?.userName ?? null, lastCheckInMessage: lastCheckIn?.message ?? null, lastLocationStatus: lastCheckIn?.locationStatus ?? 'unavailable', lastLocationAccuracyMeters: lastCheckIn?.accuracyMeters ?? null, lastLocationSource: lastCheckIn?.locationSource ?? null, leaderPhone: delivery.leaderPhone,
           reportText: report.text };
         if (delivery.stage === 'overdue_120' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
           const token = createGrantToken(delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET);

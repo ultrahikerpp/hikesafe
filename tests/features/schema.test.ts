@@ -217,6 +217,7 @@ describe('database schema', () => {
     expect(bootstrap).toContain('0012_guardian_invites.sql');
     expect(bootstrap).toContain('0013_alert_job_heartbeat.sql');
     expect(bootstrap).toContain('0014_session_revocations.sql');
+    expect(bootstrap).toContain('0015_check_in_notifications.sql');
   });
 });
 

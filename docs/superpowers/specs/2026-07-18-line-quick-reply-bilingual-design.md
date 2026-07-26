@@ -6,7 +6,7 @@
 
 讓登山客可直接在 HikeSafe 官方 LINE 對話中，以文字或 Quick Reply 快速回報進度，不必切換到 LIFF 網頁；LINE 位置訊息也可保存，但明確標示精度未知。保留現有繁體中文，所有系統 UI、功能提示、LINE 回覆與通知文字增加英文翻譯，以支援國際黑客松展示。
 
-本功能不提供背景定位、導航、持續 GPS 追蹤或自動救援。一般平安回報只更新行程資料；只有「需要協助」、預計下山提醒與逾時狀態會通知留守人。LINE 位置不是 GPS 精度資料，不得用來開始登山或宣稱有精度保證。
+本功能不提供背景定位、導航、持續 GPS 追蹤或自動救援。一般進度回報會更新行程資料並通知留守人；「需要協助」、預計下山提醒與逾時狀態沿用各自的通知流程。LINE 位置不是 GPS 精度資料，不得用來開始登山或宣稱有精度保證。
 
 ## 使用流程
 
@@ -34,14 +34,14 @@ Quick Reply 使用 postback action 或 LINE 原生 location action。LINE 使用
 
 ```text
 回報已成功送出
-Check-in submitted successfully
+Check-in sent successfully
 ```
 
-這類回報不建立 LINE 推播通知，不增加留守人的通知量；它會成為行程的最後成功回報，供留守查看頁面與後續提醒使用。
+這類回報會在同一筆資料庫交易中寫入 check-in 並建立留守通知事件，再由既有的可重試通知流程推播最新回報人、內容、時間與位置狀態。重複 webhook event 不會新增第二筆 check-in 或通知事件。
 
 ### 位置回報
 
-使用者只有一個 active trip 時，才顯示「傳送位置」的 LINE 原生 location action。收到位置 message event 後，將位置轉為 `locationSource = 'line'` 的 check-in，保存經緯度與收到時間，`accuracyMeters` 留空表示 LINE 未提供精度；位置回報本身不推播給留守人。此資料可供留守查看與後續通報摘要使用，但不得作為開始登山所需的新鮮 GPS。
+使用者只有一個 active trip 時，才顯示「傳送位置」的 LINE 原生 location action。收到位置 message event 後，將位置轉為 `locationSource = 'line'` 的 check-in，保存經緯度與收到時間，`accuracyMeters` 留空表示 LINE 未提供精度；位置回報也會通知留守人，並明確標示 LINE 未提供精度。此資料可供留守查看與後續通報摘要使用，但不得作為開始登山所需的新鮮 GPS。
 
 使用者有多個 active trip 時不顯示位置按鈕，避免 LINE location event 無法攜帶所選行程而寫錯資料；此情況的位置回報改由 LIFF 完成。多行程仍可使用不含位置的「平安」或「已到山屋」回報，且系統不得自行猜測位置所屬行程。
 
@@ -115,7 +115,7 @@ LINE reply API 保持使用 webhook 的 reply token。postback 內可能帶行�
 - LINE 回覆失敗：記錄不含秘密的錯誤；資料庫 command 的冪等結果仍保持一致。
 - LINE 位置沒有精度值：以 `locationSource = 'line'` 保存，不填入假精度；報告與留守查看顯示「精度未知」。
 - 重複 webhook event：回傳原本結果，不新增第二筆 check-in 或 alert event。
-- 平安回報成功後不推播留守人；求助確認成功後才進入現有通知佇列。
+- 一般回報成功後建立留守通知事件；求助仍需確認後才進入通知佇列。
 
 ## 範圍與限制
 
@@ -129,7 +129,7 @@ LINE reply API 保持使用 webhook 的 reply token。postback 內可能帶行�
 ## 驗收與測試
 
 - `回報` 會回覆雙語 Quick Reply，且按鈕包含對應 icon/action。
-- 「平安」與「已到山屋」只新增 check-in，不新增通知事件。
+- 「平安」與「已到山屋」各新增一筆 check-in 與一筆留守通知事件。
 - 位置 action 會新增含經緯度、`locationSource = 'line'`、精度為 NULL 的 check-in。
 - 只有單一 active trip 時才顯示位置 action；多 active trip 不顯示位置按鈕，且不會把收到的位置自行套用到任一行程。
 - LINE 位置不會被 `startTrip` 接受為開始登山 GPS；GPS／network check-in 的精度驗證維持原規則。

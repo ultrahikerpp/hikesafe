@@ -1,4 +1,4 @@
-export type AlertStage = 'started' | 'extended' | 'help' | 'finished' | 'due' | 'overdue_60' | 'overdue_120';
+export type AlertStage = 'started' | 'extended' | 'help' | 'finished' | 'check_in' | 'due' | 'overdue_60' | 'overdue_120';
 
 const stages: ReadonlyArray<readonly [AlertStage, number]> = [
   ['due', 0],

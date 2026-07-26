@@ -90,13 +90,14 @@ describe('trip lifecycle commands', () => {
       .rejects.toThrow('Multi-person trips require a deputy before start');
   });
 
-  it('lets a member record a text-only check-in with explicit unavailable location', async () => {
+  it('records a text-only check-in and queues one idempotent guardian notification', async () => {
     const repository = makeRepository();
     repository.trip.status = 'active';
     const command = { tripId: 'trip-1', userId: 'member-1', message: '平安，無定位訊號', idempotencyKey: 'check-in-1', now };
     await recordCheckIn(command, repository);
     await recordCheckIn(command, repository);
     expect(repository.checkIns).toEqual([expect.objectContaining({ userId: 'member-1', message: '平安，無定位訊號', locationStatus: 'unavailable' })]);
+    expect(repository.calls.filter((call) => call === 'notify-check_in')).toHaveLength(1);
   });
 
   it('accepts a fresh network location for check-ins', async () => {

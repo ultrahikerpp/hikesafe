@@ -18,7 +18,7 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => { linePushes.length = 0; server.resetHandlers(); });
 afterAll(() => server.close());
 
-type Event = { id: string; stage: 'started' | 'extended' | 'due' | 'overdue_60' | 'overdue_120'; dueAt: Date; status: 'pending' | 'claimed' | 'sent' | 'cancelled'; token?: string };
+type Event = { id: string; stage: 'started' | 'extended' | 'check_in' | 'due' | 'overdue_60' | 'overdue_120'; dueAt: Date; status: 'pending' | 'claimed' | 'sent' | 'cancelled'; token?: string };
 type Delivery = { id: string; eventId: string; status: 'pending' | 'claimed' | 'sending' | 'sent' | 'cancelled'; retryKey: string; token?: string; attempts: number; message?: Array<{ type: 'text'; text: string }> };
 
 class FlowStore implements CreateTripRepository, TripCommandsRepository, AlertProcessRepository, RetentionRepository {
@@ -106,10 +106,10 @@ describe('full trip flow with an explicit development repository fixture', () =>
     await recordCheckIn({ tripId: created.tripId, userId: 'member-1', message: '平安', location: gps('2026-07-12T01:10:00.000Z'), idempotencyKey: 'check-1', now: new Date('2026-07-12T01:10:00.000Z') }, store);
     await extendTrip({ tripId: created.tripId, userId: 'deputy-1', plannedFinishAt: extended, idempotencyKey: 'extend-1', now: new Date('2026-07-12T01:15:00.000Z') }, store);
     for (const at of [extended, new Date(extended.getTime() + 60 * 60_000), new Date(extended.getTime() + 120 * 60_000)]) await processDueAlerts({ now: at, repository: store, send: sendLine });
-    expect(linePushes.map((push) => push.text)).toEqual(['HikeSafe started trip-1', 'HikeSafe due trip-1', 'HikeSafe extended trip-1', 'HikeSafe overdue_60 trip-1', 'HikeSafe overdue_120 trip-1']);
+    expect(linePushes.map((push) => push.text)).toEqual(['HikeSafe started trip-1', 'HikeSafe check_in trip-1', 'HikeSafe due trip-1', 'HikeSafe extended trip-1', 'HikeSafe overdue_60 trip-1', 'HikeSafe overdue_120 trip-1']);
     await finishTrip({ tripId: created.tripId, userId: 'deputy-1', location: gps('2026-07-12T05:01:00.000Z'), idempotencyKey: 'finish-1', now: new Date('2026-07-12T05:01:00.000Z') }, store);
     await processDueAlerts({ now: new Date('2026-07-12T05:02:00.000Z'), repository: store, send: sendLine });
-    expect(linePushes).toHaveLength(6);
+    expect(linePushes).toHaveLength(7);
     await expect(deleteExpiredPreciseLocations(() => new Date('2026-10-12T05:02:00.000Z'), store)).resolves.toEqual({ deleted: 2 });
     expect(store.checkIns.every((checkIn) => checkIn.locationStatus !== 'available')).toBe(true);
   });

@@ -7,6 +7,8 @@ export interface AlertMessageTrip {
   plannedFinishAt: Date;
   team: string[];
   lastCheckInAt: Date | null;
+  lastCheckInBy?: string | null;
+  lastCheckInMessage?: string | null;
   lastLocationStatus: 'available' | 'unavailable' | 'redacted';
   lastLocationAccuracyMeters: number | null;
   lastLocationSource: 'gps' | 'network' | 'line' | null;
@@ -87,6 +89,14 @@ const card = (
 });
 
 export const buildLineMessage = (stage: AlertStage, trip: AlertMessageTrip): LineMessage => {
+  if (stage === 'check_in') {
+    return card('#2E8B57', bilingual('登山客最新回報', 'Latest hiker check-in'), trip, [
+      bilingual(`回報人：${trip.lastCheckInBy || '未提供'}`, `Reported by: ${trip.lastCheckInBy || 'Not provided'}`),
+      `${bilingual('回報內容：', 'Status:')}\n${trip.lastCheckInMessage?.trim() || bilingual('未提供', 'Not provided')}`,
+      ...locationDetails(trip),
+      bilingual('此回報由登山客主動送出，不代表持續定位。', 'This check-in was actively sent by the hiker and does not indicate continuous tracking.'),
+    ], []);
+  }
   if (stage === 'started') {
     return card('#2E8B57', bilingual('已啟程：HikeSafe 留守通知', 'Started: HikeSafe guardian notification'), trip, [
       bilingual('隊伍已在登山口啟程；此通知不代表持續 GPS 追蹤。', 'The team started at the trailhead; this notification does not indicate continuous GPS tracking.'),

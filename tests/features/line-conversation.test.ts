@@ -96,7 +96,7 @@ describe('handleLineConversation', () => {
   });
 
   it('records shelter and text check-ins only for one active trip', async () => {
-    await handleLineConversation(event({ postbackData: 'hikesafe:check-in:trip-1:shelter' }), {
+    const shelterMessages = await handleLineConversation(event({ postbackData: 'hikesafe:check-in:trip-1:shelter' }), {
       repository: makeRepository(),
     });
     await handleLineConversation(event({ eventId: 'line-event-2', text: '回報 稜線風大但平安' }), {
@@ -117,6 +117,7 @@ describe('handleLineConversation', () => {
       idempotencyKey: 'line-event-2',
       now,
     });
+    expect(shelterMessages).toEqual([{ type: 'text', text: copy.checkInSuccess() }]);
   });
 
   it('asks the user to choose and retry ambiguous text check-ins without writing', async () => {

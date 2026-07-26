@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 
 import { applyMigrations } from '@/src/db/migrations';
 import { createDatabaseAlertProcessRepository, databaseAlertProcessRepository } from '@/src/features/alerts/process';
-import { extendTrip, finishTrip, startTrip } from '@/src/features/trips/commands';
+import { extendTrip, finishTrip, recordCheckIn, startTrip } from '@/src/features/trips/commands';
 import { acceptTripInvite, assignDeputy, createTripInvite } from '@/src/features/trips/invites';
 
 const databaseUrl = process.env.BESAFE_TEST_DATABASE_URL
@@ -128,6 +128,7 @@ describe('PostgreSQL alert concurrency', () => {
       '0012_guardian_invites.sql',
       '0013_alert_job_heartbeat.sql',
       '0014_session_revocations.sql',
+      '0015_check_in_notifications.sql',
     ]);
     await expect(admin`SELECT 'manual_review'::alert_delivery_status`).resolves.toHaveLength(1);
   });
@@ -291,6 +292,39 @@ describe('PostgreSQL alert concurrency', () => {
 
     await expect(admin<{ count: string }[]>`SELECT count(*) FROM alert_events WHERE trip_id = ${tripId} AND stage = 'extended' AND status = 'pending'`)
       .resolves.toEqual([{ count: '2' }]);
+  });
+
+  it('queues one idempotent check-in event and dispatches it only to the bound guardian', async () => {
+    const { tripId, ownerId } = await seedTrip();
+    const [{ id: guardianUserId }] = await admin<{ id: string }[]>`
+      INSERT INTO users (line_user_id, display_name) VALUES ('guardian-line-user', 'Guardian') RETURNING id
+    `;
+    const [{ id: bindingId }] = await admin<{ id: string }[]>`
+      INSERT INTO line_bindings (user_id, source_type, source_id, display_name, bound_at)
+      VALUES (${guardianUserId}, 'user', 'guardian-recipient', 'Guardian', now()) RETURNING id
+    `;
+    await admin`INSERT INTO guardians (trip_id, line_binding_id) VALUES (${tripId}, ${bindingId})`;
+
+    const command = {
+      tripId,
+      userId: ownerId,
+      message: '平安\nSafe',
+      idempotencyKey: 'postgres-check-in',
+      now: new Date(),
+    };
+    await recordCheckIn(command);
+    await recordCheckIn(command);
+
+    await expect(admin<{ count: string }[]>`
+      SELECT count(*) FROM alert_events
+      WHERE trip_id = ${tripId} AND stage = 'check_in' AND status = 'pending'
+    `).resolves.toEqual([{ count: '1' }]);
+
+    const [claim] = await databaseAlertProcessRepository.claimDueActiveEvents({ now: new Date(), limit: 10 });
+    await expect(databaseAlertProcessRepository.dispatchClaim?.({ claim, now: new Date() })).resolves.toBe('dispatched');
+    await expect(admin<{ recipient_id: string }[]>`
+      SELECT recipient_id FROM alert_deliveries WHERE event_id = ${claim.eventId}
+    `).resolves.toEqual([{ recipient_id: 'guardian-recipient' }]);
   });
 
   it('persists a one-time draft invite, joins the LINE user as member, and lets the owner designate deputy', async () => {

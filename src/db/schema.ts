@@ -46,6 +46,7 @@ export const alertStageEnum = pgEnum('alert_stage', [
   'extended',
   'help',
   'finished',
+  'check_in',
   'due',
   'overdue_60',
   'overdue_120',

@@ -16,6 +16,23 @@ const trip = {
 };
 
 describe('buildLineMessage', () => {
+  it('builds a guardian card containing the hiker latest check-in status', () => {
+    const message = buildLineMessage('check_in', {
+      ...trip,
+      lastCheckInBy: '阿山',
+      lastCheckInMessage: '平安\nSafe',
+    });
+    const serialized = JSON.stringify(message);
+
+    expect(message).toEqual(expect.objectContaining({
+      type: 'flex',
+      altText: expect.stringContaining('登山客最新回報'),
+    }));
+    expect(serialized).toContain('平安');
+    expect(serialized).toContain('阿山');
+    expect(serialized).toContain('登山客主動送出');
+  });
+
   it('sends the due reminder only to participant delivery targets', () => {
     expect(buildLineMessage('due', trip)).toEqual(expect.objectContaining({
       type: 'text',
