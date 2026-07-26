@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { authorizeTripViewer } from '@/src/features/auth/authorize-trip';
 import { sessionCookie, verifySession } from '@/src/features/auth/session';
+import { viewerTokenFromRequest } from '@/src/features/auth/viewer-token';
 
 const sessionToken = (request: Request) =>
   request.headers.get('cookie')?.split(';').map((part) => part.trim())
@@ -22,7 +23,7 @@ export const GET = async (
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   const { tripId } = await params;
-  const viewerToken = new URL(request.url).searchParams.get('grant') ?? undefined;
+  const viewerToken = viewerTokenFromRequest(request);
   const authorized = await authorizeTripViewer({
     tripId,
     userId: session.userId,

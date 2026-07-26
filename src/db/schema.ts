@@ -405,3 +405,17 @@ export const idempotencyKeys = pgTable(
     uniqueIndex('idempotency_keys_user_key_unique').on(table.userId, table.key),
   ],
 );
+
+export const jobHeartbeats = pgTable('job_heartbeats', {
+  jobName: text('job_name').primaryKey(),
+  lastStartedAt: timestamp('last_started_at', { withTimezone: true }),
+  lastSucceededAt: timestamp('last_succeeded_at', { withTimezone: true }),
+  lastFailedAt: timestamp('last_failed_at', { withTimezone: true }),
+  lastError: text('last_error'),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const sessionRevocations = pgTable('session_revocations', {
+  sessionId: text('session_id').primaryKey(),
+  revokedAt: timestamp('revoked_at', { withTimezone: true }).notNull().defaultNow(),
+});

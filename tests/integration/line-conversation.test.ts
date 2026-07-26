@@ -86,6 +86,27 @@ describe('LINE conversation webhook', () => {
     expect(reply).toHaveBeenCalledWith('reply-postback-1', messages);
   });
 
+  it('returns a retryable response when LINE cannot accept a conversation reply', async () => {
+    const conversation = vi.fn().mockResolvedValue([{ type: 'text', text: 'retry me' }]);
+    const logger = { error: vi.fn() };
+
+    const response = await handleLineWebhook(signedRequest([{
+      type: 'message',
+      webhookEventId: 'event-reply-failure-1',
+      replyToken: 'reply-failure-1',
+      source,
+      message: { type: 'text', text: '回報' },
+    }]), {
+      now: () => now,
+      conversation,
+      reply: vi.fn().mockRejectedValue(new Error('LINE unavailable')),
+      logger,
+    });
+
+    expect(response.status).toBe(503);
+    expect(logger.error).toHaveBeenCalled();
+  });
+
   it('forwards signed LINE locations without inventing accuracy', async () => {
     const conversation = vi.fn().mockResolvedValue([]);
     const reply = vi.fn().mockResolvedValue(undefined);

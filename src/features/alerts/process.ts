@@ -257,7 +257,7 @@ export const databaseAlertProcessRepository: AlertProcessRepository = {
         if (delivery.stage === 'overdue_120' && delivery.viewerGrantEligible && delivery.guardianId && delivery.guardianLineUserId) {
           const token = createGrantToken(delivery.id, delivery.grantVersion, getEnv().GRANT_TOKEN_SECRET);
           await transaction.insert(viewerGrants).values({ tripId: delivery.tripId, guardianId: delivery.guardianId, deliveryId: delivery.id, tokenVersion: delivery.grantVersion, guardianLineUserId: delivery.guardianLineUserId, tokenHash: hashViewerGrant(token), expiresAt: deadline }).onConflictDoNothing();
-          trip.viewerGrantUrl = `https://liff.line.me/${getEnv().NEXT_PUBLIC_LIFF_ID}/trips/${delivery.tripId}/guardian-viewer?grant=${grantTokenMarker}`;
+          trip.viewerGrantUrl = `https://liff.line.me/${getEnv().NEXT_PUBLIC_LIFF_ID}/trips/${delivery.tripId}/guardian-viewer#grant=${grantTokenMarker}`;
         }
         messages = [buildLineMessage(delivery.stage, trip)];
       }

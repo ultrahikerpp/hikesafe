@@ -13,7 +13,7 @@ Use Node 24.x and copy `.env.example` to `.env.local`. `src/env.ts` defines nine
 - `NEXT_PUBLIC_LIFF_ID`: LIFF application ID.
 - `NEXT_PUBLIC_LINE_OA_URL` (optional): LINE Official Account URL. When set, guardian invite acceptance shows an "add Official Account" button; the button is hidden when it is unset.
 
-Apply migrations before creating trips; `npm run db:migrate` is repeatable and records a checksum for each applied file. Import only a verified route catalog after `npm run routes:verify` succeeds.
+Apply migrations before creating trips; `npm run db:migrate` is repeatable, records a checksum for each applied file, and is the canonical Supabase bootstrap flow documented in `docs/supabase-bootstrap.md`. Import only a verified route catalog after `npm run routes:verify` succeeds.
 
 ```sh
 npm run db:migrate
@@ -30,7 +30,7 @@ For a local development fixture, inject the repository dependencies used by the 
 2. Create a Messaging API channel, issue its access token, and add the Official Account to every intended guardian group. Group or room delivery does not grant precise viewer access; bind an individual guardian for that.
 3. Register the webhook URL as `https://<host>/api/line/webhook` and verify its signature with `LINE_CHANNEL_SECRET`.
 4. Set the eight required variables above in Vercel (plus optional `NEXT_PUBLIC_LINE_OA_URL`), apply migrations, then deploy.
-5. Authorize the alert job at `GET /api/jobs/alerts` with `Authorization: Bearer <JOB_SECRET>` on a frequent schedule. Authorize `GET /api/jobs/retention` with the same header daily. The every-minute alerts schedule runs on Supabase pg_cron and is defined in `docs/supabase-cron-setup.sql` — re-apply that file after any database rebuild, since the schedule is not part of the migrations. Retention runs on Vercel Cron (`vercel.ts`).
+5. Authorize the alert job at `GET /api/jobs/alerts` with `Authorization: Bearer <JOB_SECRET>` on a frequent schedule. Monitor `GET /api/jobs/alerts/health` with the same header; it returns 503 when no successful alert run has been recorded in three minutes. Authorize `GET /api/jobs/retention` with the same header daily. The every-minute alerts schedule runs on Supabase pg_cron and is defined in `docs/supabase-cron-setup.sql` — re-apply that file after any database rebuild, since the schedule is not part of the migrations. Retention runs on Vercel Cron (`vercel.ts`).
 6. Test LINE Login, a guardian binding, and a Messaging API push in the deployed environment before allowing real trips.
 
 ## Operational checks and limitations

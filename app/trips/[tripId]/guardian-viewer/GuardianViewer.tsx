@@ -2,16 +2,23 @@
 
 import { useState } from 'react';
 import { LiffBootstrap } from '@/app/LiffBootstrap';
+import { viewerGrantHeader } from '@/src/features/auth/viewer-token';
 import type { GuardianViewer as GuardianViewerData } from '@/src/features/guardian-viewer/service';
 import { copy } from '@/src/features/i18n/copy';
 import { Card } from '@/app/components/Card';
 import { Notice } from '@/app/components/Notice';
 
-export function GuardianViewer({ tripId, grant }: { tripId: string; grant: string }) {
+export function GuardianViewer({ tripId }: { tripId: string }) {
   const [viewer, setViewer] = useState<GuardianViewerData>();
   const [error, setError] = useState<string>();
   const load = async () => {
-    const response = await fetch(`/api/trips/${tripId}/guardian-viewer?grant=${encodeURIComponent(grant)}`);
+    const grant = new URLSearchParams(window.location.hash.slice(1)).get('grant');
+    if (!grant) { setError(copy.guardianViewerError); return; }
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    const response = await fetch(`/api/trips/${tripId}/guardian-viewer`, {
+      cache: 'no-store',
+      headers: { [viewerGrantHeader]: grant },
+    });
     if (!response.ok) { setError(copy.guardianViewerError); return; }
     setViewer(await response.json());
   };

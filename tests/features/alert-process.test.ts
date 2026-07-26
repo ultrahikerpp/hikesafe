@@ -64,7 +64,7 @@ describe('processDueAlerts', () => {
   });
 
   it('reconstructs a viewer URL from a token-free persisted message template', () => {
-    const template = [{ type: 'text' as const, text: 'https://viewer?grant=__BESAFE_GRANT_TOKEN__' }];
+  const template = [{ type: 'text' as const, text: 'https://viewer#grant=__BESAFE_GRANT_TOKEN__' }];
     const sent = materializeDeliveryMessages(template, 'delivery-1', 1, 'grant-secret');
     expect(JSON.stringify(template)).toContain('__BESAFE_GRANT_TOKEN__');
     expect(JSON.stringify(template)).not.toContain(createGrantToken('delivery-1', 1, 'grant-secret'));

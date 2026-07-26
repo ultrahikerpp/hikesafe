@@ -35,11 +35,13 @@ describe('guardian viewer route', () => {
         latitude: 23.47, longitude: 120.95, accuracyMeters: null, capturedAt: '2026-07-12T04:19:00.000Z', source: 'line',
       } }, report: '119 摘要',
     });
-    const response = await GET(new Request('http://localhost/api/trips/trip-1/guardian-viewer?grant=token', { headers: { cookie: 'besafe_session=session' } }), { params: Promise.resolve({ tripId: 'trip-1' }) });
+    const response = await GET(new Request('http://localhost/api/trips/trip-1/guardian-viewer', { headers: { cookie: 'besafe_session=session', 'x-hikesafe-viewer-grant': 'token' } }), { params: Promise.resolve({ tripId: 'trip-1' }) });
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ route: '玉山主峰', team: ['阿山'], lastCheckIn: { location: {
       accuracyMeters: null, capturedAt: '2026-07-12T04:19:00.000Z', source: 'line',
     } }, report: '119 摘要' });
     expect(loadGuardianViewer).toHaveBeenCalledWith({ tripId: 'trip-1' });
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(response.headers.get('referrer-policy')).toBe('no-referrer');
   });
 });

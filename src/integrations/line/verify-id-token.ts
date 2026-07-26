@@ -34,6 +34,7 @@ export const verifyLineIdToken = async (
         id_token: idToken,
         client_id: env.LINE_CHANNEL_ID,
       }),
+      signal: AbortSignal.timeout(10_000),
     },
   );
   if (!response.ok) throw new Error('Invalid LINE identity token');

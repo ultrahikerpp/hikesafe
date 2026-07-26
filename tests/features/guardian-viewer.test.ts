@@ -89,7 +89,8 @@ describe('GuardianViewer', () => {
         report: '119 摘要',
       }),
     })));
-    render(createElement(GuardianViewer, { tripId: 'trip-1', grant: 'guardian-grant' }));
+    window.location.hash = '#grant=guardian-grant';
+    render(createElement(GuardianViewer, { tripId: 'trip-1' }));
   };
 
   it('renders LINE coordinates and time with the required unknown-accuracy disclosure', async () => {
@@ -100,6 +101,12 @@ describe('GuardianViewer', () => {
     expect(document.body).toHaveTextContent('位置精度：LINE 未提供');
     expect(document.body).toHaveTextContent('Location accuracy: Not provided by LINE');
     expect(document.body).not.toHaveTextContent('GPS accuracy');
+    const request = vi.mocked(fetch).mock.calls[0];
+    expect(request[0]).toBe('/api/trips/trip-1/guardian-viewer');
+    expect(request[1]).toEqual(expect.objectContaining({
+      cache: 'no-store',
+      headers: { 'x-hikesafe-viewer-grant': 'guardian-grant' },
+    }));
   });
 
   it.each([

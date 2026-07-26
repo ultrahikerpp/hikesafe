@@ -32,8 +32,8 @@ describe('GET /api/trips/:tripId/viewer', () => {
     vi.mocked(authorizeTripViewer).mockResolvedValue(true);
 
     const response = await GET(new Request(
-      'http://localhost/api/trips/trip-1/viewer?grant=token',
-      { headers: { cookie: 'besafe_session=session-token' } },
+      'http://localhost/api/trips/trip-1/viewer',
+      { headers: { cookie: 'besafe_session=session-token', 'x-hikesafe-viewer-grant': 'token' } },
     ), context);
 
     expect(response.status).toBe(200);
@@ -80,8 +80,8 @@ describe('GET /api/trips/:tripId/viewer', () => {
     vi.mocked(authorizeTripViewer).mockResolvedValue(false);
 
     const response = await GET(new Request(
-      'http://localhost/api/trips/trip-1/viewer?grant=legacy-group-token',
-      { headers: { cookie: 'besafe_session=session-token' } },
+      'http://localhost/api/trips/trip-1/viewer',
+      { headers: { cookie: 'besafe_session=session-token', 'x-hikesafe-viewer-grant': 'legacy-group-token' } },
     ), context);
 
     expect(response.status).toBe(403);
@@ -89,5 +89,20 @@ describe('GET /api/trips/:tripId/viewer', () => {
       error: 'Viewer grant requires an individual LINE guardian binding',
       code: 'REQUIRES_DIRECT_GUARDIAN_BINDING',
     });
+  });
+
+  it('does not accept a bearer grant from the query string', async () => {
+    vi.mocked(verifySession).mockResolvedValue({
+      userId: 'line-session-user', lineUserId: 'line-user', expiresAt: new Date(), sessionId: 'session-1',
+    });
+    vi.mocked(authorizeTripViewer).mockResolvedValue(false);
+
+    const response = await GET(new Request(
+      'http://localhost/api/trips/trip-1/viewer?grant=leaked-token',
+      { headers: { cookie: 'besafe_session=session-token' } },
+    ), context);
+
+    expect(response.status).toBe(403);
+    expect(authorizeTripViewer).toHaveBeenCalledWith(expect.objectContaining({ viewerToken: undefined }));
   });
 });

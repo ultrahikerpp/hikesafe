@@ -82,8 +82,19 @@ describe('LINE identity verification', () => {
       expect.objectContaining({
         method: 'POST',
         body: expect.any(URLSearchParams),
+        signal: expect.any(AbortSignal),
       }),
     );
+  });
+
+  it('uses a bounded timeout for LINE identity verification', async () => {
+    const fetch = vi.fn().mockResolvedValue(Response.json({
+      sub: 'line-user-1', name: '登山者', aud: env.LINE_CHANNEL_ID, exp: 2_000,
+    }));
+
+    await verifyLineIdToken('id-token', { fetch, now: () => new Date(1_000_000) });
+
+    expect(fetch.mock.calls[0][1]).toEqual(expect.objectContaining({ signal: expect.any(AbortSignal) }));
   });
 });
 
@@ -97,17 +108,28 @@ describe('signed session', () => {
       { now: () => new Date('2026-07-12T00:00:00Z') },
     );
 
-    expect(decodeJwt(token)).toEqual({
+    expect(decodeJwt(token)).toEqual(expect.objectContaining({
       userId: 'user-1',
       lineUserId: 'line-user-1',
       exp: 1_786_406_400,
-    });
+      jti: expect.any(String),
+    }));
 
-    await expect(verifySession(token)).resolves.toEqual({
+    await expect(verifySession(token, { isRevoked: async () => false })).resolves.toEqual(expect.objectContaining({
       userId: 'user-1',
       lineUserId: 'line-user-1',
       expiresAt: new Date('2026-08-11T00:00:00.000Z'),
-    });
+      sessionId: expect.any(String),
+    }));
+  });
+
+  it('rejects a session after its ID has been revoked', async () => {
+    const token = await createSession(
+      { userId: 'user-1', lineUserId: 'line-user-1' },
+      { now: () => new Date('2026-07-12T00:00:00Z') },
+    );
+
+    await expect(verifySession(token, { isRevoked: async () => true })).rejects.toThrow('Session revoked');
   });
 });
 

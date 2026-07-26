@@ -107,7 +107,7 @@ afterAll(async () => {
 });
 
 describe('PostgreSQL alert concurrency', () => {
-  it('applies migrations 0000 through 0008 to a clean PostgreSQL schema', async () => {
+  it('applies every tracked migration to a clean PostgreSQL schema', async () => {
     const rows = await admin<{ version: string }[]>`
       SELECT version FROM __besafe_migrations ORDER BY version
     `;
@@ -121,6 +121,13 @@ describe('PostgreSQL alert concurrency', () => {
       '0006_trip_invites.sql',
       '0007_help_and_finish_notifications.sql',
       '0008_route_catalog_designations.sql',
+      '0009_route_catalog_official_gaps.sql',
+      '0010_route_catalog_source_references.sql',
+      '0011_line_location_source.sql',
+      '0011_route_catalog_tiered_sources.sql',
+      '0012_guardian_invites.sql',
+      '0013_alert_job_heartbeat.sql',
+      '0014_session_revocations.sql',
     ]);
     await expect(admin`SELECT 'manual_review'::alert_delivery_status`).resolves.toHaveLength(1);
   });
@@ -141,6 +148,19 @@ describe('PostgreSQL alert concurrency', () => {
     await (applyMigrations as any)(admin, directory);
     await expect(admin<{ version: string }[]>`SELECT version FROM __besafe_migrations WHERE version LIKE '900%' ORDER BY version`)
       .resolves.toEqual([{ version: '9000_atomic.sql' }, { version: '9001_failing.sql' }]);
+  });
+
+  it('serializes concurrent migration runners on independent connections', async () => {
+    const directory = await mkdtemp(path.join(tmpdir(), 'besafe-concurrent-migrations-'));
+    await writeFile(path.join(directory, '9000_concurrent.sql'), 'CREATE TABLE concurrent_migration_marker (id integer);');
+
+    await expect(Promise.all([
+      (applyMigrations as any)(first, directory),
+      (applyMigrations as any)(second, directory),
+    ])).resolves.toEqual([undefined, undefined]);
+    await expect(admin<{ count: string }[]>`
+      SELECT count(*) FROM __besafe_migrations WHERE version = '9000_concurrent.sql'
+    `).resolves.toEqual([{ count: '1' }]);
   });
 
   it('claims child deliveries once across independent connections while a row is SKIP LOCKED', async () => {

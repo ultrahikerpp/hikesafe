@@ -16,7 +16,7 @@ describe('LIFF deep links without a prior cookie', () => {
   });
 
   it('keeps the guardian grant in the client viewer component until bootstrap completes', () => {
-    render(<GuardianViewer tripId="trip-1" grant="guardian-grant" />);
+    render(<GuardianViewer tripId="trip-1" />);
     expect(screen.getByRole('heading', { name: copy.guardianTripInfo })).toBeInTheDocument();
     expect(screen.getByText('LIFF session pending')).toBeInTheDocument();
   });

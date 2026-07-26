@@ -1,6 +1,10 @@
--- HikeSafe full database bootstrap for Supabase SQL Editor
--- Applies migrations 0000 through 0010 to an empty public schema.
--- Run this file only when the database has no HikeSafe tables.
+-- HISTORICAL SNAPSHOT — NOT THE CANONICAL HikeSafe bootstrap.
+-- This file reflects an older 0000–0010 schema and must not be used to create
+-- a new environment. The canonical flow is documented in supabase-bootstrap.md
+-- and applies every tracked drizzle/*.sql migration, including 0012+.
+--
+-- Canonical command (from the repository root, with DATABASE_URL configured):
+--   npm run db:migrate
 
 CREATE TABLE IF NOT EXISTS public.__besafe_migrations (
   version text PRIMARY KEY,

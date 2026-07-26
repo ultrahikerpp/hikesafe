@@ -10,9 +10,11 @@ import {
   guardians,
   idempotencyKeys,
   lineBindings,
+  jobHeartbeats,
   locationSourceEnum,
   locationStatusEnum,
   routeVersions,
+  sessionRevocations,
   routes,
   tripMembers,
   trips,
@@ -21,7 +23,7 @@ import {
 } from '@/src/db/schema';
 
 describe('database schema', () => {
-  it('defines the eleven required tables', () => {
+  it('defines the required application and operational tables', () => {
     expect(
       [
         users,
@@ -35,6 +37,8 @@ describe('database schema', () => {
         alertEvents,
         viewerGrants,
         idempotencyKeys,
+        jobHeartbeats,
+        sessionRevocations,
       ].map(getTableName),
     ).toEqual([
       'users',
@@ -48,6 +52,8 @@ describe('database schema', () => {
       'alert_events',
       'viewer_grants',
       'idempotency_keys',
+      'job_heartbeats',
+      'session_revocations',
     ]);
   });
 
@@ -201,6 +207,16 @@ describe('database schema', () => {
   it('ships a migration that adds the guardian invite column', () => {
     const migration = readFileSync('drizzle/0012_guardian_invites.sql', 'utf8');
     expect(migration).toMatch(/ALTER TABLE line_bindings\s+ADD COLUMN invite_token_hash text UNIQUE/i);
+  });
+
+  it('marks the old Supabase SQL snapshot as historical and documents the canonical current bootstrap', () => {
+    const snapshot = readFileSync('docs/supabase-full-migration.sql', 'utf8');
+    const bootstrap = readFileSync('docs/supabase-bootstrap.md', 'utf8');
+    expect(snapshot).toContain('HISTORICAL SNAPSHOT');
+    expect(snapshot).toContain('npm run db:migrate');
+    expect(bootstrap).toContain('0012_guardian_invites.sql');
+    expect(bootstrap).toContain('0013_alert_job_heartbeat.sql');
+    expect(bootstrap).toContain('0014_session_revocations.sql');
   });
 });
 

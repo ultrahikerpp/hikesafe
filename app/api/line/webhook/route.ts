@@ -95,6 +95,7 @@ const replyToLine = async (replyToken: string, messages: LineMessage[]) => {
       'content-type': 'application/json',
     },
     body: JSON.stringify({ replyToken, messages }),
+    signal: AbortSignal.timeout(10_000),
   });
   if (!response.ok) throw new Error('LINE reply failed');
 };
@@ -159,6 +160,7 @@ export const handleLineWebhook = async (
         await (dependencies.reply ?? replyToLine)(event.replyToken, [bindingSuccess]);
       } catch {
         (dependencies.logger ?? console).error('Unable to send LINE binding reply');
+        return new Response('Retry', { status: 503 });
       }
       continue;
     }
@@ -186,6 +188,7 @@ export const handleLineWebhook = async (
       await (dependencies.reply ?? replyToLine)(event.replyToken, messages);
     } catch {
       (dependencies.logger ?? console).error('Unable to send LINE conversation reply');
+      return new Response('Retry', { status: 503 });
     }
   }
   return new Response('OK');
