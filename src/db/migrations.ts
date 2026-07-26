@@ -37,12 +37,17 @@ export const applyMigrations = async (database: Sql, directory = migrationsDirec
         if (applied.checksum !== checksum) throw new Error(`Migration checksum mismatch: ${version}`);
         continue;
       }
-      await connection.begin(async (transaction) => {
-        for (const statement of splitStatements(migration)) await transaction.unsafe(statement);
-        await transaction`
+      await connection`BEGIN`;
+      try {
+        for (const statement of splitStatements(migration)) await connection.unsafe(statement);
+        await connection`
           INSERT INTO __besafe_migrations (version, checksum) VALUES (${version}, ${checksum})
         `;
-      });
+        await connection`COMMIT`;
+      } catch (error) {
+        await connection`ROLLBACK`;
+        throw error;
+      }
     }
   } finally {
     try {
