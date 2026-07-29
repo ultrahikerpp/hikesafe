@@ -39,8 +39,20 @@ it('keeps the phase-1 action copy bilingual', () => {
 });
 
 it('keeps the guardian invite copy bilingual', () => {
-  expect(copy.inviteGuardian).toBe('邀請留守人\nInvite a guardian');
+  expect(copy.inviteGuardian).toBe('建立邀請連結\nCreate invite link');
   expect(copy.copyInviteLink).toBe('複製邀請連結\nCopy invite link');
+  expect(copy.shareCancelled).toBe(
+    '已取消 LINE 分享，未傳送或複製邀請連結。\nLINE sharing was cancelled; the invite link was not sent or copied.',
+  );
+  expect(copy.shareUnavailableCopied).toBe(
+    '目前的開啟環境不支援 LINE 分享，已複製邀請連結，請貼給留守人。\nLINE sharing is not supported in the current environment. The invite link was copied; paste it to your guardian.',
+  );
+  expect(copy.shareFailedCopied).toBe(
+    'LINE 分享暫時失敗，已複製邀請連結，請貼給留守人。\nLINE sharing temporarily failed. The invite link was copied; paste it to your guardian.',
+  );
+  expect(copy.shareAndCopyFailed).toBe(
+    '無法分享到 LINE，也無法複製邀請連結，請稍後再試。\nThe invite could not be shared to LINE or copied. Try again later.',
+  );
   expect(copy.acceptInviteTitle('阿山')).toBe(
     '阿山 邀請你擔任留守人\n阿山 invited you to be their guardian',
   );

@@ -1,9 +1,18 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react/pure';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+vi.mock('@line/liff', () => ({
+  default: {
+    getProfile: vi.fn(async () => ({ displayName: '小美' })),
+    isApiAvailable: vi.fn(() => true),
+    shareTargetPicker: vi.fn(async () => ({ status: 'success' })),
+  },
+}));
+
 import { TripForm } from '@/app/trips/new/TripForm';
 import type { QuickRouteOption } from '@/app/trips/new/quick-trip-form';
 import { copy } from '@/src/features/i18n/copy';
+import liff from '@line/liff';
 
 const copyName = (value: string) => new RegExp(value
   .split('\n')
@@ -75,7 +84,12 @@ const installFetch = (options: {
 };
 
 describe('TripForm quick creation', () => {
-  beforeEach(() => installFetch());
+  beforeEach(() => {
+    installFetch();
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
+    vi.mocked(liff.isApiAvailable).mockReturnValue(true);
+    vi.mocked(liff.shareTargetPicker).mockResolvedValue({ status: 'success' });
+  });
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
@@ -284,6 +298,20 @@ describe('TripForm quick creation', () => {
     render(<TripForm />);
 
     expect(await screen.findByRole('button', { name: copy.inviteGuardian })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: copy.shareInviteToLine })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.inviteGuardian }));
+    expect(await screen.findByRole('button', { name: copy.shareInviteToLine })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: copy.createBindingCode })).not.toBeInTheDocument();
+  });
+
+  it('shows LINE cancellation without copying the invite link', async () => {
+    vi.mocked(liff.shareTargetPicker).mockResolvedValueOnce(undefined);
+    render(<TripForm />);
+
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
+
+    expect(await screen.findByText(copyName(copy.shareCancelled))).toBeInTheDocument();
+    expect(navigator.clipboard.writeText).not.toHaveBeenCalled();
   });
 });

@@ -5,7 +5,8 @@ vi.mock('@/app/LiffBootstrap', () => ({ LiffBootstrap: () => null }));
 vi.mock('@line/liff', () => ({
   default: {
     getProfile: vi.fn(async () => ({ userId: 'U-guardian-self', displayName: '小美' })),
-    shareTargetPicker: vi.fn(async () => undefined),
+    isApiAvailable: vi.fn(() => true),
+    shareTargetPicker: vi.fn(async () => ({ status: 'success' })),
   },
 }));
 
@@ -33,9 +34,11 @@ const invitingFetch = () => respondWith({
 
 describe('guardians page', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     vi.unstubAllGlobals();
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
-    vi.mocked(liff.shareTargetPicker).mockResolvedValue(undefined);
+    vi.mocked(liff.isApiAvailable).mockReturnValue(true);
+    vi.mocked(liff.shareTargetPicker).mockResolvedValue({ status: 'success' });
   });
 
   afterEach(cleanup);
@@ -44,6 +47,8 @@ describe('guardians page', () => {
     vi.stubGlobal('fetch', invitingFetch());
     render(<GuardiansContent />);
 
+    expect(screen.queryByRole('button', { name: copy.shareInviteToLine })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: copy.copyInviteLink })).not.toBeInTheDocument();
     fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
 
     expect(await screen.findByRole('button', { name: copy.shareInviteToLine })).toBeInTheDocument();
@@ -63,7 +68,21 @@ describe('guardians page', () => {
     expect(navigator.clipboard.writeText).not.toHaveBeenCalled();
   });
 
-  it('falls back to copying the link when LINE sharing is unavailable', async () => {
+  it('copies the link with an unavailable-environment warning when the API is unavailable', async () => {
+    vi.mocked(liff.isApiAvailable).mockReturnValueOnce(false);
+    vi.stubGlobal('fetch', invitingFetch());
+    render(<GuardiansContent />);
+
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
+
+    await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledWith(inviteUrl));
+    expect((await screen.findByRole('status')).textContent).toBe(copy.shareUnavailableCopied);
+    expect(liff.shareTargetPicker).not.toHaveBeenCalled();
+  });
+
+  it('copies the link with a LINE failure warning when the target picker rejects', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
     vi.mocked(liff.shareTargetPicker).mockRejectedValueOnce(new Error('shareTargetPicker not available'));
     vi.stubGlobal('fetch', invitingFetch());
     render(<GuardiansContent />);
@@ -73,7 +92,32 @@ describe('guardians page', () => {
 
     await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledWith(inviteUrl));
     const status = await screen.findByRole('status');
-    expect(status.textContent).toBe(copy.shareUnavailableCopied);
+    expect(status.textContent).toBe(copy.shareFailedCopied);
+  });
+
+  it('reports cancellation without copying the invite link', async () => {
+    vi.mocked(liff.shareTargetPicker).mockResolvedValueOnce(undefined);
+    vi.stubGlobal('fetch', invitingFetch());
+    render(<GuardiansContent />);
+
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
+
+    expect((await screen.findByRole('status')).textContent).toBe(copy.shareCancelled);
+    expect(navigator.clipboard.writeText).not.toHaveBeenCalled();
+  });
+
+  it('shows an error when LINE sharing and fallback copying both fail', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    vi.mocked(liff.shareTargetPicker).mockRejectedValueOnce(new Error('LINE failed'));
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('Clipboard denied'));
+    vi.stubGlobal('fetch', invitingFetch());
+    render(<GuardiansContent />);
+
+    fireEvent.click(await screen.findByRole('button', { name: copy.inviteGuardian }));
+    fireEvent.click(await screen.findByRole('button', { name: copy.shareInviteToLine }));
+
+    expect((await screen.findByRole('alert')).textContent).toBe(copy.shareAndCopyFailed);
   });
 
   it('copies the invite link and confirms it', async () => {

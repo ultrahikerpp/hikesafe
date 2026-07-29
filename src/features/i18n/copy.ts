@@ -134,13 +134,25 @@ export const copy = {
   myGuardians: bilingual('我的留守人', 'My guardians'),
   guardiansTitle: bilingual('留守人管理', 'Guardian management'),
   noGuardianBindings: bilingual('尚未綁定任何留守人。', 'No guardian is bound yet.'),
-  inviteGuardian: bilingual('邀請留守人', 'Invite a guardian'),
+  inviteGuardian: bilingual('建立邀請連結', 'Create invite link'),
   shareInviteToLine: bilingual('分享到 LINE', 'Share to LINE'),
   copyInviteLink: bilingual('複製邀請連結', 'Copy invite link'),
   inviteLinkCopied: bilingual('邀請連結已複製。', 'The invite link was copied.'),
+  shareCancelled: bilingual(
+    '已取消 LINE 分享，未傳送或複製邀請連結。',
+    'LINE sharing was cancelled; the invite link was not sent or copied.',
+  ),
   shareUnavailableCopied: bilingual(
-    '此裝置無法開啟 LINE 分享，已複製邀請連結，請貼給留守人。',
-    'LINE sharing is unavailable here; the invite link was copied — paste it to your guardian.',
+    '目前的開啟環境不支援 LINE 分享，已複製邀請連結，請貼給留守人。',
+    'LINE sharing is not supported in the current environment. The invite link was copied; paste it to your guardian.',
+  ),
+  shareFailedCopied: bilingual(
+    'LINE 分享暫時失敗，已複製邀請連結，請貼給留守人。',
+    'LINE sharing temporarily failed. The invite link was copied; paste it to your guardian.',
+  ),
+  shareAndCopyFailed: bilingual(
+    '無法分享到 LINE，也無法複製邀請連結，請稍後再試。',
+    'The invite could not be shared to LINE or copied. Try again later.',
   ),
   inviteCreateError: bilingual('無法建立邀請連結。', 'The invite link could not be created.'),
   inviteLimitReached: bilingual(

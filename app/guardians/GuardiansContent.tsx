@@ -9,6 +9,7 @@ import { Chip } from '@/app/components/Chip';
 import { Notice } from '@/app/components/Notice';
 import { copy } from '@/src/features/i18n/copy';
 import { formatTime } from '@/src/lib/format-time';
+import { shareInviteNotice } from '@/src/lib/share-invite-feedback';
 import { shareInviteLink } from '@/src/lib/share-invite';
 
 interface GuardianBinding {
@@ -24,7 +25,7 @@ interface Invite { inviteUrl: string; expiresAt: string }
 export function GuardiansContent() {
   const [bindings, setBindings] = useState<GuardianBinding[]>([]);
   const [invite, setInvite] = useState<Invite>();
-  const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string }>();
+  const [notice, setNotice] = useState<{ tone: 'success' | 'warning' | 'error'; text: string }>();
   const [busy, setBusy] = useState(false);
   const [bindingCode, setBindingCode] = useState('');
   const [loadFailed, setLoadFailed] = useState(false);
@@ -73,7 +74,7 @@ export function GuardiansContent() {
     if (!invite) return;
     const inviteUrl = invite.inviteUrl;
     const result = await shareInviteLink(inviteUrl, (name) => copy.inviteShareMessage(name, inviteUrl));
-    setNotice(result === 'copied' ? { tone: 'success', text: copy.shareUnavailableCopied } : undefined);
+    setNotice(shareInviteNotice(result));
   };
 
   const revoke = async (id: string) => {

@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { copy } from '@/src/features/i18n/copy';
+import { shareInviteNotice } from '@/src/lib/share-invite-feedback';
 import { shareInviteLink } from '@/src/lib/share-invite';
 
 import { Button } from '@/app/components/Button';
@@ -49,7 +50,10 @@ export function TripForm() {
   const [bindings, setBindings] = useState<GuardianBinding[]>([]);
   const [guardianBindingIds, setGuardianBindingIds] = useState<string[]>([]);
   const [inviteUrl, setInviteUrl] = useState('');
-  const [inviteShareNote, setInviteShareNote] = useState('');
+  const [inviteShareNotice, setInviteShareNotice] = useState<{
+    tone: 'success' | 'warning' | 'error';
+    text: string;
+  }>();
   const [vehicle, setVehicle] = useState('');
   const [equipment, setEquipment] = useState('');
   const [leaderPhone, setLeaderPhone] = useState('');
@@ -167,7 +171,7 @@ export function TripForm() {
       if (response.status === 409) { setError(copy.inviteLimitReached); return; }
       if (!response.ok) { setError(copy.inviteCreateError); return; }
       setInviteUrl((await response.json() as { inviteUrl: string }).inviteUrl);
-      setInviteShareNote('');
+      setInviteShareNotice(undefined);
     } catch (requestError) {
       console.error('Guardian invite request failed', { error: requestError });
       setError(copy.inviteCreateError);
@@ -177,13 +181,13 @@ export function TripForm() {
   const shareInvite = async () => {
     if (!inviteUrl) return;
     const result = await shareInviteLink(inviteUrl, (name) => copy.inviteShareMessage(name, inviteUrl));
-    setInviteShareNote(result === 'copied' ? copy.shareUnavailableCopied : '');
+    setInviteShareNotice(shareInviteNotice(result));
   };
 
   const copyInvite = async () => {
     if (!inviteUrl) return;
     await navigator.clipboard.writeText(inviteUrl);
-    setInviteShareNote(copy.inviteLinkCopied);
+    setInviteShareNotice({ tone: 'success', text: copy.inviteLinkCopied });
   };
 
   const missing = missingQuickTripFields({
@@ -294,7 +298,8 @@ export function TripForm() {
       {inviteUrl && <>
         <Button variant="secondary" onClick={() => void shareInvite()}>{copy.shareInviteToLine}</Button>
         <Button variant="ghost" onClick={() => void copyInvite()}>{copy.copyInviteLink}</Button>
-        {inviteShareNote && <p className="source-note" role="status">{inviteShareNote}</p>}
+        {inviteShareNotice &&
+          <Notice tone={inviteShareNotice.tone}>{inviteShareNotice.text}</Notice>}
       </>}
     </Card>
 
