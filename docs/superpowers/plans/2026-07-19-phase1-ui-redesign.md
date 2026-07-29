@@ -1,6 +1,8 @@
-# Phase 1：UI 設計系統與頁面重構 Implementation Plan
+# Phase 1：UI 設計系統與頁面重構 Implementation Record
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Status: Completed and merged to `master` on 2026-07-19. Every implementation and local verification step below is checked; deployment and credential-backed smoke tests are tracked separately in `README.md`.
+
+> This document preserves the original task breakdown as a completed implementation record.
 
 **Goal:** 依 `docs/superpowers/specs/2026-07-19-line-first-ux-redesign-design.md` §3–§4，建立 LINE 原生風設計系統（tokens＋五個共用元件），重構首頁、建立行程、行程頁（草稿＋進行中）、周邊頁面，並全面移除 `window.prompt`／`window.confirm`。
 
@@ -30,7 +32,7 @@
 - Produces: CSS class 名稱供後續所有 task 使用——`card`、`card-title`、`btn`、`btn-primary|secondary|danger|ghost`、`chip`、`chip-success|neutral|warning|danger`、`notice`、`notice-success|warning|error`、`expander`、`expander-body`、`action-grid`、`status-list`、`source-note`、`card-row`、`missing-fields`、`report-text`。
 - 保留過渡期 legacy 規則 `.alert-label`、`.secondary-action`（Task 9 全部改完後由 Task 10 刪除）。
 
-- [ ] **Step 1: 覆寫 `app/globals.css` 為以下完整內容**
+- [x] **Step 1: 覆寫 `app/globals.css` 為以下完整內容**
 
 ```css
 :root {
@@ -432,12 +434,12 @@ nav[aria-label^='主要操作'] a {
 }
 ```
 
-- [ ] **Step 2: 跑既有測試確認無破壞（jsdom 不解析 CSS，理應全綠）**
+- [x] **Step 2: 跑既有測試確認無破壞（jsdom 不解析 CSS，理應全綠）**
 
 Run: `npm test`
 Expected: 全數 PASS
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add app/globals.css
@@ -465,7 +467,7 @@ git commit -m "feat: add LINE-native design tokens and base styles"
   - `Notice({ tone?: 'success'|'warning'|'error', children })`——`error` → `role="alert"`，其餘 `role="status"`
   - `Expander({ label: string, open: boolean, onToggle: () => void, variant?: ButtonVariant（預設 'ghost'）, children })`——受控元件，開闔由呼叫端管理
 
-- [ ] **Step 1: 寫失敗測試 `tests/features/ui-components.test.tsx`**
+- [x] **Step 1: 寫失敗測試 `tests/features/ui-components.test.tsx`**
 
 ```tsx
 import { fireEvent, render, screen } from '@testing-library/react';
@@ -535,12 +537,12 @@ describe('Expander', () => {
 });
 ```
 
-- [ ] **Step 2: 跑測試確認失敗**
+- [x] **Step 2: 跑測試確認失敗**
 
 Run: `npx vitest run tests/features/ui-components.test.tsx`
 Expected: FAIL（Cannot find module '@/app/components/Button'）
 
-- [ ] **Step 3: 建立五個元件**
+- [x] **Step 3: 建立五個元件**
 
 `app/components/Button.tsx`：
 
@@ -636,12 +638,12 @@ export function Expander({
 }
 ```
 
-- [ ] **Step 4: 跑測試確認通過**
+- [x] **Step 4: 跑測試確認通過**
 
 Run: `npx vitest run tests/features/ui-components.test.tsx`
 Expected: PASS（6 tests）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/components tests/features/ui-components.test.tsx
@@ -659,7 +661,7 @@ git commit -m "feat: add shared LINE-native UI components"
 **Interfaces:**
 - Produces（後續 task 依賴的 key）：`checkInAction`、`quickCheckInSafe`、`quickCheckInShelter`、`customCheckInLabel`、`sendCheckIn`、`extendByMinutes(minutes)`、`customMinutesLabel`、`confirmExtend`、`finishAction`、`confirmHelp`、`missingFieldsLabel`、`sectionTime`、`fieldTimeWindow`、`fieldConfirmation`、`goToTrip`。
 
-- [ ] **Step 1: 在 `tests/features/i18n.test.ts` 檔尾加入失敗測試**
+- [x] **Step 1: 在 `tests/features/i18n.test.ts` 檔尾加入失敗測試**
 
 ```ts
 it('keeps the phase-1 action copy bilingual', () => {
@@ -669,12 +671,12 @@ it('keeps the phase-1 action copy bilingual', () => {
 });
 ```
 
-- [ ] **Step 2: 跑測試確認失敗**
+- [x] **Step 2: 跑測試確認失敗**
 
 Run: `npx vitest run tests/features/i18n.test.ts`
 Expected: FAIL（copy.quickCheckInSafe is undefined）
 
-- [ ] **Step 3: 在 `src/features/i18n/copy.ts` 的 `safeFinish:` 條目之後插入**
+- [x] **Step 3: 在 `src/features/i18n/copy.ts` 的 `safeFinish:` 條目之後插入**
 
 ```ts
   checkInAction: bilingual('回報平安', 'Check in'),
@@ -694,12 +696,12 @@ Expected: FAIL（copy.quickCheckInSafe is undefined）
   goToTrip: bilingual('開啟行程頁', 'Open trip page'),
 ```
 
-- [ ] **Step 4: 跑測試確認通過**
+- [x] **Step 4: 跑測試確認通過**
 
 Run: `npx vitest run tests/features/i18n.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/i18n/copy.ts tests/features/i18n.test.ts
@@ -717,7 +719,7 @@ git commit -m "feat: add phase-1 UI copy entries"
 **Interfaces:**
 - Produces: `formatTime(value?: string): string`、`formatElapsed(startedAt?: string, now?: string): string`（行為與現有 `TripActions.tsx:16-30` 完全相同，僅搬移）。`TripActions` 續 re-export 兩者（`trip-actions.test.tsx` 與 Task 5 首頁都會用到）。
 
-- [ ] **Step 1: 建立 `src/lib/format-time.ts`（內容自 TripActions 原樣搬移）**
+- [x] **Step 1: 建立 `src/lib/format-time.ts`（內容自 TripActions 原樣搬移）**
 
 ```ts
 import { copy } from '@/src/features/i18n/copy';
@@ -739,7 +741,7 @@ export const formatElapsed = (startedAt?: string, now = new Date().toISOString()
 };
 ```
 
-- [ ] **Step 2: 修改 `TripActions.tsx`——刪除本地 `formatTime`／`formatElapsed` 定義（原第 16–30 行），在 import 區塊加入**
+- [x] **Step 2: 修改 `TripActions.tsx`——刪除本地 `formatTime`／`formatElapsed` 定義（原第 16–30 行），在 import 區塊加入**
 
 ```tsx
 import { formatElapsed, formatTime } from '@/src/lib/format-time';
@@ -747,12 +749,12 @@ import { formatElapsed, formatTime } from '@/src/lib/format-time';
 export { formatElapsed, formatTime };
 ```
 
-- [ ] **Step 3: 跑既有測試確認搬移無破壞**
+- [x] **Step 3: 跑既有測試確認搬移無破壞**
 
 Run: `npx vitest run tests/features/trip-actions.test.tsx`
 Expected: PASS（3 tests，`formatElapsed` 仍可自 TripActions import）
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/lib/format-time.ts "app/trips/[tripId]/TripActions.tsx"
@@ -772,7 +774,7 @@ git commit -m "refactor: extract trip time formatting to src/lib"
 - Consumes: `Card`、`Chip`（Task 2）、`copy.goToTrip`（Task 3）、`formatTime`（Task 4）、既有 `sessionCookie`／`verifySession`。
 - Produces: `HomeContent({ activeTrip?: HomeActiveTrip })`、`interface HomeActiveTrip { id: string; routeName: string; plannedFinishAt: string }`（`plannedFinishAt` 為**已格式化**顯示字串，由 server 端先轉好）。
 
-- [ ] **Step 1: 改寫 `tests/features/home.test.tsx` 為失敗測試**
+- [x] **Step 1: 改寫 `tests/features/home.test.tsx` 為失敗測試**
 
 ```tsx
 import { cleanup, render, screen } from '@testing-library/react';
@@ -807,12 +809,12 @@ describe('home content', () => {
 });
 ```
 
-- [ ] **Step 2: 跑測試確認失敗**
+- [x] **Step 2: 跑測試確認失敗**
 
 Run: `npx vitest run tests/features/home.test.tsx`
 Expected: FAIL（Cannot find module '@/app/HomeContent'）
 
-- [ ] **Step 3: 建立 `app/HomeContent.tsx`**
+- [x] **Step 3: 建立 `app/HomeContent.tsx`**
 
 ```tsx
 import Link from 'next/link';
@@ -857,7 +859,7 @@ export function HomeContent({ activeTrip }: { activeTrip?: HomeActiveTrip }) {
 }
 ```
 
-- [ ] **Step 4: 覆寫 `app/page.tsx`**
+- [x] **Step 4: 覆寫 `app/page.tsx`**
 
 ```tsx
 import { and, eq } from 'drizzle-orm';
@@ -895,12 +897,12 @@ export default async function Home() {
 }
 ```
 
-- [ ] **Step 5: 跑測試確認通過**
+- [x] **Step 5: 跑測試確認通過**
 
 Run: `npx vitest run tests/features/home.test.tsx`
 Expected: PASS（3 tests）
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/HomeContent.tsx app/page.tsx tests/features/home.test.tsx
@@ -919,7 +921,7 @@ git commit -m "feat: redesign home with active trip card"
 - Consumes: `Button`、`Card`、`Expander`、`Notice`（Task 2）、Task 3 copy、Task 4 format helpers；既有 offline queue／`ActiveTripInitialState` 不變。
 - Produces: `TripActions({ tripId, initialState })` props 不變；`export type ActiveTripState`、re-export `formatElapsed`／`formatTime` 保留。四個操作按鈕名稱＝`copy.checkInAction`、`copy.extendFinishTime`、`copy.finishAction`、`copy.needHelp`。錨點 `id="check-in"`（回報區）與 `id="finish"`（結束區）供首頁深連結。
 
-- [ ] **Step 1: 改寫 `tests/features/trip-actions.test.tsx` 為新行為的失敗測試**
+- [x] **Step 1: 改寫 `tests/features/trip-actions.test.tsx` 為新行為的失敗測試**
 
 ```tsx
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
@@ -1025,12 +1027,12 @@ describe('TripActions', () => {
 });
 ```
 
-- [ ] **Step 2: 跑測試確認失敗**
+- [x] **Step 2: 跑測試確認失敗**
 
 Run: `npx vitest run tests/features/trip-actions.test.tsx`
 Expected: FAIL（找不到 `copy.checkInAction` 名稱的按鈕等）
 
-- [ ] **Step 3: 覆寫 `app/trips/[tripId]/TripActions.tsx`**
+- [x] **Step 3: 覆寫 `app/trips/[tripId]/TripActions.tsx`**
 
 ```tsx
 'use client';
@@ -1260,17 +1262,17 @@ export function TripActions({ tripId, initialState }: { tripId: string; initialS
 }
 ```
 
-- [ ] **Step 4: 跑測試確認通過**
+- [x] **Step 4: 跑測試確認通過**
 
 Run: `npx vitest run tests/features/trip-actions.test.tsx`
 Expected: PASS（7 tests）
 
-- [ ] **Step 5: 確認彈窗已絕跡**
+- [x] **Step 5: 確認彈窗已絕跡**
 
 Run: `grep -rn "window.prompt\|window.confirm" "app/trips/[tripId]/TripActions.tsx"`
 Expected: 無輸出
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add "app/trips/[tripId]/TripActions.tsx" tests/features/trip-actions.test.tsx
@@ -1288,7 +1290,7 @@ git commit -m "feat: replace trip action dialogs with inline expanders"
 - Consumes: `Button`、`Card`、`Notice`（Task 2）。
 - Produces: props 與對外行為不變（`tests/features/draft-trip.test.tsx` 應原樣通過）。
 
-- [ ] **Step 1: 將 `DraftTrip.tsx` 的 import 補上元件，`return` 區塊改為**
+- [x] **Step 1: 將 `DraftTrip.tsx` 的 import 補上元件，`return` 區塊改為**
 
 ```tsx
 import { Button } from '@/app/components/Button';
@@ -1320,12 +1322,12 @@ import { Notice } from '@/app/components/Notice';
   </section>;
 ```
 
-- [ ] **Step 2: 跑既有測試確認通過**
+- [x] **Step 2: 跑既有測試確認通過**
 
 Run: `npx vitest run tests/features/draft-trip.test.tsx tests/features/trip-actions.test.tsx`
 Expected: PASS
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add "app/trips/[tripId]/DraftTrip.tsx"
@@ -1346,7 +1348,7 @@ git commit -m "feat: restyle draft trip with shared components"
 - Consumes: `Button`、`Card`、`Chip`、`Notice`（Task 2）、Task 3 copy。
 - Produces: `type QuickTripField = 'route' | 'guardians' | 'timeWindow' | 'vehicle' | 'confirmation'`；`missingQuickTripFields(input): QuickTripField[]`（input 與 `canSubmitQuickTrip` 相同）；`canSubmitQuickTrip` 行為不變。
 
-- [ ] **Step 1: 在 `tests/features/quick-trip-form-state.test.ts` 檔尾加入失敗測試**
+- [x] **Step 1: 在 `tests/features/quick-trip-form-state.test.ts` 檔尾加入失敗測試**
 
 ```ts
 import { missingQuickTripFields } from '@/app/trips/new/quick-trip-form';
@@ -1376,12 +1378,12 @@ it('returns no missing fields for a submittable quick trip', () => {
 
 （若該檔已有 import 區塊，將 `missingQuickTripFields` 併入既有 import。）
 
-- [ ] **Step 2: 跑測試確認失敗**
+- [x] **Step 2: 跑測試確認失敗**
 
 Run: `npx vitest run tests/features/quick-trip-form-state.test.ts`
 Expected: FAIL（missingQuickTripFields is not exported）
 
-- [ ] **Step 3: 在 `quick-trip-form.ts` 將 `canSubmitQuickTrip` 整段換成**
+- [x] **Step 3: 在 `quick-trip-form.ts` 將 `canSubmitQuickTrip` 整段換成**
 
 ```ts
 export type QuickTripField = 'route' | 'guardians' | 'timeWindow' | 'vehicle' | 'confirmation';
@@ -1405,12 +1407,12 @@ export const canSubmitQuickTrip = (input: Parameters<typeof missingQuickTripFiel
   missingQuickTripFields(input).length === 0;
 ```
 
-- [ ] **Step 4: 跑測試確認通過（含既有 canSubmit 測試）**
+- [x] **Step 4: 跑測試確認通過（含既有 canSubmit 測試）**
 
 Run: `npx vitest run tests/features/quick-trip-form-state.test.ts`
 Expected: PASS
 
-- [ ] **Step 5: 在 `tests/features/quick-trip-form.test.tsx` 檔尾（describe 內）加入缺件提示的失敗測試**
+- [x] **Step 5: 在 `tests/features/quick-trip-form.test.tsx` 檔尾（describe 內）加入缺件提示的失敗測試**
 
 ```tsx
   it('lists what is still missing while the submit button is disabled', async () => {
@@ -1428,12 +1430,12 @@ Expected: PASS
   });
 ```
 
-- [ ] **Step 6: 跑測試確認新測試失敗、其餘通過**
+- [x] **Step 6: 跑測試確認新測試失敗、其餘通過**
 
 Run: `npx vitest run tests/features/quick-trip-form.test.tsx`
 Expected: 僅新測試 FAIL（找不到 missingFieldsLabel 文字）
 
-- [ ] **Step 7: 修改 `TripForm.tsx`**
+- [x] **Step 7: 修改 `TripForm.tsx`**
 
 Import 區塊加入：
 
@@ -1576,12 +1578,12 @@ const fieldLabels: Record<QuickTripField, string> = {
 
 原 fieldset／legend 改為 Card；若既有測試因結構改變失敗，修元件保住原本的 role 與 label 語意，**不得改舊測試的預期**。
 
-- [ ] **Step 8: 跑測試確認全部通過**
+- [x] **Step 8: 跑測試確認全部通過**
 
 Run: `npx vitest run tests/features/quick-trip-form.test.tsx tests/features/quick-trip-form-state.test.ts`
 Expected: PASS（含新缺件提示測試）
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add app/trips/new/quick-trip-form.ts app/trips/new/TripForm.tsx tests/features/quick-trip-form-state.test.ts tests/features/quick-trip-form.test.tsx
@@ -1602,7 +1604,7 @@ git commit -m "feat: card-section trip form with missing-field hints"
 - Consumes: `Button`、`Card`、`Notice`（Task 2）。
 - Produces: 各元件 props 與 role 語意不變（`deep-links.test.tsx`、`new-trip-page.test.tsx` 應原樣通過）。
 
-- [ ] **Step 1: `app/trips/active/page.tsx`——import 加 `Card`，未登入／無行程的 return 改為**
+- [x] **Step 1: `app/trips/active/page.tsx`——import 加 `Card`，未登入／無行程的 return 改為**
 
 ```tsx
 import { Card } from '@/app/components/Card';
@@ -1619,7 +1621,7 @@ import { Card } from '@/app/components/Card';
   </main>;
 ```
 
-- [ ] **Step 2: `JoinTrip.tsx`——return 改為**
+- [x] **Step 2: `JoinTrip.tsx`——return 改為**
 
 ```tsx
 import { Button } from '@/app/components/Button';
@@ -1639,7 +1641,7 @@ import { Notice } from '@/app/components/Notice';
   </main>;
 ```
 
-- [ ] **Step 3: `GuardianViewer.tsx`——刪除無作用的 `useEffect`（`if (!viewer && !error) return;` 那段，連同 `useEffect` import），return 改為**
+- [x] **Step 3: `GuardianViewer.tsx`——刪除無作用的 `useEffect`（`if (!viewer && !error) return;` 那段，連同 `useEffect` import），return 改為**
 
 ```tsx
 import { Card } from '@/app/components/Card';
@@ -1666,7 +1668,7 @@ import { Notice } from '@/app/components/Notice';
   </main>;
 ```
 
-- [ ] **Step 4: `LiffBootstrap.tsx`——三個訊息 return 改為**
+- [x] **Step 4: `LiffBootstrap.tsx`——三個訊息 return 改為**
 
 ```tsx
 import { Notice } from '@/app/components/Notice';
@@ -1679,12 +1681,12 @@ import { Notice } from '@/app/components/Notice';
   return <p className="source-note" role="status">{copy.liffLoading}</p>;
 ```
 
-- [ ] **Step 5: 跑受影響測試**
+- [x] **Step 5: 跑受影響測試**
 
 Run: `npx vitest run tests/features/deep-links.test.tsx tests/features/new-trip-page.test.tsx tests/features/home.test.tsx`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/trips/active/page.tsx "app/trips/join/[token]/JoinTrip.tsx" "app/trips/[tripId]/guardian-viewer/GuardianViewer.tsx" app/LiffBootstrap.tsx
@@ -1698,24 +1700,24 @@ git commit -m "feat: apply design system to remaining pages"
 **Files:**
 - Modify: `app/globals.css`（刪除 legacy 區塊）
 
-- [ ] **Step 1: 確認 legacy class 已無人使用**
+- [x] **Step 1: 確認 legacy class 已無人使用**
 
 Run: `grep -rn "alert-label\|secondary-action" app src`
 Expected: 無輸出（若有殘留，回到對應 task 改完再繼續）
 
-- [ ] **Step 2: 刪除 `globals.css` 中「legacy」註解起的三段規則（`.alert-label`、`.secondary-action`、`nav[aria-label^='主要操作']` 兩條）**
+- [x] **Step 2: 刪除 `globals.css` 中「legacy」註解起的三段規則（`.alert-label`、`.secondary-action`、`nav[aria-label^='主要操作']` 兩條）**
 
-- [ ] **Step 3: 全套件測試**
+- [x] **Step 3: 全套件測試**
 
 Run: `npm test`
 Expected: 全數 PASS，無 skip
 
-- [ ] **Step 4: production build**
+- [x] **Step 4: production build**
 
 Run: `npm run build`
 Expected: build 成功、無 type error
 
-- [ ] **Step 5: 冒煙驗證（新樣式確實出現在頁面）**
+- [x] **Step 5: 冒煙驗證（新樣式確實出現在頁面）**
 
 ```bash
 npm run dev &
@@ -1726,7 +1728,7 @@ kill %1
 
 Expected: 輸出 ≥1（新版 class 已出現在首頁 HTML）
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/globals.css

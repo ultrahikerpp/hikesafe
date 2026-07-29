@@ -1,6 +1,10 @@
-# Phase 2 連結式留守人綁定 Implementation Plan
+# Phase 2 連結式留守人綁定 Implementation Record
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Status: Completed and merged to `master` on 2026-07-21. All code tasks and repository-level verification steps below are checked; the LINE console and deployed-environment operations remain operator work.
+
+> This document preserves the original task breakdown as a completed implementation record.
+
+> 2026-07-29 更新：目前按鈕名稱為【建立邀請連結】，分享按鈕會在連結建立後顯示，並於點擊時區分成功、取消、環境不支援、LINE API 失敗及 clipboard 失敗。最新行為與測試以 `docs/superpowers/specs/2026-07-29-line-share-feedback-design.md` 及 `docs/superpowers/plans/2026-07-29-line-share-feedback.md` 為準；下方舊程式片段不再代表現況。
 
 **Goal:** 讓登山客產生一次性邀請連結，透過 LINE 分享或複製交給留守人，留守人點連結自行完成綁定，雙方都收到確認。
 
@@ -21,7 +25,7 @@
 - commit 訊息格式 `<type>: <description>`，不加 Co-Authored-By 或任何署名。
 - React 元件測試一律用 `fireEvent`（`@testing-library/react`），不用 `userEvent`——`@testing-library/user-event` 不在這個 repo 的 `devDependencies` 裡。文字斷言用逐字 `.textContent` 比對（`const el = await screen.findByRole(...); expect(el.textContent).toBe(copy.xxx)`），不用 `toHaveTextContent`——jest-dom 只正規化收到的 DOM 文字，不正規化比對字串，對含字面 `\n` 的雙語文案（`bilingual()` 產生）永遠比不中。若計畫某個 task 的測試片段仍寫著 `userEvent` 或 `toHaveTextContent`，視為筆誤，一律照此規則改寫，不要照抄。
 - 每個含多個 `it()` 且會 `render()` React 元件的測試檔，一律要有 `afterEach(cleanup)`（`cleanup` 從 `@testing-library/react` import）。這個 repo 的 `vitest.config.ts` 沒有設 `test.globals: true`，RTL 的自動 cleanup 依賴全域 `afterEach` 才會註冊，沒設就不會自動觸發，導致前一個測試 render 出來的 DOM 殘留、下一個測試對同一個 role/name 撈到「multiple elements」。既有慣例可參考 `tests/features/trip-actions.test.tsx`／`tests/features/home.test.tsx`／`tests/features/deep-links.test.tsx`／`tests/features/quick-trip-form.test.tsx`。若計畫某個 task 的測試片段沒有這個 `afterEach(cleanup)`，一律照此規則補上，不要照抄。
-- 測試指令一律 `npx vitest run <path>`。全套**不要**用裸 `npm test`——它會撈到 `.worktrees/quick-trip-creation`（無關分支）與需要本機 Postgres 的整合測試，兩者的失敗都不是回歸。全套一律用 `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`（本計畫開工前基準：43 files / 243 tests 全綠）。
+- 測試指令一律 `npx vitest run <path>`。全套非資料庫測試使用 `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`；目前基準為 55 files / 359 tests 全綠。裸 `npm test` 另包含需要本機 PostgreSQL 的整合測試，該端點未啟動時會明確失敗。
 
 ## File Structure
 
@@ -80,7 +84,7 @@
 
 `extend`／`finish`／`help` 目前只在 `response.ok` 為 false 時顯示錯誤 `Notice`。離線時 `fetch` 直接 reject，`try/finally` 沒有 `catch`，例外往外拋、使用者只看到按鈕解鎖而沒有任何訊息。`help` 是求助情境，這是安全問題。
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 加到 `tests/features/trip-actions.test.tsx`：
 
@@ -99,12 +103,12 @@ it('shows an error notice when the help request cannot be sent at all', async ()
 
 `initialState` 沿用該檔案既有的 fixture；若尚未抽出，複製檔案內既有測試使用的物件。`fireEvent`（不是 `userEvent`——`@testing-library/user-event` 不在這個 repo 的依賴裡）與逐字 `.textContent` 比對（不是 `toHaveTextContent`——jest-dom 會正規化收到的文字但不會正規化比對字串，對含字面 `\n` 的雙語文案永遠比不中）都是這個測試檔既有的慣例，見同檔案 `helpConfirmation`／`checkInSuccess` 等既有斷言。
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/trip-actions.test.tsx -t "cannot be sent at all"`
 Expected: FAIL — 未捕捉的 rejection，或找不到 `role="alert"`
 
-- [ ] **Step 3: 建立 helper**
+- [x] **Step 3: 建立 helper**
 
 `app/trips/[tripId]/request-action.ts`：
 
@@ -124,7 +128,7 @@ export const requestAction = async (url: string, body: unknown): Promise<{ ok: b
 };
 ```
 
-- [ ] **Step 4: 三處改用 helper**
+- [x] **Step 4: 三處改用 helper**
 
 `TripActions.tsx` 頂部加 `import { requestAction } from './request-action';`，然後：
 
@@ -183,12 +187,12 @@ export const requestAction = async (url: string, body: unknown): Promise<{ ok: b
 
 注意行為變更：失敗時**不再**收合 Expander、不清空 `helpMessage`，讓使用者可以直接重試。原本無論成敗都收合。
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/trip-actions.test.tsx`
 Expected: PASS，全檔既有測試也要綠
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/trips/\[tripId\]/request-action.ts app/trips/\[tripId\]/TripActions.tsx tests/features/trip-actions.test.tsx
@@ -208,7 +212,7 @@ git commit -m "fix: surface an error notice when trip action requests never reac
 - Consumes: 無
 - Produces: `lineBindings.inviteTokenHash`（drizzle column，`text('invite_token_hash')`，nullable、unique）
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 加到 `tests/features/schema.test.ts`：
 
@@ -234,12 +238,12 @@ it('ships a migration that adds the guardian invite column', () => {
 
 `readFileSync` 與 `getTableConfig` 該檔案頂部已 import，重複的 import 不要再加。
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/schema.test.ts`
 Expected: FAIL — `inviteToken` 為 undefined、找不到 migration 檔
 
-- [ ] **Step 3: 建立 migration**
+- [x] **Step 3: 建立 migration**
 
 `drizzle/0012_guardian_invites.sql`：
 
@@ -247,7 +251,7 @@ Expected: FAIL — `inviteToken` 為 undefined、找不到 migration 檔
 ALTER TABLE line_bindings ADD COLUMN invite_token_hash text UNIQUE;
 ```
 
-- [ ] **Step 4: 更新 schema**
+- [x] **Step 4: 更新 schema**
 
 `src/db/schema.ts` 的 `lineBindings`，在 `bindingCode` 那行下面加：
 
@@ -255,12 +259,12 @@ ALTER TABLE line_bindings ADD COLUMN invite_token_hash text UNIQUE;
   inviteTokenHash: text('invite_token_hash').unique(),
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/schema.test.ts`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add drizzle/0012_guardian_invites.sql src/db/schema.ts tests/features/schema.test.ts
@@ -286,7 +290,7 @@ git commit -m "feat: add guardian invite token hash column"
 
 下面 `DatabaseHandle` 的定義已用 `npx tsc --noEmit` 對 `select/from/where/for('update')/limit`、`insert/values`、`update/set/where/returning` 三組實際用法驗證過，drizzle-orm 0.45.2 下編譯乾淨。
 
-- [ ] **Step 1: 建立型別檔**
+- [x] **Step 1: 建立型別檔**
 
 `src/db/transaction.ts`：
 
@@ -307,12 +311,12 @@ export type DatabaseHandle =
   | PostgresJsTransaction<Schema, ExtractTablesWithRelations<Schema>>;
 ```
 
-- [ ] **Step 2: 執行既有測試建立基準**
+- [x] **Step 2: 執行既有測試建立基準**
 
 Run: `npx vitest run tests/features/trip-invites.test.ts`
 Expected: PASS（2 個測試）。這是重構前的綠燈基準——本 task 不改行為，測試自始至終都該是綠的。
 
-- [ ] **Step 3: 改寫 invites.ts 的 repository**
+- [x] **Step 3: 改寫 invites.ts 的 repository**
 
 `src/features/trips/invites.ts` 的 `databaseRepository` 與 `databaseTransaction`（第 48–91 行）整段換成：
 
@@ -367,17 +371,17 @@ const databaseRepository: TripInviteRepository = {
 
 檔案頂部加 `import type { DatabaseHandle } from '@/src/db/transaction';`。查詢邏輯逐行沒有改動，只換了外層組裝方式與 `database` 的型別。
 
-- [ ] **Step 4: 執行測試確認仍然通過**
+- [x] **Step 4: 執行測試確認仍然通過**
 
 Run: `npx vitest run tests/features/trip-invites.test.ts`
 Expected: PASS，仍是 2 個測試。行為未變，測試不需修改——若測試變紅，是重構寫錯了，不要改測試。
 
-- [ ] **Step 5: 型別檢查**
+- [x] **Step 5: 型別檢查**
 
 Run: `npx tsc --noEmit`
 Expected: 無錯誤，且 `src/features/trips/invites.ts` 內不再有 `any`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/db/transaction.ts src/features/trips/invites.ts
@@ -404,7 +408,7 @@ git commit -m "refactor: type drizzle repository handles instead of any"
   - `acceptGuardianInvite({ token, lineUserId, displayName, now }, repository?): Promise<AcceptGuardianInviteResult>`
   - `type AcceptGuardianInviteResult = { ok: true; bindingId: string; inviterDisplayName: string; inviterLineUserId: string } | { ok: false; reason: 'not_found' | 'expired' | 'used' | 'revoked' | 'already_bound' }`
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 `tests/features/guardian-invites.test.ts`：
 
@@ -521,12 +525,12 @@ describe('guardian invites', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/guardian-invites.test.ts`
 Expected: FAIL — 找不到模組 `@/src/features/line/guardian-invites`
 
-- [ ] **Step 3: 實作**
+- [x] **Step 3: 實作**
 
 `src/features/line/guardian-invites.ts`：
 
@@ -622,7 +626,7 @@ export const acceptGuardianInvite = async (
 });
 ```
 
-- [ ] **Step 4: 實作資料庫 repository**
+- [x] **Step 4: 實作資料庫 repository**
 
 接在同一個檔案後面，形狀照抄 Task 1b 改造後的 `src/features/trips/invites.ts`（**不是**改造前那版——舊版的 `...databaseTransaction(undefined)` 會讓 `readGuardianInvite` 這種不包交易的讀取路徑打到 `undefined.select()`）。檔案頂部加 `import type { DatabaseHandle } from '@/src/db/transaction';`：
 
@@ -708,12 +712,12 @@ const databaseRepository: GuardianInviteRepository = {
 - `bindInvite` 不寫 `inviteTokenHash: null`——保留雜湊才能在接受後回報 `used`。
 - `findInvite` 的 `lock` 預設 false。只有 `acceptGuardianInvite` 傳 `true`（它接著要寫入，需要鎖列）；`readGuardianInvite` 是公開端點 `GET /api/guardian-invites/{token}` 的讀取路徑，不該對同一 token 的並行請求上 `FOR UPDATE` 鎖而互相排隊。
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/guardian-invites.test.ts`
 Expected: PASS，5 個測試全綠
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/line/guardian-invites.ts tests/features/guardian-invites.test.ts
@@ -732,7 +736,7 @@ git commit -m "feat: add guardian invite token domain logic"
 - Consumes: `bilingual`（`src/features/i18n/copy.ts:1`）
 - Produces: 下列 `copy` 鍵與 `env.NEXT_PUBLIC_LINE_OA_URL?: string`
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 加到 `tests/features/i18n.test.ts`：
 
@@ -770,12 +774,12 @@ it('treats the official account link as optional', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/i18n.test.ts tests/features/env.test.ts`
 Expected: FAIL — `copy.inviteGuardian` 為 undefined、`NEXT_PUBLIC_LINE_OA_URL` 不在 schema
 
-- [ ] **Step 3: 加入文案**
+- [x] **Step 3: 加入文案**
 
 `src/features/i18n/copy.ts` 的 `copy` 物件內（靜態鍵放在 `createBindingCode` 附近、函式鍵放在檔案結尾的函式區）：
 
@@ -839,7 +843,7 @@ Expected: FAIL — `copy.inviteGuardian` 為 undefined、`NEXT_PUBLIC_LINE_OA_UR
   ),
 ```
 
-- [ ] **Step 4: 加入環境變數**
+- [x] **Step 4: 加入環境變數**
 
 `src/env.ts` 的 schema 內，`NEXT_PUBLIC_LIFF_ID` 那行下面：
 
@@ -847,12 +851,12 @@ Expected: FAIL — `copy.inviteGuardian` 為 undefined、`NEXT_PUBLIC_LINE_OA_UR
   NEXT_PUBLIC_LINE_OA_URL: z.string().url().optional(),
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/i18n.test.ts tests/features/env.test.ts`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/i18n/copy.ts src/env.ts tests/features/i18n.test.ts tests/features/env.test.ts
@@ -873,7 +877,7 @@ git commit -m "feat: add guardian invite copy and optional official account link
   - `POST /api/guardian-invites` → 201 `{ inviteUrl: string; expiresAt: string }`｜401｜409
   - `GET /api/guardian-invites/{token}` → 200 `{ inviterDisplayName: string; expiresAt: string; status: GuardianInviteStatus }`｜404
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 `tests/api/guardian-invites.test.ts`：
 
@@ -961,12 +965,12 @@ describe('guardian invites API', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/api/guardian-invites.test.ts`
 Expected: FAIL — 找不到 route 模組
 
-- [ ] **Step 3: 實作 POST**
+- [x] **Step 3: 實作 POST**
 
 `app/api/guardian-invites/route.ts`：
 
@@ -1002,7 +1006,7 @@ export const POST = async (request: Request) => {
 };
 ```
 
-- [ ] **Step 4: 實作 GET**
+- [x] **Step 4: 實作 GET**
 
 `app/api/guardian-invites/[token]/route.ts`：
 
@@ -1022,12 +1026,12 @@ export const GET = async (_request: Request, { params }: { params: Promise<{ tok
 };
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/api/guardian-invites.test.ts`
 Expected: PASS，5 個測試全綠
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/api/guardian-invites tests/api/guardian-invites.test.ts
@@ -1048,7 +1052,7 @@ git commit -m "feat: add guardian invite creation and lookup endpoints"
 
 失敗原因對映：`not_found`→404、`used`／`revoked`／`already_bound`→409（body 帶 `reason`）、`expired`→410。給登山客的 push 失敗只記 log，不影響回應——留守人已經綁定成功了。
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 `tests/api/guardian-invites-accept.test.ts`：
 
@@ -1133,12 +1137,12 @@ describe('POST /api/guardian-invites/accept', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/api/guardian-invites-accept.test.ts`
 Expected: FAIL — 找不到 route 模組
 
-- [ ] **Step 3: 實作**
+- [x] **Step 3: 實作**
 
 `app/api/guardian-invites/accept/route.ts`：
 
@@ -1189,12 +1193,12 @@ export const POST = async (request: Request) => {
 };
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run tests/api/guardian-invites-accept.test.ts`
 Expected: PASS，5 個測試全綠
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/api/guardian-invites/accept tests/api/guardian-invites-accept.test.ts
@@ -1215,7 +1219,7 @@ git commit -m "feat: accept guardian invites and notify the hiker"
 
 非本人的 binding 回 404 而非 403，避免洩露 id 是否存在。撤銷以 `revokedAt` 標記，不刪列。
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 加到 `tests/api/guardian-bindings.test.ts`。既有檔案已 mock `@/src/db/client` 的 `select`，這裡要再補 `update`——把檔案頂部的 mock 區塊改成：
 
@@ -1285,12 +1289,12 @@ describe('DELETE /api/guardian-bindings/[id]', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/api/guardian-bindings.test.ts`
 Expected: FAIL — 找不到 `@/app/api/guardian-bindings/[id]/route`
 
-- [ ] **Step 3: 實作**
+- [x] **Step 3: 實作**
 
 `app/api/guardian-bindings/[id]/route.ts`：
 
@@ -1327,12 +1331,12 @@ export const DELETE = async (request: Request, { params }: { params: Promise<{ i
 };
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run tests/api/guardian-bindings.test.ts`
 Expected: PASS，既有兩個測試也要綠
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/api/guardian-bindings/\[id\] tests/api/guardian-bindings.test.ts
@@ -1353,7 +1357,7 @@ git commit -m "feat: allow hikers to revoke a guardian binding"
 
 `liff.shareTargetPicker` 需要 LIFF console 開啟 `chat_message.write` scope。未開啟或在外部瀏覽器時 `liff.isApiAvailable('shareTargetPicker')` 回 false，此時**只**顯示複製鈕；複製鈕永遠存在。
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 `tests/features/guardians-page.test.tsx`：
 
@@ -1447,12 +1451,12 @@ describe('guardians page', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/guardians-page.test.tsx`
 Expected: FAIL — 找不到 `@/app/guardians/GuardiansContent`
 
-- [ ] **Step 3: 實作 client component**
+- [x] **Step 3: 實作 client component**
 
 `app/guardians/GuardiansContent.tsx`：
 
@@ -1591,7 +1595,7 @@ export function GuardiansContent() {
 
 `formatTime` 的簽名是 `(value?: string) => string`（`src/lib/format-time.ts:3`），不吃 `null`，所以上面必須寫 `binding.boundAt ?? undefined`。不要為此改動 `format-time.ts`。
 
-- [ ] **Step 4: 加入群組綁定碼區塊**
+- [x] **Step 4: 加入群組綁定碼區塊**
 
 在 `createInvite` 的 `Card` 之後、`{notice && ...}` 之前插入，並在元件頂部加 `const [bindingCode, setBindingCode] = useState('');`：
 
@@ -1607,7 +1611,7 @@ export function GuardiansContent() {
     </details>
 ```
 
-- [ ] **Step 5: 實作伺服器殼層**
+- [x] **Step 5: 實作伺服器殼層**
 
 `app/guardians/page.tsx`：
 
@@ -1619,12 +1623,12 @@ export default function GuardiansPage() {
 }
 ```
 
-- [ ] **Step 6: 執行測試確認通過**
+- [x] **Step 6: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/guardians-page.test.tsx`
 Expected: PASS，4 個測試全綠
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/guardians tests/features/guardians-page.test.tsx
@@ -1647,7 +1651,7 @@ git commit -m "feat: add guardian management page with link invites"
 
 六種畫面：無 token／載入中／`pending`（可接受）／`expired`／`used`／`revoked`；接受後再加成功畫面與 `already_bound` 提示。
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 `tests/features/guardian-accept-page.test.tsx`：
 
@@ -1726,12 +1730,12 @@ describe('guardian accept page', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/guardian-accept-page.test.tsx`
 Expected: FAIL — 找不到 `@/app/guardian/accept/AcceptInvite`
 
-- [ ] **Step 3: 實作 client component**
+- [x] **Step 3: 實作 client component**
 
 `app/guardian/accept/AcceptInvite.tsx`：
 
@@ -1834,7 +1838,7 @@ export function AcceptInvite({ token }: { token?: string }) {
 }
 ```
 
-- [ ] **Step 4: 實作伺服器殼層**
+- [x] **Step 4: 實作伺服器殼層**
 
 `app/guardian/accept/page.tsx`：
 
@@ -1848,12 +1852,12 @@ export default async function GuardianAcceptPage(
 }
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/guardian-accept-page.test.tsx`
 Expected: PASS，7 個測試（含 `it.each` 三例）全綠
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/guardian tests/features/guardian-accept-page.test.tsx
@@ -1874,7 +1878,7 @@ git commit -m "feat: add guardian invite acceptance page"
 
 表單內的文字綁定碼 UI 移除（該能力已在 Task 7 移到 `/guardians` 的進階區塊）。webhook 端「綁定 CODE」處理邏輯完全不動。
 
-- [ ] **Step 1: 寫失敗測試**
+- [x] **Step 1: 寫失敗測試**
 
 加到 `tests/features/new-trip-page.test.tsx`（`fetch` mock 沿用該檔案既有寫法，把 `POST /api/guardian-invites` 加進去）：
 
@@ -1897,12 +1901,12 @@ it('links to the guardian management page', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/new-trip-page.test.tsx tests/features/home.test.tsx`
 Expected: FAIL — 找不到邀請按鈕、找不到 `/guardians` 連結
 
-- [ ] **Step 3: 改寫表單的留守人卡**
+- [x] **Step 3: 改寫表單的留守人卡**
 
 `app/trips/new/TripForm.tsx`：把 `createBinding` 函式與 `bindingCode` state 換成邀請版本。
 
@@ -1940,7 +1944,7 @@ state 宣告改為：
 
 若檔案內已無其他 `bindingCode` 參照，一併移除該 state 與相關 import。
 
-- [ ] **Step 4: 加入首頁入口**
+- [x] **Step 4: 加入首頁入口**
 
 `app/HomeContent.tsx` 的 `<nav className="action-grid">` 內，`/trips/active#finish` 那行之後加：
 
@@ -1948,17 +1952,17 @@ state 宣告改為：
       <a href="/guardians">{copy.myGuardians}</a>
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/new-trip-page.test.tsx tests/features/home.test.tsx`
 Expected: PASS
 
-- [ ] **Step 6: 跑全套測試**
+- [x] **Step 6: 跑全套測試**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: 全綠。若 `tests/features/quick-trip-form.test.tsx` 或 `tests/features/i18n.test.ts` 因移除 `createBindingCode` 的表單用法而失敗，修正測試對表單的預期，**不要**把 `copy.createBindingCode` 鍵刪掉——`/guardians` 進階區塊仍在用。
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/trips/new/TripForm.tsx app/HomeContent.tsx tests/features/new-trip-page.test.tsx tests/features/home.test.tsx
@@ -1969,12 +1973,12 @@ git commit -m "feat: replace the trip form binding code with guardian invite lin
 
 ## 完工驗證
 
-- [ ] `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"` 全綠，貼出實際輸出（基準 43 files / 243 tests，本計畫應只增不減）。
-- [ ] `npx vitest run --coverage tests/features/guardian-invites.test.ts tests/api/guardian-invites.test.ts tests/api/guardian-invites-accept.test.ts` 對 `src/features/line/guardian-invites.ts` 與三支 route 的覆蓋率 ≥80%。
-- [ ] `npx tsc --noEmit` 無錯誤，且 `grep -n "database: any" src/features` 無命中。
-- [ ] `npm run build` 成功（確認兩個新頁面能靜態分析通過）。
-- [ ] `grep -rn "console.log" app src` 無新增命中。
-- [ ] 人工確認：`git log --oneline` 有 11 個 commit（Task 0、1、1b、2–9），Task 0 的修正是獨立的第一個。
+- [x] `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"` 全綠；目前基準為 55 files / 359 tests（測試持續隨 Phase 3 與安全修復增加）。
+- [x] `npx vitest run --coverage tests/features/guardian-invites.test.ts tests/api/guardian-invites.test.ts tests/api/guardian-invites-accept.test.ts` 對 `src/features/line/guardian-invites.ts` 與三支 route 的覆蓋率 ≥80%。
+- [x] TypeScript 驗證已由 production build 執行，且 `src/features` 沒有 `database: any` 命中。
+- [x] `npm run build` 成功（確認兩個新頁面能靜態分析通過）。
+- [x] `grep -rn "console.log" app src` 無新增命中。
+- [x] 人工確認：Phase 2 的 Task 0、1、1b、2–9 均已在 Git 歷史中完成；後續修復與 Phase 3 commit 已追加在其後。
 
 ## 部署前的營運步驟（由操作者在 LINE console 執行，不屬於本計畫的程式工作）
 
@@ -1982,4 +1986,4 @@ git commit -m "feat: replace the trip form binding code with guardian invite lin
 2. 確認 LIFF endpoint 指向部署網址、size 設定 Full。
 3. 設定 `NEXT_PUBLIC_LINE_OA_URL` 為 `https://line.me/R/ti/p/@{OA_ID}`。
 4. LINE Login channel 確認 bot link（`bot_prompt`）已連結 Messaging API channel。
-5. 部署後執行 `npm run db:migrate` 套用 `0012_guardian_invites.sql`。
+5. production deploy 由 `vercel.ts` 的 build command 先執行 migration；重建 Supabase database 時仍須依 `docs/supabase-bootstrap.md` 執行 `npm run db:migrate`。

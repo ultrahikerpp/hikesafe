@@ -16,8 +16,9 @@ Use Node 24.x and copy `.env.example` to `.env.local`. `src/env.ts` defines nine
 Apply migrations before creating trips; `npm run db:migrate` is repeatable, records a checksum for each applied file, and is the canonical Supabase bootstrap flow documented in `docs/supabase-bootstrap.md`. Import only a verified route catalog after `npm run routes:verify` succeeds.
 
 ```sh
-npm run db:migrate
-npm test
+npm run db:migrate             # requires an explicitly configured PostgreSQL URL
+npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"
+npm test                        # full suite; requires the PostgreSQL integration endpoint
 npm run build
 npm run routes:verify
 ```
@@ -26,12 +27,12 @@ For a local development fixture, inject the repository dependencies used by the 
 
 ## LINE and Vercel configuration
 
-1. Create a LINE Login channel and set its LIFF endpoint to the deployed HTTPS application URL.
+1. Create a LINE Login channel, set its LIFF endpoint to the deployed HTTPS application URL, and include the `openid` and `profile` scopes. The app checks `liff.isApiAvailable('shareTargetPicker')` at runtime instead of assuming every browser can open the LINE picker.
 2. Create a Messaging API channel, issue its access token, and add the Official Account to every intended guardian group. Group or room delivery does not grant precise viewer access; bind an individual guardian for that.
 3. Register the webhook URL as `https://<host>/api/line/webhook` and verify its signature with `LINE_CHANNEL_SECRET`.
 4. Set the eight required variables above in Vercel (plus optional `NEXT_PUBLIC_LINE_OA_URL`), apply migrations, then deploy.
 5. Authorize the alert job at `GET /api/jobs/alerts` with `Authorization: Bearer <JOB_SECRET>` on a frequent schedule. Monitor `GET /api/jobs/alerts/health` with the same header; it returns 503 when no successful alert run has been recorded in three minutes. Authorize `GET /api/jobs/retention` with the same header daily. The every-minute alerts schedule runs on Supabase pg_cron and is defined in `docs/supabase-cron-setup.sql` — re-apply that file after any database rebuild, since the schedule is not part of the migrations. Retention runs on Vercel Cron (`vercel.ts`).
-6. Test LINE Login, a guardian binding, and a Messaging API push in the deployed environment before allowing real trips.
+6. Test LINE Login, guardian invite creation and sharing, a guardian binding, and a Messaging API push in the deployed environment before allowing real trips. The LINE share and copy buttons appear only after 「建立邀請連結 / Create invite link」 succeeds; unavailable or failed LINE sharing copies the invite link with a reason-specific warning, while user cancellation does not copy it.
 
 ## Operational checks and limitations
 
@@ -47,4 +48,4 @@ For a local development fixture, inject the repository dependencies used by the 
 
 `tests/integration/full-trip-flow.test.ts` uses the existing repository abstractions and MSW to exercise the lifecycle, three alert stages, finish cancellation, and 91-day retention. `tests/integration/alert-race.test.ts` covers two workers racing a deputy finish and a LINE 500 followed by a successful retry. `tests/integration/postgres-alerts.test.ts` resets `BESAFE_TEST_DATABASE_URL` (or its local test default), reapplies migrations, and verifies PostgreSQL row locks, delivery claiming, cancellation ordering, and lease reclaim.
 
-PostgreSQL integration is covered locally with a disposable test database. Real LINE Login, Messaging API, LIFF, webhook, and Vercel credential values remain blocked until the operator supplies them; no live LINE request or deployment has been attempted.
+The automated suite covers PostgreSQL through a disposable test database when `BESAFE_TEST_DATABASE_URL` is available. In the current workspace, the non-PostgreSQL suite passes, but the PostgreSQL integration suite cannot connect to its local default endpoint (`127.0.0.1:55432`). Real LINE Login, Messaging API, LIFF, webhook, and deployed-environment smoke tests remain operator work; the production migration path is version-controlled and wired into the deployment workflow, but no live credential-backed end-to-end verification is recorded here.

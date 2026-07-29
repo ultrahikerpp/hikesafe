@@ -1,4 +1,6 @@
-# HikeSafe LINE Quick Reply and Bilingual Messaging Implementation Plan
+# HikeSafe LINE Quick Reply and Bilingual Messaging Implementation Record
+
+> Status: Code implementation is merged. The later `check_in` notification follow-up (`11d2126`) supersedes the original silent-check-in assumption in this plan; manual LINE acceptance remains an operator task.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (- [ ]) syntax for tracking.
 
@@ -11,7 +13,7 @@
 ## Global Constraints
 
 - Preserve LINE HMAC signature validation, sender-to-user mapping, trip membership authorization, idempotency, and retry behavior.
-- Keep normal check-ins silent to guardians; only confirmed help, lifecycle, due, and overdue events notify guardians.
+- Normal check-ins notify the bound guardians through a durable `check_in` alert event; confirmed help, lifecycle, due, and overdue events retain their existing notification flows.
 - gps and network locations must retain accuracy; line locations may have accuracyMeters = NULL and must never satisfy start-trip GPS validation.
 - Show bilingual system copy as Chinese on the first line and English on the second line.
 - Keep route names, mountain names, official route data, and user-entered content in their original form.
@@ -295,7 +297,7 @@ export const handleLineConversation: (
   - A LINE location event is accepted only with exactly one active trip and calls recordCheckIn with source line and capturedAt equal to event.now. With multiple active trips it returns an ambiguity message and writes nothing.
   - Every postback trip ID is revalidated against the sender's active-trip list before a command call.
 
-- [ ] Step 5: Map command errors to bilingual user responses without exposing database errors. Preserve idempotent command results and ensure normal check-in paths do not create lifecycle notifications.
+- [ ] Step 5: Map command errors to bilingual user responses without exposing database errors. Preserve idempotent command results and create one durable `check_in` notification for each accepted normal check-in.
 
 - [ ] Step 6: Run tests and commit.
 
@@ -412,7 +414,7 @@ Confirm 0011_line_location_source.sql sorts after 0010_route_catalog_source_refe
 - [ ] Step 4: Perform the manual acceptance test after deployment.
 
 1. With exactly one active trip, send 回報 in LINE and verify the bilingual Quick Reply includes the location button.
-2. Tap 平安 and verify one check_ins row, no help/lifecycle event, and no guardian push.
+2. Tap 平安 and verify one `check_ins` row, one `check_in` notification event, and one guardian push.
 3. Tap 傳送位置 and verify location_status = available, location_source = line, coordinates present, and accuracy_meters IS NULL.
 4. Open the guardian viewer and verify the coordinate is visible with precision-unavailable wording.
 5. Tap 需要協助, cancel once, then confirm once; verify only confirmation creates a help event and Supabase Cron delivers the guardian notification.
@@ -420,7 +422,6 @@ Confirm 0011_line_location_source.sql sorts after 0010_route_catalog_source_refe
 
 ## Plan Self-Review
 
-- Spec coverage: LINE text, postback, location, Quick Reply, one-trip location guard, bilingual system copy, nullable LINE accuracy, migration, authorization, idempotency, silent normal check-ins, confirmed help, viewer/report output, and verification are each covered.
+- Spec coverage: LINE text, postback, location, Quick Reply, one-trip location guard, bilingual system copy, nullable LINE accuracy, migration, authorization, idempotency, guardian notification for normal check-ins, confirmed help, viewer/report output, and verification are each covered.
 - Placeholder scan: no TBD, TODO, or deferred implementation step is used; every task names files, tests, commands, and expected outcomes.
 - Type consistency: LineLocationFix is distinct from LocationFix; CheckInLocation is used only by check-in paths; StartTripCommand remains GPS-only; Quick Reply builders and conversation service signatures are defined before webhook integration.
-

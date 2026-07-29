@@ -1,4 +1,6 @@
-# HikeSafe LINE MVP Implementation Plan
+# HikeSafe LINE MVP Implementation Record
+
+> Status: Core MVP implementation is merged to `master`. The original local implementation steps are retained below; the deployment gate remains conditional on operator-supplied credentials and live smoke testing.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -683,7 +685,7 @@ Ensure 44px minimum touch targets, visible keyboard focus, semantic labels, non-
 
 - [ ] **Step 5: Document setup and operational checks**
 
-`.env.example` lists all seven keys from `src/env.ts` without values. README documents LINE Login channel, Messaging API channel, webhook URL, LIFF endpoint, OA group permission, database migration, route catalog verification, alert job authorization, retention job, local test commands, and the explicit limitations from Global Constraints.
+`.env.example` lists the nine variables from `src/env.ts` without values, eight required plus optional `NEXT_PUBLIC_LINE_OA_URL`. README documents LINE Login channel, Messaging API channel, webhook URL, LIFF endpoint, OA group permission, database migration, route catalog verification, alert job authorization, retention job, local test commands, and the explicit limitations from Global Constraints.
 
 - [ ] **Step 6: Run final verification**
 
@@ -710,4 +712,4 @@ git commit -m "feat: complete HikeSafe LINE MVP"
 
 ## Deployment Gate
 
-Do not deploy until the user supplies or authorizes creation of LINE Login and Messaging API credentials, a PostgreSQL database, and Vercel environment values. Before deployment, upgrade the outdated Vercel CLI through Homebrew in accordance with project installation policy, confirm version 55.0.0 or newer, apply migrations, import the verified catalog, register the webhook and LIFF URL, deploy, and run the full `/browse` canary flow against production.
+The deployment gate remains conditional on LINE Login and Messaging API credentials, a PostgreSQL database, Vercel environment values, and a live `/browse` canary flow. Production migrations are now version-controlled in `vercel.ts`; catalog import, webhook/LIFF registration, and credential-backed smoke testing remain operator work. The local Vercel CLI is 57.0.0; Homebrew currently has no newer formula available.

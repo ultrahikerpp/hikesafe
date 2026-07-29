@@ -16,8 +16,13 @@ Date: 2026-07-13
 - `npm test`: 34 files, 153 tests passed.
 - `npm run db:migrate`: completed safely against an already-migrated disposable database.
 - `npm run build`: passed.
-- `npm run routes:verify`: catalog remains blocked at 0/100 hundred peaks and 0/30 suburban routes, with no missing sources. This was intentionally not changed.
+- At the time of this report, `npm run routes:verify` was blocked at 0/100 hundred peaks and 0/30 suburban routes, with no missing sources. That was intentionally not changed in this repair.
 
 ## Remaining credential blocker
 
 No live LINE Login, Messaging API, LIFF, webhook, or Vercel credential was supplied. No live LINE request or deployment was attempted.
+
+## Follow-up status, 2026-07-29
+
+- The route catalog later reached 100 hundred peaks, 138 suburban routes, and 96 small hundred peaks. `npm run routes:verify` now exits successfully with zero missing sources and zero duplicate slugs; the remaining coverage warnings are documented in `README.md`.
+- The production migration path is now version-controlled through `vercel.ts` and the deploy migration script. Live credential-backed LINE and deployed-environment smoke tests are still not recorded in this workspace.

@@ -4,6 +4,8 @@
 狀態：已與使用者逐節確認
 上游：`docs/superpowers/specs/2026-07-19-line-first-ux-redesign-design.md` §2（本文件為對照 Phase 1 實際落地結果後的修正版，衝突處以本文件為準）
 
+> 2026-07-29 更新：目前按鈕名稱為【建立邀請連結】；連結建立後一律顯示【分享到 LINE】與【複製邀請連結】，點擊分享時才以 `liff.isApiAvailable('shareTargetPicker')` 判斷並提供具體 fallback。最新行為以 `2026-07-29-line-share-feedback-design.md` 為準；下方舊名稱保留為當時設計紀錄。
+
 ## 背景
 
 Phase 1（UI 設計系統與頁面重構）已合併 master（commit `107ae7b`）。目前留守人綁定只有一條路徑：登山客在建立行程表單按【建立留守綁定碼】產生 6 碼文字碼，再由本人在群組／OA 私訊輸入「綁定 CODE」。這條路徑無法把綁定能力交給留守人自行完成，也沒有分享與複製功能。

@@ -1,6 +1,8 @@
-# Phase 3｜LINE-first 補完 Implementation Plan
+# Phase 3｜LINE-first 補完 Implementation Record
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> Status: Completed and merged to `master` on 2026-07-22. All implementation steps below are checked; live LINE console provisioning and deployed-environment smoke tests remain operator work.
+
+> This document preserves the original task breakdown as a completed implementation record.
 
 **Goal:** 讓登山客能全程在 LINE 內完成行程生命週期（建立、開始、延長、結束、回報、求助），不必面對 Vercel 網址。
 
@@ -71,7 +73,7 @@
   - `buildStartLocationPrompt(): LineMessage`
   - `buildUsageReply(): LineMessage`
 
-- [ ] **Step 1: 建立 `tests/features/line-prompts.test.ts` 失敗測試**
+- [x] **Step 1: 建立 `tests/features/line-prompts.test.ts` 失敗測試**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -211,12 +213,12 @@ describe('line prompts', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-prompts.test.ts`
 Expected: FAIL — `Failed to resolve import "@/src/features/line/prompts"`
 
-- [ ] **Step 3: 建立 `src/features/line/prompts.ts`**
+- [x] **Step 3: 建立 `src/features/line/prompts.ts`**
 
 ```ts
 import { bilingual } from '@/src/features/i18n/copy';
@@ -340,13 +342,13 @@ export const buildStartLocationPrompt = (): LineMessage => ({
 export const buildUsageReply = (): LineMessage => ({ type: 'text', text: usageGuide });
 ```
 
-- [ ] **Step 4: 從 `messages.ts` 移除已搬走的成員**
+- [x] **Step 4: 從 `messages.ts` 移除已搬走的成員**
 
 刪除 `src/features/line/messages.ts` 的這些區塊：`LineTripChoice` 介面（30-33 行）、`postback` 與 `conciseLabel` 兩個 const（60-61 行）、`buildCheckInPrompt`（63-73 行）、`buildTripChooser`（75-92 行）、`buildHelpConfirmation`（94-103 行）。
 
 `LineMessage`、`LineQuickReply`、`LineQuickReplyAction`、`AlertMessageTrip`、`buildLineMessage`、`formatTime` 等其餘內容全部保留不動。刪除後 `messages.ts` 內不得殘留對 `postback`／`conciseLabel` 的參照（`buildLineMessage` 用的是自己的 `card` helper，不受影響）。
 
-- [ ] **Step 5: 更新 `conversation.ts` 的 import**
+- [x] **Step 5: 更新 `conversation.ts` 的 import**
 
 把 `src/features/line/conversation.ts:5-10` 改為：
 
@@ -359,7 +361,7 @@ import {
 import type { LineMessage } from '@/src/features/line/messages';
 ```
 
-- [ ] **Step 6: 更新兩個既有測試檔的 import**
+- [x] **Step 6: 更新兩個既有測試檔的 import**
 
 `tests/integration/line-conversation.test.ts:8` 改為：
 
@@ -376,19 +378,19 @@ import { buildLineMessage } from '@/src/features/line/messages';
 
 並刪除該檔中已搬到 `line-prompts.test.ts` 的四個測試：`'builds a bilingual check-in prompt with concise typed Quick Reply actions'`、`'builds a bilingual trip chooser without a location action for ambiguous trips'`、`'uses a bilingual text-only web fallback for 14 active trips'`、`'builds a bilingual help confirmation with explicit confirm and cancel actions'`。保留 `buildLineMessage` 的所有測試。
 
-- [ ] **Step 7: 執行測試確認通過**
+- [x] **Step 7: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，總數應為 49 files ／ 289 tests（283 − 4 移出 ＋ 10 新增；`line-prompts.test.ts` 是新檔案，故檔案數 +1）。若檔案數或測試數與預期不符，先確認是否漏刪 `line-messages.test.ts` 的舊測試。
 
-- [ ] **Step 8: 型別檢查**
+- [x] **Step 8: 型別檢查**
 
 Run: `npx tsc --noEmit 2>&1 | grep -E "^src/features/line" || echo "no type errors in src/features/line"`
 Expected: `no type errors in src/features/line`
 
 本 repo 有 53 個既有 tsc 錯誤基準，本任務不必修。此處只檢查 `src/features/line/` 底下的產品程式碼——測試檔對 `LineMessage` 聯集型別做 `messages[0].text`／`.quickReply` 存取本來就會產生 tsc 錯誤（既有測試同樣如此，屬於那 53 個基準的一部分），vitest 以 esbuild 去型別執行不受影響，不要為此改寫測試。
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/features/line/prompts.ts src/features/line/messages.ts src/features/line/conversation.ts tests/features/line-prompts.test.ts tests/features/line-messages.test.ts tests/integration/line-conversation.test.ts
@@ -412,7 +414,7 @@ git commit -m "refactor: split hiker conversation prompts out of line messages"
   - `export type ParsedPostback = { kind: 'check-in'; tripId: string; message: 'safe' | 'shelter' } | { kind: 'help'; tripId: string; action: 'confirm' | 'cancel' } | { kind: 'trip'; tripId: string; intent: TripChooserIntent } | { kind: 'start'; tripId: string; action: 'confirm' | 'cancel' } | { kind: 'extend'; tripId: string; minutes: 30 | 60 | 120 } | { kind: 'finish'; tripId: string; action: 'confirm' | 'cancel' }`
   - `parsePostback(data: string): ParsedPostback | undefined`
 
-- [ ] **Step 1: 建立 `tests/features/line-postback.test.ts` 失敗測試**
+- [x] **Step 1: 建立 `tests/features/line-postback.test.ts` 失敗測試**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -469,12 +471,12 @@ describe('parsePostback', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-postback.test.ts`
 Expected: FAIL — `Failed to resolve import "@/src/features/line/postback"`
 
-- [ ] **Step 3: 建立 `src/features/line/postback.ts`**
+- [x] **Step 3: 建立 `src/features/line/postback.ts`**
 
 ```ts
 import type { TripChooserIntent } from '@/src/features/line/prompts';
@@ -517,12 +519,12 @@ export const parsePostback = (data: string): ParsedPostback | undefined => {
 };
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/line-postback.test.ts`
 Expected: PASS（7 tests）
 
-- [ ] **Step 5: 讓 `conversation.ts` 改用解析器（行為不變）**
+- [x] **Step 5: 讓 `conversation.ts` 改用解析器（行為不變）**
 
 刪除 `src/features/line/conversation.ts` 的三個正規式 const（`checkInPostback`／`helpPostback`／`tripPostback`，61-63 行），改 import：
 
@@ -588,12 +590,12 @@ postback 處理區塊（146-155 行）改為：
 
 註：`start`／`extend`／`finish` 三種 kind 此時尚未接線，會落到 `parsed.kind !== 'check-in'` 的 `unavailableTrip`。使用者此刻無法產生這些 postback（沒有任何提示會發出它們），Task 5-8 會逐一接上。
 
-- [ ] **Step 6: 執行全套測試確認無回歸**
+- [x] **Step 6: 執行全套測試確認無回歸**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 296 tests（289 ＋ 7 新增，`line-postback.test.ts` 是新檔案）
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/features/line/postback.ts src/features/line/conversation.ts tests/features/line-postback.test.ts
@@ -613,7 +615,7 @@ git commit -m "refactor: parse line postbacks through a dedicated grammar module
 **Interfaces:**
 - Consumes: `buildUsageReply(): LineMessage`（Task 1）
 
-- [ ] **Step 1: 加入失敗測試**
+- [x] **Step 1: 加入失敗測試**
 
 在 `tests/features/line-conversation.test.ts` 的 `describe('handleLineConversation', ...)` 內加入：
 
@@ -639,12 +641,12 @@ git commit -m "refactor: parse line postbacks through a dedicated grammar module
   });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-conversation.test.ts -t "usage command"`
 Expected: FAIL — 兩個測試都拿到空陣列（`isSupported` 回 false），`expect(messages).toHaveLength(1)` 失敗
 
-- [ ] **Step 3: 實作**
+- [x] **Step 3: 實作**
 
 在 `src/features/line/conversation.ts` 的 import 加入 `buildUsageReply`：
 
@@ -671,12 +673,12 @@ import {
   if (event.text?.trim() === '說明') return [buildUsageReply()];
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 298 tests
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/line/conversation.ts tests/features/line-conversation.test.ts
@@ -696,7 +698,7 @@ git commit -m "feat: answer the LINE usage command before any lookup"
 **Interfaces:**
 - Produces: `StartTripCommand.location` 型別由 `LocationFix` 變為 `CheckInLocation`（`src/lib/location.ts`，即 `LocationFix | LineLocationFix`）。Task 8 依賴此變更才能用 LINE 位置訊息開始行程。
 
-- [ ] **Step 1: 加入失敗測試**
+- [x] **Step 1: 加入失敗測試**
 
 `tests/features/trip-commands.test.ts` 已有 `makeRepository()`（無參數，其 `trip` 預設就是 `status: 'draft'`）與 `now = new Date('2026-07-12T01:00:00.000Z')`、`freshGps`（`24.18/121.28`、`capturedAt: 00:59:00`）。在 `freshGps` 宣告之後加入一個 LINE 版本：
 
@@ -744,12 +746,12 @@ const freshLineFix = {
   });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/trip-commands.test.ts -t "LINE location"`
 Expected: FAIL — 第一個測試因 `assertGps` 丟出 `Location must be GPS`；另兩個測試目前也會拿到 `Location must be GPS` 而非預期訊息
 
-- [ ] **Step 3: 修改 `src/features/trips/commands.ts`**
+- [x] **Step 3: 修改 `src/features/trips/commands.ts`**
 
 import 區塊（第 6-12 行）移除 `type LocationFix`：
 
@@ -788,17 +790,17 @@ const assertGps = (location: LocationFix, now: Date) => {
     assertCheckInLocation(command.location, command.now);
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/tests/integration/**" --exclude "**/.worktrees/**"`
 Expected: PASS，50 files ／ 301 tests。已確認全 repo 沒有任何測試斷言 `Location must be GPS`（該字串目前只出現在 `commands.ts:95` 本身），因此本變更不應造成既有測試失敗。若仍有失敗，是真的回歸，請修實作而非改測試。
 
-- [ ] **Step 5: 確認 `LocationFix` 沒有殘留參照**
+- [x] **Step 5: 確認 `LocationFix` 沒有殘留參照**
 
 Run: `grep -n "LocationFix" src/features/trips/commands.ts || echo "no LocationFix references remain"`
 Expected: `no LocationFix references remain`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/trips/commands.ts tests/features/trip-commands.test.ts
@@ -818,7 +820,7 @@ git commit -m "fix: accept LINE and network location fixes when starting a trip"
 **Interfaces:**
 - Consumes: `buildTripChooser(trips, intent?)`、`buildExtendPrompt(tripId)`、`buildFinishConfirmation(tripId)`、`buildHelpConfirmation(tripId)`（Task 1）；`ParsedPostback` 的 `{ kind: 'trip'; intent }`（Task 2）
 
-- [ ] **Step 1: 加入失敗測試**
+- [x] **Step 1: 加入失敗測試**
 
 在 `tests/features/line-conversation.test.ts` 加入：
 
@@ -869,12 +871,12 @@ git commit -m "fix: accept LINE and network location fixes when starting a trip"
   });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-conversation.test.ts -t "intent"`
 Expected: FAIL — help 選擇器仍發出 `:select`；`:help`／`:extend`／`:finish` 三種 postback 都落到 `unavailableTrip`
 
-- [ ] **Step 3: 實作**
+- [x] **Step 3: 實作**
 
 `src/features/line/conversation.ts` 的 import 補上兩個建構器：
 
@@ -925,12 +927,12 @@ postback 的 `trip` 分支改為依意圖分派：
 
 `event.location` 分支的 `buildTripChooser(activeTrips)` 維持預設 `'select'`，不需改動。
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 305 tests
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/features/line/conversation.ts tests/features/line-conversation.test.ts
@@ -950,7 +952,7 @@ git commit -m "fix: route trip chooser selections to the intent the user asked f
 **Interfaces:**
 - Consumes: `extendTrip({ tripId, userId, plannedFinishAt, idempotencyKey, now })`（`src/features/trips/commands.ts`）；`ActiveLineTrip.plannedFinishAt: Date`；`buildExtendPrompt`（Task 1）；`ParsedPostback` 的 `{ kind: 'extend'; minutes }`（Task 2）
 
-- [ ] **Step 1: 把 `extendTrip` 加入既有的 commands mock**
+- [x] **Step 1: 把 `extendTrip` 加入既有的 commands mock**
 
 `tests/features/line-conversation.test.ts` 頂端的 mock 補上 `extendTrip`：
 
@@ -972,7 +974,7 @@ import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/com
     vi.mocked(extendTrip).mockReset();
 ```
 
-- [ ] **Step 2: 加入失敗測試**
+- [x] **Step 2: 加入失敗測試**
 
 ```ts
   it('offers the extension options for one active trip', async () => {
@@ -1024,12 +1026,12 @@ import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/com
 
 註：`trips[0].plannedFinishAt` 是 `2026-07-18T08:00:00.000Z`，加 60 分鐘即 `09:00:00.000Z`。
 
-- [ ] **Step 3: 執行測試確認失敗**
+- [x] **Step 3: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-conversation.test.ts -t "extend"`
 Expected: FAIL — `延長` 未被 `isSupported` 接受（回空陣列）；`hikesafe:extend:...` 落到 `unavailableTrip`
 
-- [ ] **Step 4: 實作**
+- [x] **Step 4: 實作**
 
 `src/features/line/conversation.ts` 的 commands import 補上 `extendTrip`：
 
@@ -1075,12 +1077,12 @@ import { extendTrip, recordCheckIn, requestHelp } from '@/src/features/trips/com
   }
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 309 tests
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/line/conversation.ts tests/features/line-conversation.test.ts
@@ -1100,7 +1102,7 @@ git commit -m "feat: extend the planned finish time from LINE chat"
 **Interfaces:**
 - Consumes: `finishTrip({ tripId, userId, idempotencyKey, now })`（`src/features/trips/commands.ts`，`location` 與 `message` 皆為選填）；`buildFinishConfirmation`（Task 1）；`ParsedPostback` 的 `{ kind: 'finish'; action }`（Task 2）
 
-- [ ] **Step 1: 把 `finishTrip` 加入 commands mock**
+- [x] **Step 1: 把 `finishTrip` 加入 commands mock**
 
 ```ts
 vi.mock('@/src/features/trips/commands', () => ({
@@ -1119,7 +1121,7 @@ import { extendTrip, finishTrip, recordCheckIn, requestHelp } from '@/src/featur
     vi.mocked(finishTrip).mockReset();
 ```
 
-- [ ] **Step 2: 加入失敗測試**
+- [x] **Step 2: 加入失敗測試**
 
 ```ts
   it('asks for confirmation before finishing one active trip', async () => {
@@ -1176,12 +1178,12 @@ import { extendTrip, finishTrip, recordCheckIn, requestHelp } from '@/src/featur
   });
 ```
 
-- [ ] **Step 3: 執行測試確認失敗**
+- [x] **Step 3: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-conversation.test.ts -t "finish"`
 Expected: FAIL — 文字觸發回空陣列；`hikesafe:finish:...` 落到 `unavailableTrip`
 
-- [ ] **Step 4: 實作**
+- [x] **Step 4: 實作**
 
 commands import 補上 `finishTrip`：
 
@@ -1226,12 +1228,12 @@ postback 區塊，在 extend 分支之後加入：
   }
 ```
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 314 tests
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/features/line/conversation.ts tests/features/line-conversation.test.ts
@@ -1262,7 +1264,7 @@ git commit -m "feat: finish a trip from LINE chat"
 | 0 | >1 | 回「多筆待開始行程，請開啟行程頁」 |
 | 0 | 0 | `copy.noActiveTrip`（既有行為） |
 
-- [ ] **Step 1: 更新測試 fake 並加入失敗測試**
+- [x] **Step 1: 更新測試 fake 並加入失敗測試**
 
 `tests/features/line-conversation.test.ts` 的 mock 補上 `startTrip`：
 
@@ -1402,12 +1404,12 @@ const draft: ActiveLineTrip = { id: 'draft-1', routeName: '合歡北峰線', pla
   });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-conversation.test.ts -t "start"`
 Expected: FAIL — `listDraftTripsForMember` 不存在於介面（型別錯誤），且所有位置訊息在無進行中行程時都回 `noActiveTrip`
 
-- [ ] **Step 3: 擴充 repository 介面與實作**
+- [x] **Step 3: 擴充 repository 介面與實作**
 
 `src/features/line/conversation.ts`：
 
@@ -1447,7 +1449,7 @@ const databaseRepository: LineConversationRepository = {
 };
 ```
 
-- [ ] **Step 4: 加入新訊息常數並改寫主體**
+- [x] **Step 4: 加入新訊息常數並改寫主體**
 
 在 `conversation.ts` 既有的訊息常數區加入：
 
@@ -1495,7 +1497,7 @@ import { extendTrip, finishTrip, recordCheckIn, requestHelp, startTrip } from '@
   }
 ```
 
-- [ ] **Step 5: 實作位置訊息判定表**
+- [x] **Step 5: 實作位置訊息判定表**
 
 把 `event.location` 分支整段改為：
 
@@ -1559,7 +1561,7 @@ const startDraftTrip = async (
 
 **設計取捨（已與專案負責人確認）：** 這裡刻意用錯誤訊息字串比對，而非型別化錯誤。領域層目前一律丟通用 `Error`；導入專屬錯誤類別要動 `src/features/trips/commands.ts` 與其所有呼叫端，超出本期範圍。spec §6 要求開始行程失敗必須給可行動指引，字串比對是現況下唯一能做到的方式。已列為 fast-follow，不在本期修。
 
-- [ ] **Step 6: 接上 start postback 並補回各文字分支的空清單處理**
+- [x] **Step 6: 接上 start postback 並補回各文字分支的空清單處理**
 
 postback 區塊的授權檢查要先讓 start 走 draft 清單。把授權段改為：
 
@@ -1609,17 +1611,17 @@ postback 區塊的授權檢查要先讓 start 走 draft 清單。把授權段改
 
 import 補上 `buildStartLocationPrompt` 與 `LineLocationFix` 型別（後者已在檔案頂端 import）。
 
-- [ ] **Step 7: 執行測試確認通過**
+- [x] **Step 7: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 323 tests
 
-- [ ] **Step 8: 確認檔案仍在規模限制內**
+- [x] **Step 8: 確認檔案仍在規模限制內**
 
 Run: `wc -l src/features/line/conversation.ts`
 Expected: 少於 400 行。若超過，把 postback 處理抽成獨立的 `handlePostback` helper 函式（同檔內），不要新增檔案。
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/features/line/conversation.ts tests/features/line-conversation.test.ts
@@ -1639,7 +1641,7 @@ git commit -m "feat: start a draft trip from a LINE location message"
 **Interfaces:**
 - Consumes: `initialState.plannedFinishAt: string`（ISO 字串，`ActiveTripInitialState`）
 
-- [ ] **Step 1: 加入失敗測試**
+- [x] **Step 1: 加入失敗測試**
 
 在 `tests/features/trip-actions.test.tsx` 加入（該檔已有 `afterEach(cleanup)`，沿用即可）：
 
@@ -1677,12 +1679,12 @@ git commit -m "feat: start a draft trip from a LINE location message"
 
 `initialState.plannedFinishAt` 是 `2026-07-12T05:00:00.000Z`：＋30 分＝`05:30`，再＋60 分＝`06:30`。
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/trip-actions.test.tsx -t "planned finish"`
 Expected: FAIL — 實際送出的是 `Date.now() + 30 分鐘`，與 `2026-07-12T05:30:00.000Z` 不符
 
-- [ ] **Step 3: 實作**
+- [x] **Step 3: 實作**
 
 `app/trips/[tripId]/TripActions.tsx` 在既有 state 宣告區加入：
 
@@ -1721,12 +1723,12 @@ Expected: FAIL — 實際送出的是 `Date.now() + 30 分鐘`，與 `2026-07-12
         <div><dt>{copy.plannedFinish}</dt><dd>{formatTime(plannedFinishAt)}</dd></div>
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，50 files ／ 325 tests
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/trips/[tripId]/TripActions.tsx tests/features/trip-actions.test.tsx
@@ -1753,7 +1755,7 @@ git commit -m "fix: extend the planned finish time from its own value on the web
   - `export interface TripSummaryRepository { findTripSummary(input: { tripId: string; ownerUserId: string }): Promise<{ lineUserId: string; routeName: string; plannedFinishAt: Date; team: string[]; guardianCount: number } | undefined> }`
   - `pushTripSummary(input: { tripId: string; ownerUserId: string }, dependencies?: { repository?: TripSummaryRepository; push?: typeof pushLineMessage; logger?: Pick<Console, 'error'> }): Promise<void>` — 永不 throw
 
-- [ ] **Step 1: 建立 `tests/features/line-trip-summary.test.ts` 失敗測試**
+- [x] **Step 1: 建立 `tests/features/line-trip-summary.test.ts` 失敗測試**
 
 ```ts
 import { describe, expect, it, vi } from 'vitest';
@@ -1834,12 +1836,12 @@ describe('pushTripSummary', () => {
 
 註：`2026-07-18T08:00:00.000Z` 在 Asia/Taipei 是 16:00，格式沿用 `messages.ts` 的 `formatTime`。
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-trip-summary.test.ts`
 Expected: FAIL — `Failed to resolve import "@/src/features/line/trip-summary"`
 
-- [ ] **Step 3: 從 `messages.ts` 匯出 `formatTime` 供重用**
+- [x] **Step 3: 從 `messages.ts` 匯出 `formatTime` 供重用**
 
 `src/features/line/messages.ts` 內既有的 `formatTime`（第 35 行）改為具名匯出，避免在 `trip-summary.ts` 重複實作同一套 Asia/Taipei 格式：
 
@@ -1847,7 +1849,7 @@ Expected: FAIL — `Failed to resolve import "@/src/features/line/trip-summary"`
 export const formatTime = (value: Date) => {
 ```
 
-- [ ] **Step 4: 建立 `src/features/line/trip-summary.ts`**
+- [x] **Step 4: 建立 `src/features/line/trip-summary.ts`**
 
 ```ts
 import { eq } from 'drizzle-orm';
@@ -1978,12 +1980,12 @@ export const pushTripSummary = async (
 
 欄位名稱已對照 `src/db/schema.ts` 確認：`users.displayName`（第 71 行）、`users.lineUserId`、`tripMembers.tripId`／`tripMembers.userId`（第 177 行起）、`guardians.tripId`（第 217 行起）、`trips.plannedFinishAt`、`routeVersions.routeName`。`import { and, eq }` 中的 `and` 若未被用到請一併移除，只留 `eq`。
 
-- [ ] **Step 5: 執行測試確認通過**
+- [x] **Step 5: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/line-trip-summary.test.ts`
 Expected: PASS（5 tests）
 
-- [ ] **Step 6: 在建立行程路由接上推播（先寫失敗測試）**
+- [x] **Step 6: 在建立行程路由接上推播（先寫失敗測試）**
 
 `tests/api/create-trip.test.ts` 頂端加入 mock：
 
@@ -2042,7 +2044,7 @@ import { pushTripSummary } from '@/src/features/line/trip-summary';
 Run: `npx vitest run tests/api/create-trip.test.ts -t "summary"`
 Expected: FAIL — `pushTripSummary` 未被呼叫
 
-- [ ] **Step 7: 修改 `app/api/trips/route.ts`**
+- [x] **Step 7: 修改 `app/api/trips/route.ts`**
 
 import 加入：
 
@@ -2068,12 +2070,12 @@ import { pushTripSummary } from '@/src/features/line/trip-summary';
     return NextResponse.json({ tripId: result.tripId }, { status: 201 });
 ```
 
-- [ ] **Step 8: 執行全套測試確認通過**
+- [x] **Step 8: 執行全套測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
 Expected: PASS，51 files ／ 332 tests（`line-trip-summary.test.ts` 是新檔案）
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/features/line/trip-summary.ts src/features/line/messages.ts app/api/trips/route.ts tests/features/line-trip-summary.test.ts tests/api/create-trip.test.ts
@@ -2100,7 +2102,7 @@ git commit -m "feat: push a trip summary card with a start action after trip cre
   - `buildRichMenuPayload(liffId: string): Record<string, unknown>`
   - `buildRichMenuSvg(): string`
 
-- [ ] **Step 1: 建立 `tests/features/line-rich-menu.test.ts` 失敗測試**
+- [x] **Step 1: 建立 `tests/features/line-rich-menu.test.ts` 失敗測試**
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -2183,12 +2185,12 @@ describe('buildRichMenuSvg', () => {
 });
 ```
 
-- [ ] **Step 2: 執行測試確認失敗**
+- [x] **Step 2: 執行測試確認失敗**
 
 Run: `npx vitest run tests/features/line-rich-menu.test.ts`
 Expected: FAIL — `Failed to resolve import "@/src/features/line/rich-menu"`
 
-- [ ] **Step 3: 建立 `src/features/line/rich-menu.ts`**
+- [x] **Step 3: 建立 `src/features/line/rich-menu.ts`**
 
 ```ts
 export const RICH_MENU_NAME = 'hikesafe-main';
@@ -2261,12 +2263,12 @@ export const buildRichMenuSvg = () => [
 ].join('');
 ```
 
-- [ ] **Step 4: 執行測試確認通過**
+- [x] **Step 4: 執行測試確認通過**
 
 Run: `npx vitest run tests/features/line-rich-menu.test.ts`
 Expected: PASS（6 tests）
 
-- [ ] **Step 5: 安裝 `sharp` 並新增 npm script**
+- [x] **Step 5: 安裝 `sharp` 並新增 npm script**
 
 Run: `npm install --save-dev sharp`
 
@@ -2276,7 +2278,7 @@ Run: `npm install --save-dev sharp`
     "line:rich-menu": "tsx scripts/line/setup-rich-menu.ts",
 ```
 
-- [ ] **Step 6: 建立 `scripts/line/setup-rich-menu.ts`**
+- [x] **Step 6: 建立 `scripts/line/setup-rich-menu.ts`**
 
 ```ts
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -2349,7 +2351,7 @@ main().catch((error) => {
 });
 ```
 
-- [ ] **Step 7: 把輸出目錄加入 `.gitignore`**
+- [x] **Step 7: 把輸出目錄加入 `.gitignore`**
 
 在 `.gitignore` 末尾加入一行：
 
@@ -2357,7 +2359,7 @@ main().catch((error) => {
 scripts/line/out/
 ```
 
-- [ ] **Step 8: 驗證 dry-run 可實際產出檔案**
+- [x] **Step 8: 驗證 dry-run 可實際產出檔案**
 
 Run: `npm run line:rich-menu -- --dry-run`
 Expected: 印出 `Dry run complete...`，且 `scripts/line/out/rich-menu.png` 與 `rich-menu.json` 存在。
@@ -2367,12 +2369,12 @@ Expected: PNG 檔案存在且 `file` 回報 `PNG image data, 2500 x 1686`
 
 若因缺少中文字型導致 PNG 上的中文變成空白方框，記錄於 task 報告的 concerns，**不要**改用圖片檔硬編或移除中文標籤——dry-run 的用途正是讓操作者在上傳前發現這件事。
 
-- [ ] **Step 9: 執行全套測試確認通過**
+- [x] **Step 9: 執行全套測試確認通過**
 
 Run: `npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"`
-Expected: PASS，52 files ／ 338 tests（`line-rich-menu.test.ts` 是新檔案）
+Current verification: PASS，55 files ／ 359 tests。PostgreSQL integration requires the configured disposable database endpoint.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add src/features/line/rich-menu.ts scripts/line/setup-rich-menu.ts tests/features/line-rich-menu.test.ts package.json package-lock.json .gitignore
@@ -2390,7 +2392,7 @@ npx vitest run --exclude "**/.worktrees/**" --exclude "**/tests/integration/**"
 npx tsc --noEmit
 ```
 
-測試須全綠，預期 **52 files ／ 338 tests**（起始 48 files ／ 283 tests，新增 4 個測試檔、淨增 55 個測試）。各 task 標示的期望數字是「照本計畫所列測試逐字實作」的結果；若實作者額外補了測試而數字偏高，不算問題，數字偏低才需要回頭確認是否漏寫。
+目前非 PostgreSQL 測試為 **55 files ／ 359 tests** 全綠；數字高於原計畫，是後續 Phase 3、alert、安全與通知修復新增測試的結果。PostgreSQL integration 的執行狀態與環境限制記錄於 `README.md`。
 
 `tsc` 有 53 個既有錯誤基準，本期不得**新增**任何錯誤——比對方式是在乾淨的 master worktree 跑同一指令取得基準清單再比對。
 

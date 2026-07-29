@@ -3,6 +3,8 @@
 日期：2026-07-19
 狀態：已與使用者逐節確認
 
+> 2026-07-29 更新：留守人邀請的目前按鈕名稱與 LINE 分享 fallback 已由 `2026-07-29-line-share-feedback-design.md` 取代；下方舊名稱保留為原始設計紀錄。
+
 ## 背景與目標
 
 HikeSafe 目前已有 LIFF bootstrap、LINE webhook 對話（回報／求助／選行程）、警示三階段推播，但：
